@@ -12,10 +12,10 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # copy repo files into container workspace (devcontainer build context)
-WORKDIR /workspaces/acadclarifier-to-vector
+WORKDIR /workspaces/Acadclarifier
 
 # install pip packages (requirements.txt will be copied by Codespaces)
-COPY requirements.txt /workspaces/acadclarifier-to-vector/
+COPY requirements.txt /workspaces/Acadclarifier/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # default command
