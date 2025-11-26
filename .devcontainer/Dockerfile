@@ -11,12 +11,14 @@ RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     && rm -rf /var/lib/apt/lists/*
 
-# copy repo files into container workspace (devcontainer build context)
+# Set the working directory to the Repo Root inside the container
 WORKDIR /workspaces/Acadclarifier
 
-# install pip packages (requirements.txt will be copied by Codespaces)
-COPY requirements.txt /workspaces/Acadclarifier/
-RUN pip install --upgrade pip && pip install -r requirements.txt
+# COPY specific file from the subfolder (relative to the build context)
+# Destination is explicit to ensure structure is maintained
+COPY to-vector/requirements.txt /workspaces/Acadclarifier/to-vector/
 
-# default command
-CMD [ "sleep", "infinity" ]
+# Install dependencies
+# Note: We point to the file we just copied
+RUN pip install --upgrade pip && \
+    pip install -r /workspaces/Acadclarifier/to-vector/requirements.txt
