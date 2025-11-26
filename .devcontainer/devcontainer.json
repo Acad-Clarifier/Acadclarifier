@@ -4,9 +4,16 @@
     "dockerfile": "Dockerfile",
     "context": ".."
   },
-  "workspaceFolder": "/workspaces/acadclarifier-to-vector",
+  // GitHub mounts the repo to /workspaces/RepoName. 
+  // We point to that, or the specific subfolder if you want VS Code to open directly inside it.
+  "workspaceFolder": "/workspaces/Acadclarifier",
+  
   "forwardPorts": [8888],
-  "postCreateCommand": "pip install -r requirements.txt",
+  
+  // Since we installed requirements in the Dockerfile, we don't strictly need this.
+  // But if you want to ensure it runs, we must cd into the directory first.
+  "postCreateCommand": "cd to-vector && pip install -r requirements.txt",
+  
   "customizations": {
     "vscode": {
       "extensions": [
