@@ -1,5 +1,0 @@
-sentence-transformers
-PyMuPDF
-transformers
-torch
-numpy
