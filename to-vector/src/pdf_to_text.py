@@ -27,22 +27,27 @@ def remove_page_markers(text: str) -> str:
 
 def fix_broken_words(text: str) -> str:
     """
-    Merge words incorrectly split by spaces.
-    Rules:
-    - Merge consecutive uppercase word fragments
-    - Merge consecutive lowercase word fragments
-    """
-    # Fix broken uppercase words: "CHAP TER" → "CHAPTER"
-    text = re.sub(r'\b([A-Z])\s+([A-Z])', r'\1\2', text)
-    # Continue merging multiple fragments in uppercase
-    while re.search(r'\b([A-Z])\s+([A-Z])', text):
-        text = re.sub(r'\b([A-Z])\s+([A-Z])', r'\1\2', text)
+    Merge words incorrectly split ACROSS NEWLINES only.
 
-    # Fix broken lowercase words: "inter action" → "interaction"
-    text = re.sub(r'\b([a-z])\s+([a-z])', r'\1\2', text)
-    # Continue merging multiple fragments in lowercase
-    while re.search(r'\b([a-z])\s+([a-z])', text):
-        text = re.sub(r'\b([a-z])\s+([a-z])', r'\1\2', text)
+    Fixes PDF-induced breaks like:
+    - "interactio\nn" → "interaction"
+    - "Introductio\nn" → "Introduction"
+    - "CHAP\nTER" → "CHAPTER"
+
+    Safe rules (minimum 3 chars to avoid merging "a tool" → "atool"):
+    - lowercase: [a-z]{3,}\n[a-z]{2,}
+    - uppercase: [A-Z]{3,}\n[A-Z]{2,}
+
+    Does NOT merge words separated by normal spaces (e.g., "a tool" stays "a tool").
+    """
+    # Merge lowercase words split by newline: "interactio\nn" → "interaction"
+    text = re.sub(r'([a-z]{3,})\n([a-z]{2,})', r'\1\2', text)
+
+    # Merge uppercase words split by newline: "CHAP\nTER" → "CHAPTER"
+    text = re.sub(r'([A-Z]{3,})\n([A-Z]{2,})', r'\1\2', text)
+
+    # Merge title case split by newline: "Introductio\nn" → "Introduction"
+    text = re.sub(r'([A-Z][a-z]{2,})\n([a-z]{2,})', r'\1\2', text)
 
     return text
 
@@ -257,7 +262,7 @@ def extract_high_quality_text(pdf_path: str) -> List[Dict]:
         )
 
     # Post-processing: apply comprehensive cleaning pipeline
-    extracted_pages = merge_page_overflow(extracted_pages)
+    # extracted_pages = merge_page_overflow(extracted_pages)
 
     for page in extracted_pages:
         text = page["text"]
