@@ -1,59 +1,115 @@
-from sentence_transformers import SentenceTransformer
-import fitz  # PyMuPDF
 import os
-import numpy as np
 import json
+from typing import List, Dict
+from sentence_transformers import SentenceTransformer
 
-# Load the model (this will download it if not present)
-model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+# -------------------------------
+# CONFIGURATION
+# -------------------------------
 
+MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+BATCH_SIZE = 32
+MAX_CHARS = 3000      # safety limit (model-independent)
+MIN_CHARS = 50        # avoid junk embeddings
 
-def pdf_to_text(path):
-    text = ""
-    doc = fitz.open(path)
-    for page in doc:
-        text += page.get_text()
-    return text
+# -------------------------------
+# PATH RESOLUTION
+# -------------------------------
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CHUNKS_PATH = os.path.join(BASE_DIR, "..", "vectors", "chunks.json")
+OUTPUT_PATH = os.path.join(BASE_DIR, "..", "vectors", "embeddings.json")
 
-def text_to_vector(text):
-    return model.encode(text, convert_to_numpy=True)
+# -------------------------------
+# LOAD MODEL
+# -------------------------------
 
+def load_embedding_model():
+    """
+    Load embedding model deterministically.
+    """
+    model = SentenceTransformer(MODEL_NAME)
+    return model
+
+# -------------------------------
+# LOAD & VALIDATE CHUNKS
+# -------------------------------
+
+def load_chunks(path: str) -> List[Dict]:
+    with open(path, "r", encoding="utf-8") as f:
+        chunks = json.load(f)
+
+    valid_chunks = []
+
+    for c in chunks:
+        text = c.get("text", "").strip()
+
+        # Skip empty or junk chunks
+        if len(text) < MIN_CHARS:
+            continue
+
+        # Hard cap text length (extra safety)
+        if len(text) > MAX_CHARS:
+            text = text[:MAX_CHARS]
+            c["text"] = text
+
+        valid_chunks.append(c)
+
+    return valid_chunks
+
+# -------------------------------
+# BATCHED EMBEDDING
+# -------------------------------
+
+def embed_chunks(chunks: List[Dict], model: SentenceTransformer) -> List[Dict]:
+    texts = [c["text"] for c in chunks]
+    embeddings = []
+
+    for i in range(0, len(texts), BATCH_SIZE):
+        batch = texts[i:i + BATCH_SIZE]
+
+        batch_embeddings = model.encode(
+            batch,
+            show_progress_bar=False,
+            normalize_embeddings=True
+        )
+
+        embeddings.extend(batch_embeddings)
+
+    # Attach embeddings back to metadata
+    embedded_chunks = []
+    for chunk, vector in zip(chunks, embeddings):
+        embedded_chunks.append({
+            **chunk,
+            "embedding": vector.tolist()
+        })
+
+    return embedded_chunks
+
+# -------------------------------
+# SAVE OUTPUT
+# -------------------------------
+
+def save_embeddings(data: List[Dict], path: str):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False)
+
+# -------------------------------
+# MAIN PIPELINE
+# -------------------------------
 
 if __name__ == "__main__":
-    BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-    pdf_path = os.path.join(BASE_DIR, "data", "sample.pdf")
-    print("Using PDF:", pdf_path)
+    print("🔹 Loading chunks...")
+    chunks = load_chunks(CHUNKS_PATH)
+    print(f"✅ Valid chunks: {len(chunks)}")
 
-    text = pdf_to_text(pdf_path)
-    vector = text_to_vector(text)
+    print("🔹 Loading embedding model...")
+    model = load_embedding_model()
 
-    print("Vector shape:", vector.shape)
-    print("Sample vector values:", vector[:10])
-    # Ensure vectors directory exists at project root
-    vectors_dir = os.path.join(BASE_DIR, "vectors")
-    os.makedirs(vectors_dir, exist_ok=True)
+    print("🔹 Generating embeddings...")
+    embedded_chunks = embed_chunks(chunks, model)
 
-    # Save as .npy
-    npy_path = os.path.join(vectors_dir, "sample_vector.npy")
-    np.save(npy_path, vector)
-    print("Saved numpy vector to:", npy_path)
+    print("🔹 Saving embeddings...")
+    save_embeddings(embedded_chunks, OUTPUT_PATH)
 
-    # Save as .json (list of floats)
-    json_path = os.path.join(vectors_dir, "sample_vector.json")
-    try:
-        with open(json_path, "w", encoding="utf-8") as jf:
-            json.dump(vector.tolist(), jf)
-        print("Saved JSON vector to:", json_path)
-    except Exception as e:
-        print("Failed to save JSON vector:", e)
-
-    # Save as .txt (one value per line)
-    txt_path = os.path.join(vectors_dir, "sample_vector.txt")
-    try:
-        with open(txt_path, "w", encoding="utf-8") as tf:
-            for v in vector.tolist():
-                tf.write(f"{v}\n")
-        print("Saved text vector to:", txt_path)
-    except Exception as e:
-        print("Failed to save text vector:", e)
+    print(f"✅ Embeddings saved to: {OUTPUT_PATH}")
