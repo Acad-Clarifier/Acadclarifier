@@ -1,0 +1,686 @@
+[
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": null,
+    "chunk_index": 0,
+    "page_start": 1,
+    "page_end": 2,
+    "text": "chap ter 3 # # the interactio n # # overvie w • interaction models help us to understand what is going on in the interaction between user and system. they address the translations between what the user wants and what the system does. • ergonomics looks at the physical characteristics of the interaction and how these influence its effectiveness. • the dialog between user and system is influenced by the style of the interface. • the interaction takes place within a social and organizational context that affects both user and system. # # 3. 1 introductio n in the previous two chapters we have looked at the human and the computer respectively. however, in the context of this book, we are not concerned with them in isolation. we are interested in how the human user uses the computer as a tool to perform, simplify or support a task. in order to do this the user must communicate his requirements to the computer. there are a number of ways in which the user can communicate with the system. at one extreme is batch input, in which the user provides all the information to the computer at once and leaves the machine to perform the task. this approach does involve an interaction between the user and computer but does not support many tasks well. at the other extreme are highly interactive input devices and paradigms, such as direct manipulation ( see chapter 4 ) and the applications of virtual reality ( chapter 20 ). here the user is constantly providing instruction and receiving feedback. these are the types of interactive system we are considering. in this chapter, we consider the communication between user and system : the interaction. we will look at some models of interaction that enable us to identify and evaluate components of the interaction, and at the physical, social and organizational issues"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": null,
+    "chunk_index": 1,
+    "page_start": 1,
+    "page_end": 2,
+    "text": "20 ). here the user is constantly providing instruction and receiving feedback. these are the types of interactive system we are considering. in this chapter, we consider the communication between user and system : the interaction. we will look at some models of interaction that enable us to identify and evaluate components of the interaction, and at the physical, social and organizational issues that provide the context for it. we will also survey some of the different styles of interaction that are used and consider how well they support the user. # # 3. 2 models of interactio n in previous chapters we have seen the usefulness of models to help us to understand complex behaviour and complex systems. interaction involves at least two participants : the user and the system. both are complex, as we have seen, and are very different from each other in the way that they communicate and view the domain and the task. the interface must therefore effectively translate between them to allow the interaction to be successful. this translation can fail at a number of points and for a number of reasons. the use of models of interaction can help us to understand exactly what is going on in the interaction and identify the likely root of difficulties. they also provide us with a framework to compare different interaction styles and to consider interaction problems. we begin by considering the most influential model of interaction, norman ’ s execution – evaluation cycle ; then we look at another model which extends the ideas of norman ’ s cycle. both of these models describe the interaction in terms of the goals and actions of the user. we will therefore briefly discuss the terminology used and the assumptions inherent in the models, before describing the models themselves."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.1 The terms of interaction",
+    "chunk_index": 0,
+    "page_start": 2,
+    "page_end": 2,
+    "text": "traditionally, the purpose of an interactive system is to aid a user in accomplishing goals from some application domain. ( later in this book we will look at alternative interactions but this model holds for many work - oriented applications ). a domain defines an area of expertise and knowledge in some real - world activity. some examples of domains are graphic design, authoring and process control in a factory. a domain consists of concepts that highlight its important aspects. in a graphic design domain, some of the important concepts are geometric shapes, a drawing surface and a drawing utensil. tasks are operations to manipulate the concepts of a domain. a goal is the desired output from a performed task. for example, one task within the graphic design domain is the construction of a specific geometric shape with particular attributes on the drawing surface. a related goal would be to produce a solid red triangle centred on the canvas. an intention is a specific action required to meet the goal. task analysis involves the identification of the problem space ( which we discussed in chapter 1 ) for the user of an interactive system in terms of the domain, goals, intentions and tasks. we can use our knowledge of tasks and goals to assess the interactive system that is designed to support them. we discuss task analysis in detail in chapter 15. the concepts used in the design of the system and the description of the user are separate, and so we can refer to them as distinct components, called the system and the user, respectively. the system and user are each described by means of a language that can express concepts relevant in the domain of the application. the system ’ s language we will refer to as the core language and the user ’ s language we will refer to as the task language. the core language"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.1 The terms of interaction",
+    "chunk_index": 1,
+    "page_start": 2,
+    "page_end": 2,
+    "text": "to them as distinct components, called the system and the user, respectively. the system and user are each described by means of a language that can express concepts relevant in the domain of the application. the system ’ s language we will refer to as the core language and the user ’ s language we will refer to as the task language. the core language describes computational attributes of the domain relevant to the system state, whereas the task language describes psychological attributes of the domain relevant to the user state. the system is assumed to be some computerized application, in the context of this book, but the models apply equally to non - computer applications. it is also a common assumption that by distinguishing between user and system we are restricted to single - user applications. this is not the case. however, the emphasis is on the view of the interaction from a single user ’ s perspective. from this point of view, other users, such as those in a multi - party conferencing system, form part of the system."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.2 The execution–evaluation cycle",
+    "chunk_index": 0,
+    "page_start": 2,
+    "page_end": 4,
+    "text": "norman ’ s model of interaction is perhaps the most influential in human – computer interaction, possibly because of its closeness to our intuitive understanding of the interaction between human user and computer [ 178 ]. the user formulates a plan of action, which is then executed at the computer interface. when the plan, or part of the plan, has been executed, the user observes the computer interface to evaluate the result of the executed plan, and to determine further actions. the interactive cycle can be divided into two major phases : execution and evaluation. these can then be subdivided into further stages, seven in all. the stages in norman ’ s model of interaction are as follows : • establishing the goal • forming the intention • specifying the action sequence • executing the action • perceiving the system state • interpreting the system state • evaluating the system state with respect to the goals and intentions. each stage is of course an activity of the user. first the user forms a goal. this is the user ’ s notion of what needs to be done and is framed in terms of the domain, in the task language. it is liable to be imprecise and therefore needs to be translated into the more specific intention, and the actual actions that will reach the goal, before it can be executed by the user. the user perceives the new state of the system, after execution of the action sequence, and interprets it in terms of his expectations. if the system state reflects the user ’ s goal then the computer has done what he wanted and the interaction has been successful ; otherwise the user must formulate a new goal and repeat the cycle. norman uses a simple example of switching on a light to illustrate this cycle. imagine you are sitting reading as evening falls."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.2 The execution–evaluation cycle",
+    "chunk_index": 1,
+    "page_start": 2,
+    "page_end": 4,
+    "text": "it in terms of his expectations. if the system state reflects the user ’ s goal then the computer has done what he wanted and the interaction has been successful ; otherwise the user must formulate a new goal and repeat the cycle. norman uses a simple example of switching on a light to illustrate this cycle. imagine you are sitting reading as evening falls. you decide you need more light ; that is you establish the goal to get more light. from there you form an intention to switch on the desk lamp, and you specify the actions required, to reach over and press the lamp switch. if someone else is closer the intention may be different – you may ask them to switch on the light for you. your goal is the same but the intention and actions are different. when you have executed the action you perceive the result, either the light is on or it isn ’ t and you interpret this, based on your knowledge of the world. for example, if the light does not come on you may interpret this as indicating the bulb has blown or the lamp is not plugged into the mains, and you will formulate new goals to deal with this. if the light does come on, you will evaluate the new state according to the original goals – is there now enough light? if so, the cycle is complete. if not, you may formulate a new intention to switch on the main ceiling light as well. norman uses this model of interaction to demonstrate why some interfaces cause problems to their users. he describes these in terms of the gulfs of execution and the gulfs of evaluation. as we noted earlier, the user and the system do not use the same terms to describe the domain and goals – remember that we called the language of the"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.2 The execution–evaluation cycle",
+    "chunk_index": 2,
+    "page_start": 2,
+    "page_end": 4,
+    "text": "light as well. norman uses this model of interaction to demonstrate why some interfaces cause problems to their users. he describes these in terms of the gulfs of execution and the gulfs of evaluation. as we noted earlier, the user and the system do not use the same terms to describe the domain and goals – remember that we called the language of the system the core language and the language of the user the task language. the gulf of execution is the difference between the user ’ s formulation of the actions to reach the goal and the actions allowed by the system. if the actions allowed by the system correspond to those intended by the user, the interaction will be effective. the interface should therefore aim to reduce this gulf. the gulf of evaluation is the distance between the physical presentation of the system state and the expectation of the user. if the user can readily evaluate the presentation in terms of his goal, the gulf of evaluation is small. the more effort that is required on the part of the user to interpret the presentation, the less effective the interaction. human error – slips and mistakes human errors are often classified into slips and mistakes. we can distinguish these using norman ’ s gulf of execution. if you understand a system well you may know exactly what to do to satisfy your goals – you have formulated the correct action. however, perhaps you mistype or you accidentally press the mouse button at the wrong time. these are called slips ; you have formulated the right action, but fail to execute that action correctly. however, if you don ’ t know the system well you may not even formulate the right goal. for example, you may think that the magnifying glass icon is the ‘ find ’ function, but in fact it is to magnify"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.2 The execution–evaluation cycle",
+    "chunk_index": 3,
+    "page_start": 2,
+    "page_end": 4,
+    "text": "these are called slips ; you have formulated the right action, but fail to execute that action correctly. however, if you don ’ t know the system well you may not even formulate the right goal. for example, you may think that the magnifying glass icon is the ‘ find ’ function, but in fact it is to magnify the text. this is called a mistake. if we discover that an interface is leading to errors it is important to understand whether they are slips or mistakes. slips may be corrected by, for instance, better screen design, perhaps putting more space between buttons. however, mistakes need users to have a better understanding of the systems, so will require far more radical redesign or improved training, perhaps a totally different metaphor for use. norman ’ s model is a useful means of understanding the interaction, in a way that is clear and intuitive. it allows other, more detailed, empirical and analytic work to be placed within a common framework. however, it only considers the system as far as the interface. it concentrates wholly on the user ’ s view of the interaction. it does not attempt to deal with the system ’ s communication through the interface. an extension of norman ’ s model, proposed by abowd and beale, addresses this problem [ 3 ]. this is described in the next section."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.3 The interaction framework",
+    "chunk_index": 0,
+    "page_start": 4,
+    "page_end": 7,
+    "text": "the interaction framework attempts a more realistic description of interaction by including the system explicitly, and breaks it into four main components, as shown in figure 3. 1. the nodes represent the four major components in an interactive system – the system, the user, the input and the output. each component has its own language. in addition to the user ’ s task language and the system ’ s core language, which we have already introduced, there are languages for both the input and output components. input and output together form the interface. figure 3. 1 the general interaction framework as the interface sits between the user and the system, there are four steps in the interactive cycle, each corresponding to a translation from one component to another, as shown by the labelled arcs in figure 3. 2. the user begins the interactive cycle with the formulation of a goal and a task to achieve that goal. the only way the user can manipulate the machine is through the input, and so the task must be articulated within the input language. the input language is translated into the core language as operations to be performed by the system. the system then transforms itself as described by the operations ; the execution phase of the cycle is complete and the evaluation phase now begins. the system is in a new state, which must now be communicated to the user. the current values of system attributes are rendered as concepts or features of the output. it is then up to the user to observe the output and assess the results of the interaction relative to the original goal, ending the evaluation phase and, hence, the interactive cycle. there are four main translations involved in the interaction : articulation, performance, presentation and observation. figure 3. 2 translations between components the user ’ s formulation of the desired"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.3 The interaction framework",
+    "chunk_index": 1,
+    "page_start": 4,
+    "page_end": 7,
+    "text": "is then up to the user to observe the output and assess the results of the interaction relative to the original goal, ending the evaluation phase and, hence, the interactive cycle. there are four main translations involved in the interaction : articulation, performance, presentation and observation. figure 3. 2 translations between components the user ’ s formulation of the desired task to achieve some goal needs to be articulated in the input language. the tasks are responses of the user and they need to be translated to stimuli for the input. as pointed out above, this articulation is judged in terms of the coverage from tasks to input and the relative ease with which the translation can be accomplished. the task is phrased in terms of certain psychological attributes that highlight the important features of the domain for the user. if these psychological attributes map clearly onto the input language, then articulation of the task will be made much simpler. an example of a poor mapping, as pointed out by norman, is a large room with overhead lighting controlled by a bank of switches. it is often desirable to control the lighting so that only one section of the room is lit. we are then faced with the puzzle of determining which switch controls which lights. the result is usually repeated trials and frustration. this arises from the difficulty of articulating a goal ( for example, ‘ turn on the lights in the front of the room ’ ) in an input language that consists of a linear row of switches, which may or may not be oriented to reflect the room layout. conversely, an example of a good mapping is in virtual reality systems, where input devices such as datagloves are specifically geared towards easing articulation by making the user ’ s psychological notion of gesturing an act that"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.3 The interaction framework",
+    "chunk_index": 2,
+    "page_start": 4,
+    "page_end": 7,
+    "text": "in an input language that consists of a linear row of switches, which may or may not be oriented to reflect the room layout. conversely, an example of a good mapping is in virtual reality systems, where input devices such as datagloves are specifically geared towards easing articulation by making the user ’ s psychological notion of gesturing an act that can be directly realized at the interface. direct manipulation interfaces, such as those found on common desktop operating systems like the macintosh and windows, make the articulation of some file handling commands easier. on the other hand, some tasks, such as repetitive file renaming or launching a program whose icon is not visible, are not at all easy to articulate with such an interface. at the next stage, the responses of the input are translated to stimuli for the system. of interest in assessing this translation is whether the translated input language can reach as many states of the system as is possible using the system stimuli directly. for example, the remote control units for some compact disc players do not allow the user to turn the power off on the player unit ; hence the off state of the player cannot be reached using the remote control ’ s input language. on the panel of the compact disc player, however, there is usually a button that controls the power. the ease with which this translation from input to system takes place is of less importance because the effort is not expended by the user. however, there can be a real effort expended by the designer and programmer. in this case, the ease of the translation is viewed in terms of the cost of implementation. once a state transition has occurred within the system, the execution phase of the interaction is complete and the evaluation phase begins. the new state"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.3 The interaction framework",
+    "chunk_index": 3,
+    "page_start": 4,
+    "page_end": 7,
+    "text": "expended by the user. however, there can be a real effort expended by the designer and programmer. in this case, the ease of the translation is viewed in terms of the cost of implementation. once a state transition has occurred within the system, the execution phase of the interaction is complete and the evaluation phase begins. the new state of the system must be communicated to the user, and this begins by translating the system responses to the transition into stimuli for the output component. this presentation translation must preserve the relevant system attributes from the domain in the limited expressiveness of the output devices. the ability to capture the domain concepts of the system within the output is a question of expressiveness for this translation. for example, while writing a paper with some word - processing package, it is necessary at times to see both the immediate surrounding text where one is currently composing, say, the current paragraph, and a wider context within the whole paper that cannot be easily displayed on one screen ( for example, the current chapter ). ultimately, the user must interpret the output to evaluate what has happened. the response from the output is translated to stimuli for the user which trigger assessment. the observation translation will address the ease and coverage of this final translation. for example, it is difficult to tell the time accurately on an unmarked analog clock, especially if it is not oriented properly. it is difficult in a command line interface to determine the result of copying and moving files in a hierarchical file system. developing a web site using a mark - up language like html would be virtually impossible without being able to preview the output through a browser. assessing overall interaction the interaction framework is presented as a means to judge the overall usability of an entire interactive system. in reality"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.3 The interaction framework",
+    "chunk_index": 4,
+    "page_start": 4,
+    "page_end": 7,
+    "text": "command line interface to determine the result of copying and moving files in a hierarchical file system. developing a web site using a mark - up language like html would be virtually impossible without being able to preview the output through a browser. assessing overall interaction the interaction framework is presented as a means to judge the overall usability of an entire interactive system. in reality, all of the analysis that is suggested by the framework is dependent on the current task ( or set of tasks ) in which the user is engaged. this is not surprising since it is only in attempting to perform a particular task within some domain that we are able to determine if the tools we use are adequate. for example, different text editors are better at different things. for a particular editing task, one can choose the text editor best suited for interaction relative to the task. the best editor, if we are forced to choose only one, is the one that best suits the tasks most frequently performed. therefore, it is not too disappointing that we cannot extend the interaction analysis beyond the scope of a particular task. design focus vcr a simple example of programming a vcr from a remote control shows that all four translations in the interaction cycle can affect the overall interaction. ineffective interaction is indicated by the user not being sure the vcr is set to record properly. this could be because the user has pressed the keys on the remote control unit in the wrong order ; this can be classified as an articulatory problem. or maybe the vcr is able to record on any channel but the remote control lacks the ability to select channels, indicating a coverage problem for the performance translation. it may be the case that the vcr display panel does not indicate that the program has been set, a presentation problem"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.3 The interaction framework",
+    "chunk_index": 5,
+    "page_start": 4,
+    "page_end": 7,
+    "text": "order ; this can be classified as an articulatory problem. or maybe the vcr is able to record on any channel but the remote control lacks the ability to select channels, indicating a coverage problem for the performance translation. it may be the case that the vcr display panel does not indicate that the program has been set, a presentation problem. or maybe the user does not interpret the feedback properly, an observational error. any one or more of these deficiencies would give rise to ineffective interaction. # # 3. 3 frameworks and hc i as well as providing a means of discussing the details of a particular interaction, frameworks provide a basis for discussing other issues that relate to the interaction. the acm sigchi curriculum development group presents a framework similar to that presented here, and uses it to place different areas that relate to hci [ 6 ]. in figure 3. 3 these aspects are shown as they relate to the interaction framework. in particular, the field of ergonomics addresses issues on the user side of the interface, covering both input and output, as well as the user ’ s immediate context. dialog design and interface styles can be placed particularly along the input branch of the framework, addressing both articulation and performance. however, it is most usually associated with the computer and so is biased to that side of the framework. presentation and screen design relates to the output branch of the framework. the entire framework can be placed within a social and organizational context that also affects the interaction. each of these areas has important implications for the design of interactive systems and the performance of the user. we will discuss these in brief in the following sections, with the exception of screen design which we will save until chapter 5"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.2.3 The interaction framework",
+    "chunk_index": 6,
+    "page_start": 4,
+    "page_end": 7,
+    "text": "to the output branch of the framework. the entire framework can be placed within a social and organizational context that also affects the interaction. each of these areas has important implications for the design of interactive systems and the performance of the user. we will discuss these in brief in the following sections, with the exception of screen design which we will save until chapter 5. figure 3. 3 a framework for human - computer interaction ( after acm sigchi curriculum development group [ 4 ] ) # # 3. 4 ergonomic s ergonomics ( or human factors ) is traditionally the study of the physical characteristics of the interaction : how the controls are designed, the physical environment in which the interaction takes place, and the layout and physical qualities of the screen. a primary focus is on user performance and how the interface enhances or detracts from this. in seeking to evaluate these aspects of the interaction, ergonomics will certainly also touch upon human psychology and system constraints. it is a large and established field, which is closely related to but distinct from hci, and full coverage would demand a book in its own right. here we consider a few of the issues addressed by ergonomics as an introduction to the field. we will briefly look at the arrangement of controls and displays, the physical environment, health issues and the use of colour. these are by no means exhaustive and are intended only to give an indication of the types of issues and problems addressed by ergonomics. for more information on ergonomic issues the reader is referred to the recommended reading list at the end of the chapter."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.4.1 Arrangement of controls and displays",
+    "chunk_index": 0,
+    "page_start": 7,
+    "page_end": 9,
+    "text": "in chapter 1 we considered perceptual and cognitive issues that affect the way we present information on a screen and provide control mechanisms to the user. however, in addition to these cognitive aspects of design, physical aspects are important. sets of controls and parts of the display should be grouped logically to allow rapid access by the user ( more on this in chapter 5 ). this may not seem so important when we are considering a single user of a spreadsheet on a pc, but it becomes vital when we turn to safety - critical applications such as plant control, aviation and air traffic control. in each of these contexts, users are under pressure and are faced with a huge range of displays and controls. here it is crucial that the physical layout of these be appropriate. indeed, returning to the less critical pc application, inappropriate placement of controls and displays can lead to inefficiency and frustration. for example, on one particular electronic newsreader, used by one of the authors, the command key to read articles from a newsgroup ( y ) is directly beside the command key to unsubscribe from a newsgroup ( u ) on the keyboard. this poor design frequently leads to inadvertent removal of newsgroups. although this is recoverable it wastes time and is annoying to the user. we saw similar examples in the introduction of this book including the macos x dock. we can therefore see that appropriate layout is important in all applications. we have already touched on the importance of grouping controls together logically ( and keeping opposing controls separate ). the exact organization that this will suggest will depend on the domain and the application, but possible organizations include the following : functional controls and displays are organized so that those"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.4.1 Arrangement of controls and displays",
+    "chunk_index": 1,
+    "page_start": 7,
+    "page_end": 9,
+    "text": "##os x dock. we can therefore see that appropriate layout is important in all applications. we have already touched on the importance of grouping controls together logically ( and keeping opposing controls separate ). the exact organization that this will suggest will depend on the domain and the application, but possible organizations include the following : functional controls and displays are organized so that those that are functionally related are placed together ; sequential controls and displays are organized to reflect the order of their use in a typical interaction ( this may be especially appropriate in domains where a particular task sequence is enforced, such as aviation ) ; frequency controls and displays are organized according to how frequently they are used, with the most commonly used controls being the most easily accessible. in addition to the organization of the controls and displays in relation to each other, the entire system interface must be arranged appropriately in relation to the user ’ s position. so, for example, the user should be able to reach all controls necessary and view all displays without excessive body movement. critical displays should be at eye level. lighting should be arranged to avoid glare and reflection distorting displays. controls should be spaced to provide adequate room for the user to manoeuvre. design focus industrial interfaces the interfaces to office systems have changed dramatically since the 1980s. however, some care is needed in transferring the idioms of officebased systems into the industrial domain. office information is primarily textual and slow varying, whereas industrial interfaces may require the rapid assimilation of multiple numeric displays, each of which is varying in response to the environment. furthermore, the environmental conditions may rule out certain interaction styles ( for example, the oil - soaked mouse ). consequently, industrial interfaces raise some additional design issues rarely encountered in the office. glass interfaces vs"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.4.1 Arrangement of controls and displays",
+    "chunk_index": 2,
+    "page_start": 7,
+    "page_end": 9,
+    "text": "textual and slow varying, whereas industrial interfaces may require the rapid assimilation of multiple numeric displays, each of which is varying in response to the environment. furthermore, the environmental conditions may rule out certain interaction styles ( for example, the oil - soaked mouse ). consequently, industrial interfaces raise some additional design issues rarely encountered in the office. glass interfaces vs. dials and knobs the traditional machine interface consists of dials and knobs directly wired or piped to the equipment. increasingly, some or all of the controls are replaced with a glass interface, a computer screen through which the equipment is monitored and controlled. many of the issues are similar for the two kinds of interface, but glass interfaces do have some special advantages and problems. for a complex system, a glass interface can be both cheaper and more flexible, and it is easy to show the same information in multiple forms ( figure 3. 4 ). for example, a data value might be given both in a precise numeric field and also in a quick to assimilate graphical form. in addition, the same information can be shown on several screens. however, the information is not located in physical space and so vital clues to context are missing – it is easy to get lost navigating complex menu systems. also, limited display resolution often means that an electronic representation of a dial is harder to read than its physical counterpart ; in some circumstances both may be necessary, as is the case on the flight deck of a modern aircraft. figure 3. 4 multiple representations of the same information indirect manipulation the phrase ‘ direct manipulation ’ dominates office system design ( figure 3. 5 ). there are arguments about its meaning and appropriateness even there, but it is certainly dependent on the user being in"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.4.1 Arrangement of controls and displays",
+    "chunk_index": 3,
+    "page_start": 7,
+    "page_end": 9,
+    "text": "circumstances both may be necessary, as is the case on the flight deck of a modern aircraft. figure 3. 4 multiple representations of the same information indirect manipulation the phrase ‘ direct manipulation ’ dominates office system design ( figure 3. 5 ). there are arguments about its meaning and appropriateness even there, but it is certainly dependent on the user being in primary control of the changes in the interface. the autonomous nature of industrial processes makes this an inappropriate model. in a direct manipulation system, the user interacts with an artificial world inside the computer ( for example, the electronic desktop ). figure 3. 5 office system – direct manipulation in contrast, an industrial interface is merely an intermediary between the operator and the real world. one implication of this indirectness is that the interface must provide feedback at two levels ( figure 3. 6 ). at one level, the user must receive immediate feedback, generated by the interface, that keystrokes and other actions have been received. in addition, the user ’ s actions will have some effect on the equipment controlled by the interface and adequate monitoring must be provided for this. figure 3. 6 indirect manipulation – two kinds of feedback the indirectness also causes problems with simple monitoring tasks. delays due to periodic sampling, slow communication and digital processing often mean that the data displayed are somewhat out of date. if the operator is not aware of these delays, diagnoses of system state may be wrong. these problems are compounded if the interface produces summary information displays. if the data comprising such a display are of different timeliness the result may be misleading."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.4.2 The physical environment of the interaction",
+    "chunk_index": 0,
+    "page_start": 9,
+    "page_end": 9,
+    "text": "as well as addressing physical issues in the layout and arrangement of the machine interface, ergonomics is concerned with the design of the work environment itself. where will the system be used? by whom will it be used? will users be sitting, standing or moving about? again, this will depend largely on the domain and will be more critical in specific control and operational settings than in general computer use. however, the physical environment in which the system is used may influence how well it is accepted and even the health and safety of its users. it should therefore be considered in all design. the first consideration here is the size of the users. obviously this is going to vary considerably. however, in any system the smallest user should be able to reach all the controls ( this may include a user in a wheelchair ), and the largest user should not be cramped in the environment. in particular, all users should be comfortably able to see critical displays. for long periods of use, the user should be seated for comfort and stability. seating should provide back support. if required to stand, the user should have room to move around in order to reach all the controls."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.4.3 Health issues",
+    "chunk_index": 0,
+    "page_start": 9,
+    "page_end": 10,
+    "text": "perhaps we do not immediately think of computer use as a hazardous activity but we should bear in mind possible consequences of our designs on the health and safety of users. leaving aside the obvious safety risks of poorly designed safety - critical systems ( aircraft crashing, nuclear plant leaks and worse ), there are a number of factors that may affect the use of more general computers. again these are factors in the physical environment that directly affect the quality of the interaction and the user ’ s performance : physical position as we noted in the previous section, users should be able to reach all controls comfortably and see all displays. users should not be expected to stand for long periods and, if sitting, should be provided with back support. if a particular position for a part of the body is to be adopted for long periods ( for example, in typing ) support should be provided to allow rest. temperature although most users can adapt to slight changes in temperature without adverse effect, extremes of hot or cold will affect performance and, in excessive cases, health. experimental studies show that performance deteriorates at high or low temperatures, with users being unable to concentrate efficiently. lighting the lighting level will again depend on the work environment. however, adequate lighting should be provided to allow users to see the computer screen without discomfort or eyestrain. the light source should also be positioned to avoid glare affecting the display. noise excessive noise can be harmful to health, causing the user pain, and in acute cases, loss of hearing. noise levels should be maintained at a comfortable level in the work environment. this does not necessarily mean no noise at all. noise can be a stimulus to users and can provide needed confirmation of system activity. time the time users spend using the system should also be controlled. as"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.4.3 Health issues",
+    "chunk_index": 1,
+    "page_start": 9,
+    "page_end": 10,
+    "text": "health, causing the user pain, and in acute cases, loss of hearing. noise levels should be maintained at a comfortable level in the work environment. this does not necessarily mean no noise at all. noise can be a stimulus to users and can provide needed confirmation of system activity. time the time users spend using the system should also be controlled. as we saw in the previous chapter, it has been suggested that excessive use of crt displays can be harmful to users, particularly pregnant women."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.4.4 The use of colour",
+    "chunk_index": 0,
+    "page_start": 10,
+    "page_end": 11,
+    "text": "in this section we have concentrated on the ergonomics of physical characteristics of systems, including the physical environment in which they are used. however, ergonomics has a close relationship to human psychology in that it is also concerned with the perceptual limitations of humans. for example, the use of colour in displays is an ergonomics issue. as we saw in chapter 1, the visual system has some limitations with regard to colour, including the number of colours that are distinguishable and the relatively low blue acuity. we also saw that a relatively high proportion of the population suffer from a deficiency in colour vision. each of these psychological phenomena leads to ergonomic guidelines ; some examples are discussed below. colours used in the display should be as distinct as possible and the distinction should not be affected by changes in contrast. blue should not be used to display critical information. if colour is used as an indicator it should not be the only cue : additional coding information should be included. the colours used should also correspond to common conventions and user expectations. red, green and yellow are colours frequently associated with stop, go and standby respectively. therefore, red may be used to indicate emergency and alarms ; green, normal activity ; and yellow, standby and auxiliary function. these conventions should not be violated without very good cause. however colour conventions are culturally determined. for example, red is associated with danger and warnings in most western cultures, but in china it symbolises happiness and good fortune. the colour of mourning is black in some cultures and white in others. awareness of the cultural associations of colour is particularly important in designing systems and web sites for a global marker. we will return to these issues in more detail in chapter 10."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.4.4 The use of colour",
+    "chunk_index": 1,
+    "page_start": 10,
+    "page_end": 11,
+    "text": "danger and warnings in most western cultures, but in china it symbolises happiness and good fortune. the colour of mourning is black in some cultures and white in others. awareness of the cultural associations of colour is particularly important in designing systems and web sites for a global marker. we will return to these issues in more detail in chapter 10."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.4.5 Ergonomics and HCI",
+    "chunk_index": 0,
+    "page_start": 11,
+    "page_end": 11,
+    "text": "ergonomics is a huge area, which is distinct from hci but sits alongside it. its contribution to hci is in determining constraints on the way we design systems and suggesting detailed and specific guidelines and standards. ergonomic factors are in general well established and understood and are therefore used as the basis for standardizing hardware designs. this issue is discussed further in chapter 7. # # 3. 5 interaction style s interaction can be seen as a dialog between the computer and the user. the choice of interface style can have a profound effect on the nature of this dialog. dialog design is discussed in detail in chapter 16. here we introduce the most common interface styles and note the different effects these have on the interaction. there are a number of common interface styles including • command line interface • menus • natural language • question / answer and query dialog • form - fills and spreadsheets • wimp • point and click • three - dimensional interfaces as the wimp interface is the most common and complex, we will discuss each of its elements in greater detail in section 3. 6."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.1 Command line interface",
+    "chunk_index": 0,
+    "page_start": 11,
+    "page_end": 12,
+    "text": "the command line interface ( figure 3. 7 ) was the first interactive dialog style to be commonly used and, in spite of the availability of menu - driven interfaces, it is still widely used. it provides a means of expressing instructions to the computer directly, using function keys, single characters, abbreviations or whole - word commands. in some systems the command line is the only way of communicating with the system, especially for remote access using telnet. more commonly today it is supplementary to menu - based interfaces, providing accelerated access to the system ’ s functionality for experienced users. figure 3. 7 command line interface command line interfaces are powerful in that they offer direct access to system functionality ( as opposed to the hierarchical nature of menus ), and can be combined to apply a number of tools to the same data. they are also flexible : the command often has a number of options or parameters that will vary its behaviour in some way, and it can be applied to many objects at once, making it useful for repetitive tasks. however, this flexibility and power brings with it difficulty in use and learning. commands must be remembered, as no cue is provided in the command line to indicate which command is needed. they are therefore better for expert users than for novices. however, this problem can be alleviated a little by using consistent and meaningful commands and abbreviations. the commands used should be terms within the vocabulary of the user rather than the technician. unfortunately, commands are often obscure and vary across systems, causing confusion to the user and increasing the overhead of learning."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.2 Menus",
+    "chunk_index": 0,
+    "page_start": 12,
+    "page_end": 12,
+    "text": "in a menu - driven interface, the set of options available to the user is displayed on the screen, and selected using the mouse, or numeric or alphabetic keys. since the options are visible they are less demanding of the user, relying on recognition rather than recall. however, menu options still need to be meaningful and logically grouped to aid recognition. often menus are hierarchically ordered and the option required is not available at the top layer of the hierarchy. the grouping and naming of menu options then provides the only cue for the user to find the required option. such systems either can be purely text based, with the menu options being presented as numbered choices ( see figure 3. 8 ), or may have a graphical component in which the menu appears within a rectangular box and choices are made, perhaps by typing the initial letter of the desired selection, or by entering the associated number, or by moving around the menu with the arrow keys. this is a restricted form of a full wimp system, described in more detail shortly. figure 3. 8 menu - driven interface"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.3 Natural language",
+    "chunk_index": 0,
+    "page_start": 12,
+    "page_end": 13,
+    "text": "perhaps the most attractive means of communicating with computers, at least at first glance, is by natural language. users, unable to remember a command or lost in a hierarchy of menus, may long for the computer that is able to understand instructions expressed in everyday words! natural language understanding, both of speech and written input, is the subject of much interest and research. unfortunately, however, the ambiguity of natural language makes it very difficult for a machine to understand. language is ambiguous at a number of levels. first, the syntax, or structure, of a phrase may not be clear. if we are given the sentence we cannot be sure whether the boy is using the stick to hit the dog or whether the dog is holding the stick when it is hit. even if a sentence ’ s structure is clear, we may find ambiguity in the meaning of the words used. for example, the word ‘ pitch ’ may refer to a sports field, a throw, a waterproofing substance or even, colloquially, a territory. we often rely on the context and our general knowledge to sort out these ambiguities. this information is difficult to provide to the machine. to complicate matters more, the use of pronouns and relative terms adds further ambiguity. given these problems, it seems unlikely that a general natural language interface will be available for some time. however, systems can be built to understand restricted subsets of a language. for a known and constrained domain, the system can be provided with sufficient information to disambiguate terms. it is important in interfaces which use natural language in this restricted form that the user is aware of the limitations of the system and does not expect too much understanding. the use of natural language in restricted domains is"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.3 Natural language",
+    "chunk_index": 1,
+    "page_start": 12,
+    "page_end": 13,
+    "text": "subsets of a language. for a known and constrained domain, the system can be provided with sufficient information to disambiguate terms. it is important in interfaces which use natural language in this restricted form that the user is aware of the limitations of the system and does not expect too much understanding. the use of natural language in restricted domains is relatively successful, but it is debatable whether this can really be called natural language. the user still has to learn which phrases the computer understands and may become frustrated if too much is expected. however, it is also not clear how useful a general natural language interface would be. language is by nature vague and imprecise : this gives it its flexibility and allows creativity in expression. computers, on the other hand, require precise instructions. given a free rein, would we be able to describe our requirements precisely enough to guarantee a particular response? and, if we could, would the language we used turn out to be a restricted subset of natural language anyway?"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.4 Question/answer and query dialog",
+    "chunk_index": 0,
+    "page_start": 13,
+    "page_end": 13,
+    "text": "question and answer dialog is a simple mechanism for providing input to an application in a specific domain. the user is asked a series of questions ( mainly with yes / no responses, multiple choice, or codes ) and so is led through the interaction step by step. an example of these would be web questionnaires. these interfaces are easy to learn and use, but are limited in functionality and power. as such, they are appropriate for restricted domains ( particularly information systems ) and for novice or casual users. query languages, on the other hand, are used to construct queries to retrieve information from a database. they use natural - language - style phrases, but in fact require specific syntax, as well as knowledge of the database structure. queries usually require the user to specify an attribute or attributes for which to search the database, as well as the attributes of interest to be displayed. this is straightforward where there is a single attribute, but becomes complex when multiple attributes are involved, particularly if the user is interested in attribute a or attribute b, or attribute a and not attribute b, or where values of attributes are to be compared. most query languages do not provide direct confirmation of what was requested, so that the only validation the user has is the result of the search. the effective use of query languages therefore requires some experience. a specialised example is the web search engine."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.5 Form-fills and spreadsheets",
+    "chunk_index": 0,
+    "page_start": 13,
+    "page_end": 14,
+    "text": "form - filling interfaces are used primarily for data entry but can also be useful in data retrieval applications. the user is presented with a display resembling a paper form, with slots to fill in ( see figure 3. 9 ). often the form display is based upon an actual form with which the user is familiar, which makes the interface easier to use. the user works through the form, filling in appropriate values. the data are then entered into the application in the correct place. most form - filling interfaces allow easy movement around the form and allow some fields to be left blank. they also require correction facilities, as users may change their minds or make a mistake about the value that belongs in each field. the dialog style is useful primarily for data entry applications and, as it is easy to learn and use, for novice users. however, assuming a design that allows flexible entry, form filling is also appropriate for expert users. figure 3. 9 a typical form - filling interface spreadsheets are a sophisticated variation of form filling. the spreadsheet comprises a grid of cells, each of which can contain a value or a formula ( see figure 3. 10 ). the formula can involve the values of other cells ( for example, the total of all cells in this column ). the user can enter and alter values and formulae in any order and the system will maintain consistency amongst the values displayed, ensuring that all formulae are obeyed. the user can therefore manipulate values to see the effects of changing different parameters. spreadsheets are an attractive medium for interaction : the user is free to manipulate values at will and the distinction between input and output is blurred, making the interface more flexible and natural. figure 3. 10 a typical spreadsheet"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.5 Form-fills and spreadsheets",
+    "chunk_index": 1,
+    "page_start": 13,
+    "page_end": 14,
+    "text": ", ensuring that all formulae are obeyed. the user can therefore manipulate values to see the effects of changing different parameters. spreadsheets are an attractive medium for interaction : the user is free to manipulate values at will and the distinction between input and output is blurred, making the interface more flexible and natural. figure 3. 10 a typical spreadsheet"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.6 The WIMP interface",
+    "chunk_index": 0,
+    "page_start": 14,
+    "page_end": 15,
+    "text": "currently many common environments for interactive computing are examples of the wimp interface style, also often called simply windowing systems. wimp stands for windows, icons, menus and pointers ( sometimes windows, icons, mice and pull - down menus ), and is the default interface style for the majority of interactive computer systems in use today, especially in the pc and desktop workstation arena. examples of wimp interfaces include microsoft windows for ibm pc compatibles, macos for apple macintosh compatibles and various x windows - based systems for unix. mixing styles the unix windowing environments are interesting as the contents of many of the windows are often themselves simply command line or character - based programs ( see figure 3. 11 ). in fact, this mixing of interface styles in the same system is quite common, especially where older legacy systems are used at the same time as more modern applications. it can be a problem if users attempt to use commands and methods suitable for one environment in another. on the apple macintosh, hypercard uses a point - and - click style. however, hypercard stack buttons look very like macintosh folders. if you double click on them, as you would to open a folder, your two mouse clicks are treated as separate actions. the first click opens the stack ( as you wanted ), but the second is then interpreted in the context of the newly opened stack, behaving in an apparently arbitrary fashion! this is an example of the importance of consistency in the interface, an issue we will return to in chapter 7. figure 3. 11 a typical unix windowing system – the openlook system. courtesy of sun microsystems"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.6 The WIMP interface",
+    "chunk_index": 1,
+    "page_start": 14,
+    "page_end": 15,
+    "text": "##having in an apparently arbitrary fashion! this is an example of the importance of consistency in the interface, an issue we will return to in chapter 7. figure 3. 11 a typical unix windowing system – the openlook system. courtesy of sun microsystems"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.7 Point-and-click interfaces",
+    "chunk_index": 0,
+    "page_start": 15,
+    "page_end": 15,
+    "text": "in most multimedia systems and in web browsers, virtually all actions take only a single click of the mouse button. you may point at a city on a map and when you click a window opens, showing you tourist information about the city. you may point at a word in some text and when you click you see a definition of the word. you may point at a recognizable iconic button and when you click some action is performed. this point - and - click interface style is obviously closely related to the wimp style. it clearly overlaps in the use of buttons, but may also include other wimp elements. however, the philosophy is simpler and more closely tied to ideas of hypertext. in addition, the point - and - click style is not tied to mouse - based interfaces, and is also extensively used in touchscreen information systems. in this case, it is often combined with a menu - driven interface. the point - and - click style has been popularized by world wide web pages, which incorporate all the above types of point - and - click navigation : highlighted words, maps and iconic buttons."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.8 Three-dimensional interfaces",
+    "chunk_index": 0,
+    "page_start": 15,
+    "page_end": 17,
+    "text": "there is an increasing use of three - dimensional effects in user interfaces. the most obvious example is virtual reality, but virtual reality is only part of a range of 3d techniques available to the interface designer. the simplest technique is where ordinary wimp elements, buttons, scroll bars, etc., are given a 3d appearance using shading, giving the appearance of being sculpted out of stone. by unstated convention, such interfaces have a light source at their top right. where used judiciously, the raised areas are easily identifiable and can be used to highlight active areas ( figure 3. 12 ). unfortunately, some interfaces make indiscriminate use of sculptural effects, on every text area, border and menu, so all sense of differentiation is lost. figure 3. 12 buttons in 3d say ‘ press me ’ a more complex technique uses interfaces with 3d workspaces. the objects displayed in such systems are usually flat, but are displayed in perspective when at an angle to the viewer and shrink when they are ‘ further away ’. figure 3. 13 shows one such system, web - book [ 38 ]. notice how size, light and occlusion provide a sense of distance. notice also that as objects get further away they take up less screen space. three - dimensional workspaces give you extra space, but in a more natural way than iconizing windows. figure 3. 13 web - book – using 3d to make more space ( card s. k., robertson g. g. and york w. ( 1996 ). the webbook and the web forager : an information workspace for the world - wide web. chi96 conference proceedings, 111 - 17. copyright © 1996 assotiation"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.8 Three-dimensional interfaces",
+    "chunk_index": 1,
+    "page_start": 15,
+    "page_end": 17,
+    "text": "figure 3. 13 web - book – using 3d to make more space ( card s. k., robertson g. g. and york w. ( 1996 ). the webbook and the web forager : an information workspace for the world - wide web. chi96 conference proceedings, 111 - 17. copyright © 1996 assotiation for computing machinery, inc. reprinted by permission. ) finally, there are virtual reality and information visualization systems where the user can move about within a simulated 3d world. these are discussed in detail in chapter 20. these mechanisms overlap with other interaction styles, especially the use of sculptured elements in wimp interfaces. however, there is a distinct interaction style for 3d interfaces in that they invite us to use our tacit abilities for the real world, and translate them into the electronic world. novice users must learn that an oval area with a word or picture in it is a button to be pressed, but a 3d button says ‘ push me ’. further, more complete 3d environments invite one to move within the virtual environment, rather than watch as a spectator. design focus navigation in 3d and 2d we live in a three dimensional world. so clearly 3d interfaces are good... or are they. actually our 3d stereo vision only works well close to us and after that we rely on cruder measures such as “ this is in front of that ”. we are good at moving obects around with our hands in three dimensions, rotating, turning them on their side. however, we walk around in two dimensions and do not fly. not surprisingly people find it hard to visualize and control movement in three dimensions. normally we use gravity to give us a fixed direction in space. this is partly through"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.8 Three-dimensional interfaces",
+    "chunk_index": 2,
+    "page_start": 15,
+    "page_end": 17,
+    "text": ". we are good at moving obects around with our hands in three dimensions, rotating, turning them on their side. however, we walk around in two dimensions and do not fly. not surprisingly people find it hard to visualize and control movement in three dimensions. normally we use gravity to give us a fixed direction in space. this is partly through the channels in the inner ear, but also largely through kinesthetic senses – feeling the weight of limbs. when we lose these senses it is easy to become disoriented and can lose track of which direction is up : divers are trained to watch the direction their bubbles move and if buried in an avalanche you should spit and feel which direction the spittle flows. where humans have to navigate in three dimensions they need extra aids such as the artificial horizon in an aeroplane. helicopters, where there are many degrees of freedom, are particularly difficult. even in the two dimensional world of walking about we do not rely on neat cartesian maps in our head. instead we mostly use models of location such as “ down the road near the church ” that rely on approximate topological understanding and landmarks. we also rely on properities of normal space, such as the ability to go backwards and the fact that things that are close can be reached quickly. when two dimensional worlds are not like this, for example in a one - way traffic system or in a labyrinth, we have great difficulty [ [ d00 ] ]. when we design systems we should take into account how people navigate in the real world and use this to guide our navigation aids. for example, if we have a 3d interface or a virtual reaility world we should normally show a ground plane and by default lock movement to be parallel to the"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.8 Three-dimensional interfaces",
+    "chunk_index": 3,
+    "page_start": 15,
+    "page_end": 17,
+    "text": ", we have great difficulty [ [ d00 ] ]. when we design systems we should take into account how people navigate in the real world and use this to guide our navigation aids. for example, if we have a 3d interface or a virtual reaility world we should normally show a ground plane and by default lock movement to be parallel to the ground. in information systems we can recruit our more network - based models of 2d space by giving landmarks and making it as easy to ‘ step back ’ as to go forwards ( as with the web browser ‘ back ’ button ). see web site for more about 3d vision : / e3 / online / seeing - 3d / # # 3. 6 elements of the wimp interfac e we have already noted the four key features of the wimp interface that give it its name – windows, icons, pointers and menus – and we will now describe these in turn. there are also many additional interaction objects and techniques commonly used in wimp interfaces, some designed for specific purposes and others more general. we will look at buttons, toolbars, palettes and dialog boxes. most of these elements can be seen in figure 3. 14. figure 3. 14 elements of the wimp interface – microsoft word 5. 1 on an apple macintosh together, these elements of the wimp interfaces are called widgets, and they comprise the toolkit for interaction between user and system. in chapter 8 we will describe windowing systems and interaction widgets more from the programmer ’ s perspective. there we will discover that though most modern windowing systems provide the same set of basic widgets, the ‘ look and feel ’ – how widgets are physically displayed and how users can interact with"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5.8 Three-dimensional interfaces",
+    "chunk_index": 4,
+    "page_start": 15,
+    "page_end": 17,
+    "text": "the toolkit for interaction between user and system. in chapter 8 we will describe windowing systems and interaction widgets more from the programmer ’ s perspective. there we will discover that though most modern windowing systems provide the same set of basic widgets, the ‘ look and feel ’ – how widgets are physically displayed and how users can interact with them to access their functionality – of different windowing systems and toolkits can differ drastically."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.1 Windows",
+    "chunk_index": 0,
+    "page_start": 18,
+    "page_end": 18,
+    "text": "windows are areas of the screen that behave as if they were independent terminals in their own right. a window can usually contain text or graphics, and can be moved or resized. more than one window can be on a screen at once, allowing separate tasks to be visible at the same time. users can direct their attention to the different windows as they switch from one thread of work to another. if one window overlaps the other, the back window is partially obscured, and then refreshed when exposed again. overlapping windows can cause problems by obscuring vital information, so windows may also be tiled, when they adjoin but do not overlap each other. alternatively, windows may be placed in a cascading fashion, where each new window is placed slightly to the left and below the previous window. in some systems this layout policy is fixed, in others it can be selected by the user. usually, windows have various things associated with them that increase their usefulness. scrollbars are one such attachment, allowing the user to move the contents of the window up and down, or from side to side. this makes the window behave as if it were a real window onto a much larger world, where new information is brought into view by manipulating the scrollbars. there is usually a title bar attached to the top of a window, identifying it to the user, and there may be special boxes in the corners of the window to aid resizing, closing, or making as large as possible. each of these can be seen in figure 3. 15. figure 3. 15 a typical window in addition, some systems allow windows within windows. for example, in microsoft office applications, such as excel and word, each application has its"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.1 Windows",
+    "chunk_index": 1,
+    "page_start": 18,
+    "page_end": 18,
+    "text": "be special boxes in the corners of the window to aid resizing, closing, or making as large as possible. each of these can be seen in figure 3. 15. figure 3. 15 a typical window in addition, some systems allow windows within windows. for example, in microsoft office applications, such as excel and word, each application has its own window and then within this each document has a window. it is often possible to have different layout policies within the different application windows."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.2 Icons",
+    "chunk_index": 0,
+    "page_start": 18,
+    "page_end": 19,
+    "text": "windows can be closed and lost for ever, or they can be shrunk to some very reduced representation. a small picture is used to represent a closed window, and this representation is known as an icon. by allowing icons, many windows can be available on the screen at the same time, ready to be expanded to their full size by clicking on the icon. shrinking a window to its icon is known as iconifying the window. when a user temporarily does not want to follow a particular thread of dialog, he can suspend that dialog by iconifying the window containing the dialog. the icon saves space on the screen and serves as a reminder to the user that he can subsequently resume the dialog by opening up the window. figure 3. 16 shows a few examples of some icons used in a typical windowing system ( mac os x ). figure 3. 16 a variety of icons icons can also be used to represent other aspects of the system, such as a wastebasket for throwing unwanted files into, or various disks, programs or functions that are accessible to the user. icons can take many forms : they can be realistic representations of the objects that they stand for, or they can be highly stylized. they can even be arbitrary symbols, but these can be difficult for users to interpret."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.3 Pointers",
+    "chunk_index": 0,
+    "page_start": 19,
+    "page_end": 20,
+    "text": "the pointer is an important component of the wimp interface, since the interaction style required by wimp relies very much on pointing and selecting things such as icons. the mouse provides an input device capable of such tasks, although joysticks and trackballs are other alternatives, as we have previously seen in chapter 2. the user is presented with a cursor on the screen that is controlled by the input device. a variety of pointer cursors are shown in figure 3. 17. figure 3. 17 a variety of pointer cursors. courtesy of sun microsystems the different shapes of cursor are often used to distinguish modes, for example the normal pointer cursor may be an arrow, but change to a cross - hairs when drawing a line. cursors are also used to tell the user about system activity, for example a watch or hour - glass cursor may be displayed when the system is busy reading a file. pointer cursors are like icons, being small bitmap images, but in addition all cursors have a hot - spot, the location to which they point. for example, the three arrows at the start of figure 3. 17 each have a hot - spot at the top left, whereas the right - pointing hand on the second line has a hot - spot on its right. sometimes the hot - spot is not clear from the appearance of the cursor, in which case users will find it hard to click on small targets. when designing your own cursors, make sure the image has an obvious hot - spot."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.4 Menus",
+    "chunk_index": 0,
+    "page_start": 20,
+    "page_end": 21,
+    "text": "the last main feature of windowing systems is the menu, an interaction technique that is common across many non - windowing systems as well. a menu presents a choice of operations or services that can be performed by the system at a given time. in chapter 1, we pointed out that our ability to recall information is inferior to our ability to recognize it from some visual cue. menus provide information cues in the form of an ordered list of operations that can be scanned. this implies that the names used for the commands in the menu should be meaningful and informative. the pointing device is used to indicate the desired option. as the pointer moves to the position of a menu item, the item is usually highlighted ( by inverse video, or some similar strategy ) to indicate that it is the potential candidate for selection. selection usually requires some additional user action, such as pressing a button on the mouse that controls the pointer cursor on the screen or pressing some special key on the keyboard. menus are inefficient when they have too many items, and so cascading menus are utilized, in which item selection opens up another menu adjacent to the item, allowing refinement of the selection. several layers of cascading menus can be used. the main menu can be visible to the user all the time, as a menu bar and submenus can be pulled down or across from it upon request ( figure 3. 18 ). menu bars are often placed at the top of the screen ( for example, macos ) or at the top of each window ( for example, microsoft windows ). however, alternatives include menu bars along one side of the screen, or even placed amongst the windows in the main ‘ desktop"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.4 Menus",
+    "chunk_index": 1,
+    "page_start": 20,
+    "page_end": 21,
+    "text": "or across from it upon request ( figure 3. 18 ). menu bars are often placed at the top of the screen ( for example, macos ) or at the top of each window ( for example, microsoft windows ). however, alternatives include menu bars along one side of the screen, or even placed amongst the windows in the main ‘ desktop ’ area. web sites use a variety of menu bar locations, including top, bottom and either side of the screen. alternatively, the main menu can be hidden and upon request it will pop up onto the screen. these pop - up menus are often used to present context - sensitive options, for example allowing one to examine properties of particular on - screen objects. however, in some systems they are also used to access more global actions when the mouse is depressed over the screen background. figure 3. 18 pull - down menu pull - down menus are dragged down from the title at the top of the screen, by moving the mouse pointer into the title bar area and pressing the button. fall - down menus are similar, except that the menu automatically appears when the mouse pointer enters the title bar, without the user having to press the button. some menus are pin - up menus, in that they can be ‘ pinned ’ to the screen, staying in place until explicitly asked to go away. pop - up menus appear when a particular region of the screen, maybe designated by an icon, is selected, but they only stay as long as the mouse button is depressed. another approach to menu selection is to arrange the options in a circular fashion. the pointer appears in the centre of the circle, and so there is the same distance to travel to any of the selections. this has"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.4 Menus",
+    "chunk_index": 2,
+    "page_start": 20,
+    "page_end": 21,
+    "text": "particular region of the screen, maybe designated by an icon, is selected, but they only stay as long as the mouse button is depressed. another approach to menu selection is to arrange the options in a circular fashion. the pointer appears in the centre of the circle, and so there is the same distance to travel to any of the selections. this has the advantages that it is easier to select items, since they can each have a larger target area, and that the selection time for each item is the same, since the pointer is equidistant from them all. compare this with a standard menu : remembering fitts ’ law from chapter 1, we can see that it will take longer to select items near the bottom of the menu than at the top. however, these pie menus, as they are known [ 35 ], take up more screen space and are therefore less common in interfaces. keyboard accelerators menus often offer keyboard accelerators, key combinations that have the same effect as selecting the menu item. this allows more expert users, familiar with the system, to manipulate things without moving off the keyboard, which is often faster. the accelerators are often displayed alongside the menu items so that frequent use makes them familiar. unfortunately most systems do not allow you to use the accelerators while the menu is displayed. so, for example, the menu might say [ figure near here from old edition p 128 ] however, when the user presses function key f3 nothing happens. f3 only works when the menu is not displayed – when the menu is there you must press ‘ f ’ instead! this is an example of an interface that is dishonest ( see also chapter 7 ). the major problems with menus in general are"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.4 Menus",
+    "chunk_index": 3,
+    "page_start": 20,
+    "page_end": 21,
+    "text": "old edition p 128 ] however, when the user presses function key f3 nothing happens. f3 only works when the menu is not displayed – when the menu is there you must press ‘ f ’ instead! this is an example of an interface that is dishonest ( see also chapter 7 ). the major problems with menus in general are what items to include and how to group those items. including too many items makes menus too long or creates too many of them, whereas grouping causes problems in that items that relate to the same topic need to come under the same heading, yet many items could be grouped under more than one heading. in pull - down menus the menu label should be chosen to reflect the function of the menu items, and items grouped within menus by function. these groupings should be consistent across applications so that the user can transfer learning to new applications. menu items should be ordered in the menu according to importance and frequency of use, and opposite functionalities ( such as ‘ save ’ and ‘ delete ’ ) should be kept apart to prevent accidental selection of the wrong function, with potentially disastrous consequences."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.5 Buttons",
+    "chunk_index": 0,
+    "page_start": 21,
+    "page_end": 21,
+    "text": "buttons are individual and isolated regions within a display that can be selected by the user to invoke specific operations. these regions are referred to as buttons because they are purposely made to resemble the push buttons you would find on a control panel. ‘ pushing ’ the button invokes a command, the meaning of which is usually indicated by a textual label or a small icon. buttons can also be used to toggle between two states, displaying status information such as whether the current font is italicized or not in a word processor, or selecting options on a web form. such toggle buttons can be grouped together to allow a user to select one feature from a set of mutually exclusive options, such as the size in points of the current font. these are called radio buttons, since the collection functions much like the old - fashioned mechanical control buttons on car radios. if a set of options is not mutually exclusive, such as font characteristics like bold, italics and underlining, then a set of toggle buttons can be used to indicate the on / off status of the options. this type of collection of buttons is sometimes referred to as check boxes."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.6 Toolbars",
+    "chunk_index": 0,
+    "page_start": 22,
+    "page_end": 22,
+    "text": "many systems have a collection of small buttons, each with icons, placed at the top or side of the window and offering commonly used functions. the function of this toolbar is similar to a menu bar, but as the icons are smaller than the equivalent text more functions can be simultaneously displayed. sometimes the content of the toolbar is fixed, but often users can customize it, either changing which functions are made available, or choosing which of several predefined toolbars is displayed. design focus learning toolbars although many applications now have toolbars, they are often underused because the users simply do not know what the icons represent. once learned the meaning is often relatively easy to remember, but most users do not want to spend time reading a manual, or even using on - line help to find out what each button does – they simply reach for the menu. there is an obvious solution – put the icons on the menus in the same way that accelerator keys are written there. so in the ‘ edit ’ menu one might find the option [ figure near here from old edition p129 ] imagine now selecting this. as the mouse drags down through the menu selections, each highlights in turn. if the mouse is dragged down the extreme left, the effect will be very similar to selecting the icon from the toolbar, except that it will be incidental to selecting the menu item. in this way, the toolbar icon will be naturally learned from normal menu interaction. [ figure near here from old edition p130 ] selecting the menu option = selecting the icon this trivial fix is based on accepted and tested knowledge of learning and has been described in more detail by one of the authors elsewhere [ 67 ]. given its"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.6 Toolbars",
+    "chunk_index": 1,
+    "page_start": 22,
+    "page_end": 22,
+    "text": "menu item. in this way, the toolbar icon will be naturally learned from normal menu interaction. [ figure near here from old edition p130 ] selecting the menu option = selecting the icon this trivial fix is based on accepted and tested knowledge of learning and has been described in more detail by one of the authors elsewhere [ 67 ]. given its simplicity, this technique should clearly be used everywhere, but until recently was rare. however, it has now been taken up in the office 97 suite and later microsoft office products, so perhaps will soon become standard."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.7 Palettes",
+    "chunk_index": 0,
+    "page_start": 22,
+    "page_end": 23,
+    "text": "in many application programs, interaction can enter one of several modes. the defining characteristic of modes is that the interpretation of actions, such as keystrokes or gestures with the mouse, changes as the mode changes. for example, using the standard unix text editor vi, keystrokes can be interpreted either as operations to insert characters in the document ( insert mode ) or as operations to perform file manipulation ( command mode ). problems occur if the user is not aware of the current mode. palettes are a mechanism for making the set of possible modes and the active mode visible to the user. a palette is usually a collection of icons that are reminiscent of the purpose of the various modes. an example in a drawing package would be a collection of icons to indicate the pixel colour or pattern that is used to fill in objects, much like an artist ’ s palette for paint. some systems allow the user to create palettes from menus or toolbars. in the case of pull - down menus, the user may be able ‘ tear off ’ the menu, turning it into a palette showing the menu items. in the case of toolbars, the user may be able to drag the toolbar away from its normal position and place it anywhere on the screen. tearoff menus are usually those that are heavily graphical anyway, for example line - style or colour selection in a drawing package."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.8 Dialog boxes",
+    "chunk_index": 0,
+    "page_start": 23,
+    "page_end": 26,
+    "text": "dialog boxes are information windows used by the system to bring the user ’ s attention to some important information, possibly an error or a warning used to prevent a possible error. alternatively, dialog boxes are used to invoke a subdialog between user and system for a very specific task that will normally be embedded within some larger task. for example, most interactive applications result in the user creating some file that will have to be named and stored within the filing system. when the user or system wants to save the file, a dialog box can be used to allow the user to name the file and indicate where it is to be located within the filing system. when the save subdialog is complete, the dialog box will disappear. just as windows are used to separate the different threads of user – system dialog, so too are dialog boxes used to factor out auxiliary task threads from the main task dialog. # # 3. 7 interactivit y when looking at an interface, it is easy to focus on the visually distinct parts ( the buttons, menus, text areas ) but the dynamics, the way they react to a user ’ s actions, are less obvious. dialog design, discussed in chapter 16, is focused almost entirely on the choice and specification of appropriate sequences of actions and corresponding changes in the interface state. however, it is typically not used at a fine level of detail and deliberately ignores the ‘ semantic ’ level of an interface : for example, the validation of numeric information in a forms - based system. it is worth remembering that interactivity is the defining feature of an interactive system. this can be seen in many areas of hci. for example, the recognition rate for speech recognition is"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.8 Dialog boxes",
+    "chunk_index": 1,
+    "page_start": 23,
+    "page_end": 26,
+    "text": "a fine level of detail and deliberately ignores the ‘ semantic ’ level of an interface : for example, the validation of numeric information in a forms - based system. it is worth remembering that interactivity is the defining feature of an interactive system. this can be seen in many areas of hci. for example, the recognition rate for speech recognition is too low to allow transcription from tape, but in an airline reservation system, so long as the system can reliably recognize yes and no it can reflect back its understanding of what you said and seek confirmation. speech - based input is difficult, speech - based interaction easier. also, in the area of information visualization the most exciting developments are all where users can interact with a visualization in real time, changing parameters and seeing the effect. interactivity is also crucial in determining the ‘ feel ’ of a wimp environment. all wimp systems appear to have virtually the same elements : windows, icons, menus, pointers, dialog boxes, buttons, etc. however, the precise behaviour of these elements differs both within a single environment and between environments. for example, we have already discussed the different behaviour of pull - down and fall - down menus. these look the same, but fall - down menus are more easily invoked by accident ( and not surprisingly the windowing environments that use them have largely fallen into disuse! ). in fact, menus are a major difference between the macos and microsoft windows environments : in macos you have to keep the mouse depressed throughout menu selection ; in windows you can click on the menu bar and a pull - down menu appears and remains there until an item is selected or it is cancelled. similarly the detailed behaviour of buttons"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.8 Dialog boxes",
+    "chunk_index": 2,
+    "page_start": 23,
+    "page_end": 26,
+    "text": "! ). in fact, menus are a major difference between the macos and microsoft windows environments : in macos you have to keep the mouse depressed throughout menu selection ; in windows you can click on the menu bar and a pull - down menu appears and remains there until an item is selected or it is cancelled. similarly the detailed behaviour of buttons is quite complex, as we shall see in chapter 17. in older computer systems, the order of interaction was largely determined by the machine. you did things when the computer was ready. in wimp environments, the user takes the initiative, with many options and often many applications simultaneously available. the exceptions to this are pre - emptive parts of the interface, where the system for various reasons wrests the initiative away from the user, perhaps because of a problem or because it needs information in order to continue. the major example of this is modal dialog boxes. it is often the case that when a dialog box appears the application will not allow you to do anything else until the dialog box has been completed or cancelled. in some cases this may simply block the application, but you can perform tasks in other applications. in other cases you can do nothing at all until the dialog box has been completed. an especially annoying example is when the dialog box asks a question, perhaps simply for confirmation of an action, but the information you need to answer is hidden by the dialog box! there are occasions when modal dialog boxes are necessary, for example when a major fault has been detected, or for certain kinds of instructional software. however, the general philosophy of modern systems suggests that one should minimize the use of pre - emptive elements, allowing the user maximum flexibility."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.8 Dialog boxes",
+    "chunk_index": 3,
+    "page_start": 23,
+    "page_end": 26,
+    "text": "you need to answer is hidden by the dialog box! there are occasions when modal dialog boxes are necessary, for example when a major fault has been detected, or for certain kinds of instructional software. however, the general philosophy of modern systems suggests that one should minimize the use of pre - emptive elements, allowing the user maximum flexibility. interactivity is also critical in dealing with errors. we discussed slips and mistakes earlier in the chapter, and some ways to try to prevent these types of errors. the other way to deal with errors is to make sure that the user or the system is able to tell when errors have occurred. if users can detect errors then they can correct them. so, even if errors occur, the interaction as a whole succeeds. several of the principles in chapter 7 deal with issues that related to this. this ability to detect and correct is important both at the small scale of button presses and keystrokes and also at the large scale. for example, if you have sent a client a letter and expect a reply, you can put in your diary a note on the day you expect a reply. if the other person forgets to reply or the letter gets lost in the post you know to send a reminder or ring when the due day passes. # # 3. 8 the context of the interactio n we have been considering the interaction between a user and a system, and how this is affected by interface design. however, this interaction does not occur within a vacuum. we have already noted some of the physical factors in the environment that can directly affect the quality of the interaction. this is part of the context in which the interaction takes place. however, this still assumes a single user operating a single, albeit"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.8 Dialog boxes",
+    "chunk_index": 4,
+    "page_start": 23,
+    "page_end": 26,
+    "text": "system, and how this is affected by interface design. however, this interaction does not occur within a vacuum. we have already noted some of the physical factors in the environment that can directly affect the quality of the interaction. this is part of the context in which the interaction takes place. however, this still assumes a single user operating a single, albeit complex, machine. in reality, users work within a wider social and organizational context. this provides the wider context for the interaction, and may influence the activity and motivation of the user. in chapter 13, we discuss some methods that can be used to gain a fuller understanding of this context, and, in chapter 14, we consider in more detail the issues involved when more than one user attempts to work together on a system. here we will confine our discussion to the influence social and organizational factors may have on the user ’ s interaction with the system. these may not be factors over which the designer has control. however, it is important to be aware of such influences to understand the user and the work domain fully. bank managers don ’ t type … the safe in most banks is operated by at least two keys, held by different employees of the bank. this makes it difficult for a bank robber to obtain both keys, and also protects the bank against light - fingered managers! atms contain a lot of cash and so need to be protected by similar measures. in one bank, which shall remain nameless, the atm had an electronic locking device. the machine could not be opened to replenish or remove cash until a long key sequence had been entered. in order to preserve security, the bank gave half the sequence to one manager and half to another, so both managers had to be present"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.8 Dialog boxes",
+    "chunk_index": 5,
+    "page_start": 23,
+    "page_end": 26,
+    "text": "similar measures. in one bank, which shall remain nameless, the atm had an electronic locking device. the machine could not be opened to replenish or remove cash until a long key sequence had been entered. in order to preserve security, the bank gave half the sequence to one manager and half to another, so both managers had to be present in order to open the atm. however, these were traditional bank managers who were not used to typing – that was a job for a secretary! so they each gave their part of the key sequence to a secretary to type in when they wanted to gain entry to the atm. in fact, they both gave their respective parts of the key sequence to the same secretary. happily the secretary was honest, but the moral is you cannot ignore social expectations and relationships when designing any sort of computer system, however simple it may be. the presence of other people in a work environment affects the performance of the worker in any task. in the case of peers, competition increases performance, at least for known tasks. similarly the desire to impress management and superiors improves performance on these tasks. however, when it comes to acquisition of new skills, the presence of these groups can inhibit performance, owing to the fear of failure. consequently, privacy is important to allow users the opportunity to experiment. in order to perform well, users must be motivated. there are a number of possible sources of motivation, as well as those we have already mentioned, including fear, allegiance, ambition and self - satisfaction. the last of these is influenced by the user ’ s perception of the quality of the work done, which leads to job satisfaction. if a system makes it difficult for the user to perform necessary tasks, or is frustrating to use,"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.8 Dialog boxes",
+    "chunk_index": 6,
+    "page_start": 23,
+    "page_end": 26,
+    "text": "sources of motivation, as well as those we have already mentioned, including fear, allegiance, ambition and self - satisfaction. the last of these is influenced by the user ’ s perception of the quality of the work done, which leads to job satisfaction. if a system makes it difficult for the user to perform necessary tasks, or is frustrating to use, the user ’ s job satisfaction, and consequently performance, will be reduced. the user may also lose motivation if a system is introduced that does not match the actual requirements of the job to be done. often systems are chosen and introduced by managers rather than the users themselves. in some cases the manager ’ s perception of the job may be based upon observation of results and not on actual activity. the system introduced may therefore impose a way of working that is unsatisfactory to the users. if this happens there may be three results : the system will be rejected, the users will be resentful and unmotivated, or the user will adapt the intended interaction to his own requirements. this indicates the importance of involving actual users in the design process. design focus half the picture? when systems are not designed to match the way people actually work, then users end up having to do “ work arounds ”. integrated student records systems are becoming popular in universities in the uk. they bring the benefits of integrating examination systems with enrolment and finance systems so all data can be maintained together and cross checked. all very useful and timesaving – in theory. however, one commonly used system only holds a single overall mark per module for each student, whereas many modules on uk courses have multiple elements of assessment. knowing a student ’ s mark on each part of the assessment is often useful to academics"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.8 Dialog boxes",
+    "chunk_index": 7,
+    "page_start": 23,
+    "page_end": 26,
+    "text": "systems so all data can be maintained together and cross checked. all very useful and timesaving – in theory. however, one commonly used system only holds a single overall mark per module for each student, whereas many modules on uk courses have multiple elements of assessment. knowing a student ’ s mark on each part of the assessment is often useful to academics making decisions in examination boards as it provides a more detailed picture of performance. in many cases staff are therefore supplementing the official records system with their own unofficial spreadsheets to provide this information – making additional work for staff and increased opportunity for error. on the other hand, the introduction of new technology may prove to be a motivation to users, particularly if it is well designed, integrated with the user ’ s current work, and challenging. providing adequate feedback is an important source of motivation for users. if no feedback is given during a session, the user may become bored, unmotivated or, worse, unsure of whether the actions performed have been successful. in general, an action should have an obvious effect to prevent this confusion and to allow early recovery in the case of error. similarly, if system delays occur, feedback can be used to prevent frustration on the part of the user – the user is then aware of what is happening and is not left wondering if the system is still working. # # 3. 9 experience, engagement and fu n ask many in hci about usability and they may use the words ‘ effective ’ and ‘ efficient ’. some may add ‘ satisfaction ’ as well. this view of usability seems to stem mainly from the taylorist tradition of time and motion studies : if you can get the worker to pull the levers and turn the knobs in the right"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.6.8 Dialog boxes",
+    "chunk_index": 8,
+    "page_start": 23,
+    "page_end": 26,
+    "text": "ask many in hci about usability and they may use the words ‘ effective ’ and ‘ efficient ’. some may add ‘ satisfaction ’ as well. this view of usability seems to stem mainly from the taylorist tradition of time and motion studies : if you can get the worker to pull the levers and turn the knobs in the right order then you can shave 10 % off production costs. however, users no longer see themselves as cogs in a machine. increasingly, applications are focused outside the closed work environment : on the home, leisure, entertainment, shopping. it is not sufficient that people can use a system, they must want to use it. even from a pure economic standpoint, your employees are likely to work better and more effectively if they enjoy what they are doing! in this section we ’ ll look at these more experiential aspects of interaction."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.9.1 Understanding experience",
+    "chunk_index": 0,
+    "page_start": 26,
+    "page_end": 26,
+    "text": "shopping is an interesting example to consider. most internet stores allow you to buy things, but do you go shopping? shopping is as much about going to the shops, feeling the clothes, being with friends. you can go shopping and never intend to spend money. shopping is not about an efficient financial transaction, it is an experience. but experience is a difficult thing to pin down – we understand the idea of a good experience, but how do we define it and even more difficult how do we design it? csikszentimihalyi [ [ c90 ] ] looked at extreme experiences such as climbing a rock face in order to understand that feeling of total engagement that can sometimes happen. he calls this flow and it is perhaps related to what some sportspeople refer to as being ‘ in the zone ’. this sense of flow occurs when there is a balance between anxiety and boredom. if you do something that you know you can do it is not engaging ; you may do it automatically while thinking of something else, or you may simply become bored. alternatively, if you do something completely outside your abilities you may become anxious and, if you are half way up a rock face, afraid. flow comes when you are teetering at the edge of your abilities ; stretching yourself to or a little beyond your limits. in education there is a similar phenomenon. the zone of proximal development are those things that you cannot quite do yourself, but you can do with some support, whether from teachers, fellow pupils, or electronic or physical materials. learning is at its best in this zone. notice again this touching of limits. of course, this does not fully capture the sense of experience, and there is an active subfield of hci researchers st"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.9.1 Understanding experience",
+    "chunk_index": 1,
+    "page_start": 26,
+    "page_end": 26,
+    "text": "things that you cannot quite do yourself, but you can do with some support, whether from teachers, fellow pupils, or electronic or physical materials. learning is at its best in this zone. notice again this touching of limits. of course, this does not fully capture the sense of experience, and there is an active subfield of hci researchers striving to make sense of this, building on the work of psychologists and philosophers on the one hand and literary analysis, film making and drama on the other."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.9.2 Designing experience",
+    "chunk_index": 0,
+    "page_start": 27,
+    "page_end": 30,
+    "text": "some of the authors were involved in the design of virtual christmas crackers. these are rather like electronic greetings cards, but are based on christmas crackers. for those who have not come across them, christmas crackers are small tubes of paper between 8 and 12 inches long ( 20 – 30cm ). inside are a small toy, a joke or motto and a paper hat. a small strip of card is threaded through, partly coated with gunpowder. when two people at a party pull the cracker, it bursts apart with a small bang from the gunpowder and the contents spill out. the virtual cracker does not attempt to fully replicate each aspect of the physical characteristics and process of pulling the cracker, but instead seeks to reproduce the experience. to do this the original crackers experience was deconstructed and each aspect of the experience produced in a similar, but sometimes different, way in the new media. table 3. 1 shows the aspects of the experience deconstructed and reconstructed in the virtual cracker. for example, the cracker contents are hidden inside ; no one knows what toy or joke will be inside. similarly when you create a virtual cracker you normally cannot see the contents until the recipient has opened it. even the recipient initially sees a page with just an image of the cracker ; it is only after the recipient has clicked on the ‘ open ’ icon that the cracker slowly opens and you get to see the joke, web toy and mask. the mask is also worth looking at. the first potential design was to have a picture of a face with a hat on it – well, it wouldn ’ t rank highly on excitement! the essential feature of the paper hat is that you can dress up. an"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.9.2 Designing experience",
+    "chunk_index": 1,
+    "page_start": 27,
+    "page_end": 30,
+    "text": "the cracker slowly opens and you get to see the joke, web toy and mask. the mask is also worth looking at. the first potential design was to have a picture of a face with a hat on it – well, it wouldn ’ t rank highly on excitement! the essential feature of the paper hat is that you can dress up. an iconic hat hardly does that. instead the cracker has a link to a web page with a picture of a mask that you can print, cut out and wear. even if you don ’ t actually print it out, the fact that you could changes the experience – it is some dressing up you just happen not to have done yet. a full description of the virtual crackers case study is on the book web at : / e3 / casestudy / crackers table 3. 1. the crackers experience [ [ d03 ] ] real cracker virtual cracker surface elements design cheap and cheerful simple page / graphics play plastic toy and joke web toy and joke dressing up paper hat mask to cut out experienced effects shared offered to another sent by email, message sender can ' t co - experience pulled together see content until opened by recipient excitement cultural connotations recruited expectation hiddenness contents inside first page - no contents suspense pulling cracker slow... page change surprise bang ( when it works ) wav file ( when it works ) physical design and engagement in chapter 2 we talked about physical controls. figure 2. 13 showed controllers for a microwave, washing machine and personal minidisc player. we saw then how certain physical interfaces were suited for different contexts : smooth plastic controls for an easy clean microwave, multi - function knob for the minidisc. designers are faced with many"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.9.2 Designing experience",
+    "chunk_index": 2,
+    "page_start": 27,
+    "page_end": 30,
+    "text": ") physical design and engagement in chapter 2 we talked about physical controls. figure 2. 13 showed controllers for a microwave, washing machine and personal minidisc player. we saw then how certain physical interfaces were suited for different contexts : smooth plastic controls for an easy clean microwave, multi - function knob for the minidisc. designers are faced with many constraints : • ergonomic – you cannot physically push buttons if they are too small or too close. • physical – the size or nature of the device may force certain positions or styles of control, for example, a dial like the one on the washing machine would not fit on the minidisc controller ; high - voltage switches cannot be as small as low - voltage ones. • legal and safety – cooker controls must be far enough from the pans that you do not burn yourself, but also high enough to prevent small children turning them on. • context and environment – the microwave ’ s controls are smooth to make them easy to clean in the kitchen. • aesthetic – the controls must look good • economic – it must not cost too much! these constraints are themselves often contradictory and require trade - offs to be made. for example, even within the safety category front - mounted controls are better in that they can be turned on or off without putting your hands over the pans and hot steam, but back - mounted controls are further from children ’ s grasp. the minidisc player is another example ; it physically needs to be small, but this means there is not room for all the controls you want given the minimum size that can be manipulated. in the case of the cooker there is no obvious best solution and so different designs favour one or the other. in the case of the"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.9.2 Designing experience",
+    "chunk_index": 3,
+    "page_start": 27,
+    "page_end": 30,
+    "text": "’ s grasp. the minidisc player is another example ; it physically needs to be small, but this means there is not room for all the controls you want given the minimum size that can be manipulated. in the case of the cooker there is no obvious best solution and so different designs favour one or the other. in the case of the minidisc player the end knob is multi - function. this means the knob is ergonomically big enough to turn and physically small enough to fit, but at the cost of a more complex interaction style. to add to this list of constraints there is another that makes a major impact on the ease of use and also the ability of the user to become engaged with the device, for it to become natural to use : • fluidity – the extent to which the physical structure and manipulation of the device naturally relate to the logical functions it supports this is related closely to the idea of affordances, which we discuss in section 5. 7. 2. the knob at the end of the minidisc controller affords turning – it is an obvious thing to do. however, this many not have mapped naturally on to the logical functions. two of the press buttons are for cycling round the display options and for changing sound options. imagine a design where turning the knob to clockwise cycled through the display options and turning it anti - clockwise cycled through the sound options. this would be a compact design satisfying all the ergonomic, physical, and aesthetic constraints, but would have not led to as fluid an interaction. the physically opposite motions lead to logically distinct effects. however, the designers did a better job than this! the twist knob is used to move backwards and forwards through the tracks of"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.9.2 Designing experience",
+    "chunk_index": 4,
+    "page_start": 27,
+    "page_end": 30,
+    "text": "the sound options. this would be a compact design satisfying all the ergonomic, physical, and aesthetic constraints, but would have not led to as fluid an interaction. the physically opposite motions lead to logically distinct effects. however, the designers did a better job than this! the twist knob is used to move backwards and forwards through the tracks of the minidisc – that is opposite physical movements produce opposite logical effects. holding the knob out and twisting turns the volume up and down. again, although the pull action is not a natural mapping, the twist maps very naturally onto controlling the sound level. as well as being fluid in action, some controls portray by their physical appearance the underlying state they control. for example, the dial on the washing machine both sets the program and reflects the current stage in the washing cycle as it turns. a simple on - off switch also does this. however, it is also common to see the power on computers and hifi devices controlled by a push button – press for on then press again for off. the button does not reflect the state at all. when the screen is on this is not a problem as the fact that there is something on the screen acts as a very immediate indicator of the state. however, if the screen has a power save then you might accidentally turn the machine off thinking that you are turning it on! for this reason this type of power button often has a light beside it to show you the power is on. a simple switch tells you that itself! managing value if we want people to want to use a device or application we need to understand their personal values. why should they want to use it? what value do they get from using it? now when we say value here we"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.9.2 Designing experience",
+    "chunk_index": 5,
+    "page_start": 27,
+    "page_end": 30,
+    "text": "power button often has a light beside it to show you the power is on. a simple switch tells you that itself! managing value if we want people to want to use a device or application we need to understand their personal values. why should they want to use it? what value do they get from using it? now when we say value here we don ’ t mean monetary value, although that may be part of the story, but all the things that drive a person. for some people this may include being nice to colleagues, being ecologically friendly, being successful in their career. whatever their personal values are, if we ask someone to do something or use something they are only likely to do it if the value to them exceeds the cost. this is complicated by the fact that for many systems the costs such as purchase cost, download time of a free application, learning effort are incurred up front, whereas often the returns – faster work, enjoyment of use – are seen later. in economics, businesses use a measure called ‘ net present value ’ to calculate what a future gain is worth today. because money invested today can be invested $ 100 now is forth the same as perhaps $ 200 in five years time. future gain is discounted. for human decision - making, future gains are typically discounted very highly ; many of us are bad at saving for tomorrow or even keeping the best bits of our dinner until last. this means that not only must we understand people ’ s value systems, but we must be able to offer gains sooner as well as later, or at least produce a very good demonstration of potential future gains so that have a perceived current value. when we were preparing the web site for the second edition of this book we thought very hard"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.9.2 Designing experience",
+    "chunk_index": 6,
+    "page_start": 27,
+    "page_end": 30,
+    "text": "dinner until last. this means that not only must we understand people ’ s value systems, but we must be able to offer gains sooner as well as later, or at least produce a very good demonstration of potential future gains so that have a perceived current value. when we were preparing the web site for the second edition of this book we thought very hard about how to give things that were of value to those who had the book, and also to those who hadn ’ t. the latter is partly because we are all academic and researchers in the field and so want to contribute to the hci community, but also of course we would like lots of people to buy the book. one option we thought of was to put the text online, which would be good for people without the book, but this would have less value to people who have the book ( they might even be annoyed that those who hadn ’ t paid should have access ). the search mechanism was the result of this process ( figure 3. 19. it gives value to those who have the book because it is a way of finding things. it is of value to those who don ’ t because it acts as a sort of online encyclopedia of hci. however, because it always gives the chapter and page number in the book it also says to those who haven ’ t got the book : “ buy me ”. see an extended case study about the design of the book search on the web site at / e3 / casestudy / search figure 3. 19 the web - based book search facility # # 3. 10 summar y in this chapter, we have looked at the interaction between human and computer, and, in particular, how we can ensure that the interaction is effective to"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.9.2 Designing experience",
+    "chunk_index": 7,
+    "page_start": 27,
+    "page_end": 30,
+    "text": "about the design of the book search on the web site at / e3 / casestudy / search figure 3. 19 the web - based book search facility # # 3. 10 summar y in this chapter, we have looked at the interaction between human and computer, and, in particular, how we can ensure that the interaction is effective to allow the user to get the required job done. we have seen how we can use norman ’ s execution – evaluation model, and the interaction framework that extends it, to analyze the interaction in terms of how easy or difficult it is for the user to express what he wants and determine whether it has been done. we have also looked at the role of ergonomics in interface design, in analyzing the physical characteristics of the interaction, and we have discussed a number of interface styles. we have considered how each of these factors can influence the effectiveness of the interaction. interactivity is at the heart of all modern interfaces and is important at many levels. interaction between user and computer does not take place in a vacuum, but is affected by numerous social and organizational factors. these may be beyond the designer ’ s control, but awareness of them can help to limit any negative effects on the interaction. exercises"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.4 (a) Group the following functions under appropriate headings, assuming that they are to form the basis for a menu-driven word-processing system – the headings you choose will become the menu titles, with the functions appearing under the appropriate one. You can choose as many or as few menu headings as you wish. You may also alter the wordings of the functions slightly if you wish.",
+    "chunk_index": 0,
+    "page_start": 31,
+    "page_end": 31,
+    "text": "save, save as, new, delete, open mail, send mail, quit, undo, table, glossary, preferences, character style, format paragraph, lay out document, position on page, plain text, bold text, italic text, underline, open file, close file, open copy of file, increase point size, decrease point size, change font, add footnote, cut, copy, paste, clear, repaginate, add page break, insert graphic, insert index entry, print, print preview, page setup, view page, find word, change word, go to, go back, check spelling, view index, see table of contents, count words, renumber pages, repeat edit, show alternative document, help. ( b ) if possible, show someone else your headings, and ask them to group the functions under your headings. compare their groupings with yours. you should find that there are areas of great similarity, and some differences. discuss the similarities and discrepancies. why do some functions always seem to be grouped together? why do some groups of functions always get categorised correctly? why are some less easy to place under the ' correct ' heading? why is this important?"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.5 Using your function groupings from Exercise 3.4, count the number of items in your menus.",
+    "chunk_index": 0,
+    "page_start": 31,
+    "page_end": 31,
+    "text": "( a ) what is the average? what is the disadvantage of putting all the functions on the screen at once? what is the problem with using lots of menu headings? what is the problem of using very few menu headings? consider the following : i can group my functions either into 3 menus, with lots of functions in each one, or into 8 menus with fewer in each. which will be easier to use? why? ( b ) optional experiment design an experiment to test your answers. perform the experiment and report on your results."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.8 The typical computer screen has a WIMP setup (what does WIMP stand for?) Most common WIMP arrangements work on the basis of a desktop metaphor , in which common actions are likened to similar actions in the real world. For example, moving a file is achieved by selecting it and dragging it into a relevant folder or filing cabinet. The advantage of using a metaphor is that the user can identify with the environment presented on the screen. Having a metaphor allows them to predict the outcome of their actions more easily.",
+    "chunk_index": 0,
+    "page_start": 32,
+    "page_end": 33,
+    "text": "note that the metaphor can break down, however. what is the real - world equivalent of formatting a disk? is there a direct analogy for the concept of ' undo '? think of some more examples yourself. recommended reading • d. a. norman, the psychology of everyday things, basic books, 1988. ( republished as the design of everyday things by penguin, 1991. ) a classic text, which discusses psychological issues in designing everyday objects and addresses why such objects are often so difficult to use. discusses the execution – evaluation cycle. very readable and entertaining. see also his more recent books turn signals are the facial expressions of automobiles [ 179 ], things that make us smart [ 180 ] and the invisible computer [ [ n98 ] ]. • r. w. bailey, human performance engineering : a guide for system designers, prentice hall, 1982. detailed coverage of human factors and ergonomics issues, with plenty of examples. • g. salvendy, handbook of human factors and ergonomics, wiley, 1997. comprehensive collection of contributions from experts in human factors and ergonomics. • helander, editor, handbook of human – computer interaction. part ii : user interface design, north - holland, 1988. comprehensive coverage of interface styles. • j. raskin ( 2000 ) the humane interface : new directions for designing interactive systems. addison wesley. jef raskin was one of the central designers of the original mac user interface. this book gives a personal, deep and practical examination of many issues of interaction and its application in user interface design. • funology : from usability to enjoyment. m. blythe, a. monk, k. overbeeke and p. wright ( eds."
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.8 The typical computer screen has a WIMP setup (what does WIMP stand for?) Most common WIMP arrangements work on the basis of a desktop metaphor , in which common actions are likened to similar actions in the real world. For example, moving a file is achieved by selecting it and dragging it into a relevant folder or filing cabinet. The advantage of using a metaphor is that the user can identify with the environment presented on the screen. Having a metaphor allows them to predict the outcome of their actions more easily.",
+    "chunk_index": 1,
+    "page_start": 32,
+    "page_end": 33,
+    "text": "raskin was one of the central designers of the original mac user interface. this book gives a personal, deep and practical examination of many issues of interaction and its application in user interface design. • funology : from usability to enjoyment. m. blythe, a. monk, k. overbeeke and p. wright ( eds. ) kluwer, 2003. this is an edited book with chapters covering many areas of user experience. it includes an extensive review of theory from many disciplines from psychology to literary theory and chapters giving design frameworks based on these. the theoretical and design base is grounded by many examples and case studies including a detailed analysis of virtual crackers. new references [ [ c90 ] ] csikszentimihalyi ( 1990 ), flow : the psychology of optimal experience. ny : harper and row. [ [ d03 ] ] a. dix ( 2003 ). deconstructing experience - pulling crackers apart. in funology : from usability to enjoyment. m. blythe, a. monk, k. overbeeke and p. wright ( eds. ) kluwer, 2003. [ [ d00 ] ] a. dix ( 2000 ). welsh mathematician walks in cyberspace ( the cartography of cyberspace ). ( keynote ). proceedings of the third international conference on collaborative virtual environments – cve2000. acm press. pp. 3 – 7. http : / / www. hcibook. com / alan / papers / cve2000 / [ [ n98 ] ] norman, don. ( 1998 ). the invisible computer. cambridge, ma : mit press"
+  },
+  {
+    "book": "book_1",
+    "chapter": null,
+    "section": "3.8 The typical computer screen has a WIMP setup (what does WIMP stand for?) Most common WIMP arrangements work on the basis of a desktop metaphor , in which common actions are likened to similar actions in the real world. For example, moving a file is achieved by selecting it and dragging it into a relevant folder or filing cabinet. The advantage of using a metaphor is that the user can identify with the environment presented on the screen. Having a metaphor allows them to predict the outcome of their actions more easily.",
+    "chunk_index": 2,
+    "page_start": 32,
+    "page_end": 33,
+    "text": "cve2000. acm press. pp. 3 – 7. http : / / www. hcibook. com / alan / papers / cve2000 / [ [ n98 ] ] norman, don. ( 1998 ). the invisible computer. cambridge, ma : mit press"
+  }
+]
