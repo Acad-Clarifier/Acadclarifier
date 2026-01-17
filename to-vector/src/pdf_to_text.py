@@ -218,11 +218,14 @@ def extract_high_quality_text(pdf_path: str) -> List[Dict]:
             block_parts = []
 
             for line in block.get("lines", []):
+                line_parts = []
+
                 for span in line.get("spans", []):
-                    text = span["text"].strip()
+                    text = span["text"]
                     size = span["size"]
 
-                    if not text:
+                    # Skip empty spans
+                    if not text.strip():
                         continue
 
                     # Ignore tiny footnote-like text
@@ -231,13 +234,20 @@ def extract_high_quality_text(pdf_path: str) -> List[Dict]:
 
                     # Detect section headers
                     if size > header_thresh:
-                        text = f"\n## {text}\n"
+                        line_parts.append(f"\n## {text.strip()}\n")
+                    else:
+                        line_parts.append(text)
 
-                    block_parts.append(text)
+                if line_parts:
+                    # Concatenate spans within same line directly (no newlines between spans)
+                    line_text = "".join(line_parts).strip()
+                    if line_text:
+                        block_parts.append(line_text)
 
             if not block_parts:
                 continue
 
+            # Join lines with newlines (newlines only between lines, not spans)
             block_text = "\n".join(block_parts)
             block_text = clean_text_content(block_text)
             block_text = remove_equation_noise(block_text)
