@@ -1,0 +1,13 @@
+{
+  "query": "Explain how vector databases internally optimize similarity search at scale.",
+  "stage": "stage_1_and_2_validation",
+  "timestamp_utc": "20260119_131454",
+  "num_results": 1,
+  "results": [
+    {
+      "url": "https://www.pinecone.io/learn/vector-database/",
+      "score": 0.7368747,
+      "content": "In traditional databases, we are usually querying for rows in the database where the value usually exactly matches our query. In vector databases, we apply a similarity metric to find a vector that is the most similar to our query.\n\nA vector database uses a combination of different algorithms that all participate in Approximate Nearest Neighbor (ANN) search. These algorithms optimize the search through hashing, quantization, or graph-based search. [...] 3.   Scalability: Vector databases are designed to scale with growing data volumes and user demands, providing better support for distributed and parallel processing. Standalone vector indices may require custom solutions to achieve similar levels of scalability (such as deploying and managing them on Kubernetes clusters or other similar systems). Modern vector databases also use serverless architectures to optimize cost at scale. [...] Image 3: Vector Database pipeline\n\n1.   Indexing: The vector database indexes vectors using an algorithm such as PQ, LSH, or HNSW (more on these below). This step maps the vectors to a data structure that will enable faster searching.\n2.   Querying: The vector database compares the indexed query vector to the indexed vectors in the dataset to find the nearest neighbors (applying a similarity metric used by that index)\n3.   Post Processing: In some cases, the vector database retrieves the final nearest neighbors from the dataset and post-processes them to return the final results. This step can include re-ranking the nearest neighbors using a different similarity measure.\n\nServerless Vector Databases"
+    }
+  ]
+}

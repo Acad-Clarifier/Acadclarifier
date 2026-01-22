@@ -1,0 +1,49 @@
+{
+  "query": "Compare the differences between REST and GraphQL APIs",
+  "timestamp_utc": "20260118_055634",
+  "tavily_response": {
+    "query": "Compare the differences between REST and GraphQL APIs",
+    "follow_up_questions": null,
+    "answer": null,
+    "images": [],
+    "results": [
+      {
+        "url": "https://medium.com/@dmosyan/graphql-vs-rest-api-similarities-differences-857f9fc637a8",
+        "title": "GraphQL vs REST API | Similarities & Differences",
+        "content": "# GraphQL vs REST API | Similarities & Differences. REST enables client applications to exchange data with a server using HTTP verbs (GET, POST, etc.), which is the standard communication protocol of the internet. On the other hand, GraphQL is an API query language that defines specifications of how a client application should request data from a remote server. Both GraphQL and REST are popular API architecture styles that enable the exchange of data between different services or applications in a client-server model. REST and GraphQL allow you to create, modify, update, and delete data on a separate application, service, or module via API. Both REST and GraphQL implement several common API architectural principles. * Both REST and GraphQL support similar data formats. Queries can return the exact data in only one API request and response exchange. * **GraphQL** uses a server-side schema to define data and data services, which differs from a REST API.",
+        "score": 0.9485422,
+        "raw_content": null
+      },
+      {
+        "url": "https://www.ibm.com/think/topics/graphql-vs-rest-api",
+        "title": "GraphQL vs REST: What's the Difference?",
+        "content": "API technologies like SOAP (a web services messaging protocol), REST (an architectural style) and GraphQL (a programming language and tool) simplify software development by enabling third-party data and services integration. Here, we dissect those differences and discuss how businesses can use REST and GraphQL APIs to optimize their networks. The API then accesses resource properties—and follows the references between resources—to get the client all the data they need from a single query to the GraphQL server. Both GraphQL and REST APIs are resource-based data interchanges that use HTTP methods (like PUT and GET requests) that dictate which operations a client can perform. REST and GraphQL APIs differ in how they manage:. Because REST relies on multiple endpoints and stateless interactions—where every API request is processed as a new query, independent of any others—clients receive every piece of data that is associated with a resource. GraphQL APIs use a single GraphQL endpoint to give clients a precise, comprehensive data response in a one round trip from a single request, eliminating over- and under-fetching issues.",
+        "score": 0.9469168,
+        "raw_content": null
+      },
+      {
+        "url": "https://konghq.com/blog/learning-center/graphql-vs-rest",
+        "title": "GraphQL vs REST: Key Similarities and Differences ...",
+        "content": "Understanding the similarities and differences between these two approaches can help teams make informed decisions when designing APIs. This article aims to provide a comprehensive comparison of GraphQL and REST, highlighting their key features, advantages, and use cases. * **Efficient Data Fetching**: GraphQL allows clients to request only the data they need, reducing over-fetching and under-fetching issues common in REST APIs. GraphQL's schema-driven approach provides a more graceful way to handle API evolution compared to REST's explicit versioning practices. GraphQL uses a single endpoint and allows clients to specify their data requirements, while REST relies on multiple endpoints with fixed data structures. GraphQL is well-suited for complex data needs, multiple client types, and evolving APIs. REST is a good fit for simple and static data, incremental adoption, and leveraging existing REST expertise. By understanding the key differences, similarities, and use cases of GraphQL and REST, developers can make informed decisions when designing APIs for their projects.",
+        "score": 0.9457263,
+        "raw_content": null
+      },
+      {
+        "url": "https://aws.amazon.com/compare/the-difference-between-graphql-and-rest/",
+        "title": "What's the Difference Between GraphQL and REST?",
+        "content": "A REST API is an architectural concept for application communication. On the other hand, GraphQL is a specification, an API query language, and a set of tools.",
+        "score": 0.9400512,
+        "raw_content": null
+      },
+      {
+        "url": "https://blog.postman.com/graphql-vs-rest/",
+        "title": "GraphQL vs REST: Choosing the Right API Architecture ...",
+        "content": "REST prioritizes simplicity and standardization, while GraphQL prioritizes flexibility and efficiency. Understanding those trade-offs is key to",
+        "score": 0.9281033,
+        "raw_content": null
+      }
+    ],
+    "response_time": 1.0,
+    "request_id": "5cb8d557-96be-4479-8df0-34d1996461f7"
+  }
+}
