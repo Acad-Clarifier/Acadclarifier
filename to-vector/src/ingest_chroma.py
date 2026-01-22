@@ -109,11 +109,8 @@ def prepare_chroma_inputs(data):
 # -------------------------------
 
 def ingest_into_chroma(ids, documents, embeddings, metadatas):
-    client = chromadb.Client(
-        Settings(
-            persist_directory=CHROMA_DIR,
-            anonymized_telemetry=False
-        )
+    client = chromadb.PersistentClient(
+        path=CHROMA_DIR
     )
 
     collection = client.get_or_create_collection(
@@ -126,6 +123,11 @@ def ingest_into_chroma(ids, documents, embeddings, metadatas):
         embeddings=embeddings,
         metadatas=metadatas
     )
+
+    print("✅ ChromaDB automatically persisted to disk")
+    print("Total chunks stored:", collection.count())
+
+
 
 
 # -------------------------------
@@ -145,3 +147,5 @@ if __name__ == "__main__":
     print(f"✅ Ingestion complete!")
     print(f"📦 Collection: {COLLECTION_NAME}")
     print(f"📁 Stored at: {CHROMA_DIR}")
+
+
