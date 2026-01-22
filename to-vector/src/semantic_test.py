@@ -9,7 +9,7 @@ COLLECTION_NAME = "academic_textbook_chunks"
 client = chromadb.PersistentClient(path=CHROMA_DIR)
 collection = client.get_collection(name=COLLECTION_NAME)
 
-query = "Explain models of interaction"
+query = "What are the different types of data models?"
 
 results = collection.query(
     query_texts=[query],
