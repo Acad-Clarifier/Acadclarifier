@@ -37,6 +37,22 @@ def sanitize_metadata(metadata: dict) -> dict:
         clean[k] = "" if v is None else v
     return clean
 
+# 🔹 Assign high-level topic (used for intent filtering)
+    chapter_text = (
+    (item.get("chapter") or "") +
+    " " +
+    (item.get("section") or "")
+ ).lower()
+
+    if any(k in chapter_text for k in ["acid", "transaction", "serializ"]):
+        metadata["topic"] = "transaction"
+    elif any(k in chapter_text for k in ["concurr", "lock", "deadlock"]):
+        metadata["topic"] = "concurrency"
+    elif any(k in chapter_text for k in ["recovery", "logging", "crash"]):
+        metadata["topic"] = "recovery"
+    else:
+        metadata["topic"] = "general"
+
 # ===============================
 # PREPARE CHROMA INPUTS
 # ===============================
