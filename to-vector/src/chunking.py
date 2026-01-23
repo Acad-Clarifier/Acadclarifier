@@ -1,56 +1,46 @@
 import re
+import json
 from typing import List, Dict
 from transformers import AutoTokenizer
 
-# -------------------------------
+# ===============================
 # CONFIGURATION
-# -------------------------------
+# ===============================
 
 BOOK_ID = "book_1"
 TOKENIZER_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
-WINDOW_SIZE = 350       # tokens per chunk
-OVERLAP = 70            # overlapping tokens
+WINDOW_SIZE = 400          # slightly larger for theory
+OVERLAP = 80               # ~20% overlap
+MIN_CHUNK_TOKENS = 120     # avoid weak chunks
 
 tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_NAME)
 
-# -------------------------------
-# STRUCTURAL DETECTION RULES
-# -------------------------------
+# ===============================
+# STRUCTURAL DETECTION
+# ===============================
 
-CHAPTER_PATTERN = re.compile(r"^(CHAPTER|Chapter)\s+\d+", re.IGNORECASE)
-SECTION_PATTERN = re.compile(r"^\d+\.\d+(\.\d+)?\s+")
+CHAPTER_MD = re.compile(r"^#\s+(.*)")
+SECTION_MD = re.compile(r"^##\s+(.*)")
 
 def detect_heading(line: str):
     line = line.strip()
-    if CHAPTER_PATTERN.match(line):
-        return "chapter", line
-    if SECTION_PATTERN.match(line):
-        return "section", line
+
+    ch = CHAPTER_MD.match(line)
+    if ch:
+        return "chapter", ch.group(1).strip()
+
+    sec = SECTION_MD.match(line)
+    if sec:
+        return "section", sec.group(1).strip()
+
     return None, None
 
-# -------------------------------
-# STAGE 1–2: STRUCTURAL PARSING
-# -------------------------------
-
-def normalize_text(text: str) -> str:
-    text = text.replace("CHAP TER", "CHAPTER")
-    text = re.sub(r"\n([a-z])", r"\1", text)  # join broken words
-    return text
-
+# ===============================
+# STRUCTURE PARSING
+# ===============================
 
 def parse_structure(pages: List[Dict]) -> List[Dict]:
-    """
-    Output:
-    [
-      {
-        "chapter": "...",
-        "section": "...",
-        "text": "normalize_text(item["text"])",
-        "pages": [start, end]
-      }
-    ]
-    """
     sections = []
 
     current_chapter = None
@@ -66,7 +56,7 @@ def parse_structure(pages: List[Dict]) -> List[Dict]:
         for line in lines:
             heading_type, heading_text = detect_heading(line)
 
-            if heading_type in ("chapter", "section"):
+            if heading_type:
                 if buffer:
                     sections.append({
                         "chapter": current_chapter,
@@ -87,8 +77,7 @@ def parse_structure(pages: List[Dict]) -> List[Dict]:
             else:
                 if line.strip():
                     buffer.append(line)
-                    if page_start is None:
-                        page_start = page_no
+                    page_start = page_no if page_start is None else page_start
                     page_end = page_no
 
     if buffer:
@@ -101,12 +90,20 @@ def parse_structure(pages: List[Dict]) -> List[Dict]:
 
     return sections
 
-# -------------------------------
-# STAGE 3–5: TOKEN-BASED SLIDING WINDOW
-# -------------------------------
+# ===============================
+# CHUNKING LOGIC
+# ===============================
 
 def chunk_section(section: Dict) -> List[Dict]:
-    tokens = tokenizer.encode(section["text"], add_special_tokens=False)
+    # 🔑 Context enrichment (CRITICAL)
+    context_header = (
+        f"Book: {BOOK_ID}\n"
+        f"Chapter: {section['chapter']}\n"
+        f"Section: {section['section']}\n\n"
+    )
+
+    full_text = context_header + section["text"]
+    tokens = tokenizer.encode(full_text, add_special_tokens=False)
 
     chunks = []
     stride = WINDOW_SIZE - OVERLAP
@@ -116,7 +113,7 @@ def chunk_section(section: Dict) -> List[Dict]:
         end = start + WINDOW_SIZE
         window_tokens = tokens[start:end]
 
-        if len(window_tokens) < 50:
+        if len(window_tokens) < MIN_CHUNK_TOKENS:
             break
 
         chunk_text = tokenizer.decode(window_tokens)
@@ -128,6 +125,7 @@ def chunk_section(section: Dict) -> List[Dict]:
             "chunk_index": chunk_idx,
             "page_start": section["pages"][0],
             "page_end": section["pages"][1],
+            "token_count": len(window_tokens),
             "text": chunk_text
         })
 
@@ -135,54 +133,43 @@ def chunk_section(section: Dict) -> List[Dict]:
 
     return chunks
 
-# -------------------------------
+# ===============================
 # PIPELINE DRIVER
-# -------------------------------
+# ===============================
 
-import json
-
-def load_cleaned_text(json_path: str):
-    """
-    Loads cleaned_text.json and adapts it to the expected input format.
-    """
+def load_cleaned_text(json_path: str) -> List[Dict]:
     with open(json_path, "r", encoding="utf-8") as f:
         raw_pages = json.load(f)
 
-    pages = []
-    for item in raw_pages:
-        pages.append({
-            "page": item["page_number"],  # ADAPT KEY NAME
+    return [
+        {
+            "page": item["page_number"],
             "text": item["text"]
-        })
-
-    return pages
-
-
+        }
+        for item in raw_pages
+    ]
 
 def structure_aware_chunking(pages: List[Dict]) -> List[Dict]:
     sections = parse_structure(pages)
 
     all_chunks = []
     for sec in sections:
-        if not sec["text"]:
-            continue
-        all_chunks.extend(chunk_section(sec))
+        if sec["text"]:
+            all_chunks.extend(chunk_section(sec))
 
     return all_chunks
 
-# -------------------------------
-# SAVING CHUNKS IN A FILE
-# -------------------------------
+# ===============================
+# SAVE
+# ===============================
 
 def save_chunks(chunks, output_path):
-    import json
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(chunks, f, ensure_ascii=False, indent=2)
 
-
-# -------------------------------
-# EXAMPLE USAGE
-# -------------------------------
+# ===============================
+# EXECUTION
+# ===============================
 
 if __name__ == "__main__":
     import os
@@ -193,10 +180,7 @@ if __name__ == "__main__":
 
     pages = load_cleaned_text(json_path)
     chunks = structure_aware_chunking(pages)
-
     save_chunks(chunks, output_path)
 
     print(f"✅ Total chunks created: {len(chunks)}")
-    print(f"📁 Chunks saved to: {output_path}")
-
-
+    print(f"📁 Saved to: {output_path}")

@@ -1,11 +1,10 @@
 import os
 import json
 import chromadb
-from chromadb.config import Settings
 
-# -------------------------------
+# ===============================
 # PATH CONFIGURATION
-# -------------------------------
+# ===============================
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -18,134 +17,124 @@ CHROMA_DIR = os.path.join(
 )
 
 COLLECTION_NAME = "academic_textbook_chunks"
+EXPECTED_EMBED_DIM = 384   # MiniLM-L6-v2
 
-# -------------------------------
-# LOAD EMBEDDINGS JSON
-# -------------------------------
+# ===============================
+# LOAD EMBEDDINGS
+# ===============================
 
 def load_embeddings(path):
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
-    
-# -------------------------------
-# SANITIZE METADATA FOR BULL VALUES
-# -------------------------------    
-    
+
+# ===============================
+# METADATA SANITIZATION
+# ===============================
+
 def sanitize_metadata(metadata: dict) -> dict:
-    """
-    Replace None values with ChromaDB-safe defaults.
-    """
     clean = {}
     for k, v in metadata.items():
-        if v is None:
-            clean[k] = ""
-        else:
-            clean[k] = v
+        clean[k] = "" if v is None else v
     return clean
 
-
-# -------------------------------
-# PREPARE DATA FOR CHROMA
-# -------------------------------
+# ===============================
+# PREPARE CHROMA INPUTS
+# ===============================
 
 def prepare_chroma_inputs(data):
-    ids = []
-    documents = []
-    embeddings = []
-    metadatas = []
+    ids, documents, embeddings, metadatas = [], [], [], []
 
     for global_idx, item in enumerate(data):
-        # ---------- ID ----------
-        raw_section = item.get("section") or "no_section"
-        section_clean = (
-            raw_section
-            .replace(" ", "_")
-            .replace(".", "_")
-            .lower()
-        )
+        # -------- ID --------
+        section = item.get("section") or "no_section"
+        section_clean = section.replace(" ", "_").replace(".", "_").lower()
 
         chunk_id = (
-            f"{item['book']}__"
-            f"{section_clean}__"
-            f"chunk_{global_idx:06d}"
+            f"{item['book']}__{section_clean}__chunk_{global_idx:06d}"
         )
 
-        # ---------- DOCUMENT ----------
-        text = item["text"]
+        # -------- EMBEDDING --------
         vector = item["embedding"]
+        if len(vector) != EXPECTED_EMBED_DIM:
+            raise ValueError(
+                f"Invalid embedding dim {len(vector)} for {chunk_id}"
+            )
 
-        # ---------- METADATA ----------
+        # -------- DOCUMENT --------
+        # IMPORTANT: store the SAME text that was embedded
+        text = item.get("embedding_text") or item["text"]
+
+        # -------- METADATA (WHITELIST) --------
         metadata = {
-            k: v for k, v in item.items()
-            if k not in ("text", "embedding", "images")
+            "book": item.get("book"),
+            "chapter": item.get("chapter"),
+            "section": item.get("section"),
+            "page_start": item.get("page_start"),
+            "page_end": item.get("page_end"),
         }
-
-        # Images → JSON string (Chroma-safe)
-        images = item.get("images")
-        if images:
-            metadata["images"] = json.dumps(images)
-        else:
-            metadata["images"] = ""
 
         metadata = sanitize_metadata(metadata)
 
-        # ---------- APPEND (CRITICAL) ----------
         ids.append(chunk_id)
         documents.append(text)
         embeddings.append(vector)
         metadatas.append(metadata)
 
-    # ---------- FINAL SAFETY CHECK ----------
-    assert len(ids) == len(documents) == len(embeddings) == len(metadatas), \
-        f"Length mismatch: ids={len(ids)}, docs={len(documents)}, emb={len(embeddings)}, meta={len(metadatas)}"
+    assert len(ids) == len(documents) == len(embeddings) == len(metadatas)
 
     return ids, documents, embeddings, metadatas
 
-
-
-
-# -------------------------------
-# INGEST INTO CHROMA
-# -------------------------------
+# ===============================
+# INGEST
+# ===============================
 
 def ingest_into_chroma(ids, documents, embeddings, metadatas):
-    client = chromadb.PersistentClient(
-        path=CHROMA_DIR
-    )
+    client = chromadb.PersistentClient(path=CHROMA_DIR)
 
     collection = client.get_or_create_collection(
         name=COLLECTION_NAME
     )
 
+    # 🔒 Prevent accidental duplicate ingestion
+    existing = set(collection.get(ids=ids)["ids"]) if collection.count() else set()
+    if existing:
+        print(f"⚠️ Skipping {len(existing)} already-ingested chunks")
+
+    filtered = [
+        (i, d, e, m)
+        for i, d, e, m in zip(ids, documents, embeddings, metadatas)
+        if i not in existing
+    ]
+
+    if not filtered:
+        print("✅ Nothing new to ingest")
+        return
+
+    ids, documents, embeddings, metadatas = zip(*filtered)
+
     collection.add(
-        ids=ids,
-        documents=documents,
-        embeddings=embeddings,
-        metadatas=metadatas
+        ids=list(ids),
+        documents=list(documents),
+        embeddings=list(embeddings),
+        metadatas=list(metadatas)
     )
 
-    print("✅ ChromaDB automatically persisted to disk")
+    print("✅ ChromaDB persisted to disk")
     print("Total chunks stored:", collection.count())
 
-
-
-
-# -------------------------------
+# ===============================
 # MAIN
-# -------------------------------
+# ===============================
 
 if __name__ == "__main__":
     print("🔹 Loading embeddings.json...")
     data = load_embeddings(EMBEDDINGS_PATH)
 
-    print("🔹 Preparing data for ChromaDB...")
+    print("🔹 Preparing Chroma inputs...")
     ids, documents, embeddings, metadatas = prepare_chroma_inputs(data)
 
     print("🔹 Ingesting into ChromaDB...")
     ingest_into_chroma(ids, documents, embeddings, metadatas)
 
-    print(f"✅ Ingestion complete!")
-    print(f"📦 Collection: {COLLECTION_NAME}")
-    print(f"📁 Stored at: {CHROMA_DIR}")
-
-
+    print("📦 Collection:", COLLECTION_NAME)
+    print("📁 Chroma path:", CHROMA_DIR)
