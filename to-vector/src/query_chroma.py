@@ -1,9 +1,11 @@
 import os
 import json
 from datetime import datetime
+from typing import List, Dict
+
 import chromadb
+from chromadb.config import Settings
 from sentence_transformers import SentenceTransformer
-from rerank_results import rerank
 
 
 # ===============================
@@ -14,59 +16,60 @@ MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 COLLECTION_NAME = "academic_textbook_chunks"
 TOP_K = 15
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CHROMA_DIR = os.path.join(BASE_DIR, "..", "chroma_store")
+OUTPUT_DIR = os.path.join(BASE_DIR, "..", "outputs/DBMS_queries")
+
+
 # ===============================
-# QUERY INTENT → TOPIC HINTS
+# QUERY → TOPIC HINTS
 # ===============================
 
 TOPIC_HINTS = {
     "acid": ["transaction", "recovery", "concurrency"],
     "transaction": ["transaction"],
-    "deadlock": ["concurrency"],
     "serializability": ["concurrency"],
+    "deadlock": ["concurrency"],
     "locking": ["concurrency"],
     "recovery": ["recovery"],
 }
 
+
+def infer_topic_filters(query: str) -> List[str]:
+    """
+    Infer high-level topic filters from the query.
+    """
+    q = query.lower()
+    for key, topics in TOPIC_HINTS.items():
+        if key in q:
+            return topics
+    return []
+
+
 # ===============================
-# PATHS
-# ===============================
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-CHROMA_DIR = os.path.join(BASE_DIR, "..", "chroma_store")
-OUTPUT_DIR = os.path.join(BASE_DIR, "..", "outputs")
-
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-# ===============================
-# LOAD MODEL
+# LOAD MODEL & CHROMA
 # ===============================
 
 def load_embedding_model():
     return SentenceTransformer(MODEL_NAME)
 
-def infer_topic_filters(query: str):
-    """
-    Infer high-level topic filters from query text.
-    Returns list of keywords to constrain retrieval.
-    """
-    query_l = query.lower()
-    for key, keywords in TOPIC_HINTS.items():
-        if key in query_l:
-            return keywords
-    return []
+
+def load_chroma_collection():
+    client = chromadb.PersistentClient(path=CHROMA_DIR)
+    return client.get_collection(name=COLLECTION_NAME)
+
 
 # ===============================
 # QUERY CHROMA
 # ===============================
 
-def query_chroma(query: str, model, collection):
+def query_chroma(query: str, model, collection) -> List[Dict]:
     query_embedding = model.encode(
         query,
         normalize_embeddings=True
     ).tolist()
 
-    # 🔹 NEW: infer topic filters
+    # 🔹 Intent-aware topic filtering
     topic_filters = infer_topic_filters(query)
 
     where_clause = None
@@ -75,8 +78,7 @@ def query_chroma(query: str, model, collection):
             "topic": {"$in": topic_filters}
         }
 
-
-    # 🔹 UPDATED Chroma query
+    # 🔹 First attempt (with filters)
     results = collection.query(
         query_embeddings=[query_embedding],
         n_results=TOP_K,
@@ -84,19 +86,19 @@ def query_chroma(query: str, model, collection):
         include=["documents", "metadatas", "distances"]
     )
 
-    # 🔹 FALLBACK: if filtering is too strict
+    # 🔹 Fallback if filtering is too strict
     if not results["documents"] or not results["documents"][0]:
-       results = collection.query(
-          query_embeddings=[query_embedding],
-          n_results=TOP_K,
-          include=["documents", "metadatas", "distances"]
-    )
+        results = collection.query(
+            query_embeddings=[query_embedding],
+            n_results=TOP_K,
+            include=["documents", "metadatas", "distances"]
+        )
 
-    output = []
     documents = results["documents"][0]
     metadatas = results["metadatas"][0]
     distances = results["distances"][0]
 
+    output = []
     for rank, (doc, meta, dist) in enumerate(
         zip(documents, metadatas, distances), start=1
     ):
@@ -107,10 +109,27 @@ def query_chroma(query: str, model, collection):
             "section": meta.get("section"),
             "page_start": meta.get("page_start"),
             "page_end": meta.get("page_end"),
-            "text_preview": doc[:600]
+            "topic": meta.get("topic"),
+            "query_context": doc[:700]
         })
 
     return output
+
+
+# ===============================
+# SAVE OUTPUTS
+# ===============================
+
+def save_results(all_results: Dict):
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    path = os.path.join(OUTPUT_DIR, f"query_results_{timestamp}.json")
+
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(all_results, f, indent=2, ensure_ascii=False)
+
+    print(f"\n📁 Results saved to: {path}")
 
 
 # ===============================
@@ -118,28 +137,24 @@ def query_chroma(query: str, model, collection):
 # ===============================
 
 if __name__ == "__main__":
-    TEST_QUERIES = [
-        
+    queries = [
+        "What is concurrency control?",
         "Explain ACID properties in DBMS",
         "What is serializability?",
         "Explain deadlock and deadlock prevention",
-       
     ]
 
     print("🔹 Loading model and ChromaDB...")
     model = load_embedding_model()
-
-    client = chromadb.PersistentClient(path=CHROMA_DIR)
-    collection = client.get_collection(name=COLLECTION_NAME)
+    collection = load_chroma_collection()
 
     all_results = {
-        "timestamp_utc": datetime.utcnow().isoformat(),
-        "collection": COLLECTION_NAME,
-        "top_k": TOP_K,
+        "stage": "local_chroma_retrieval",
+        "num_queries": len(queries),
         "queries": []
     }
 
-    for q in TEST_QUERIES:
+    for q in queries:
         print(f"\n🔎 QUERY: {q}")
         print("=" * 80)
 
@@ -152,29 +167,9 @@ if __name__ == "__main__":
             print(r["text_preview"].replace("\n", " "))
             print("-" * 80)
 
-        reranked_results = rerank(q, results)
-
         all_results["queries"].append({
             "query": q,
-            "chroma_results": results,
-            "reranked_results": reranked_results
+            "results": results
         })
 
-        
-
-
-    # ===============================
-    # SAVE OUTPUT
-    # ===============================
-
-    timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-    output_path = os.path.join(
-        OUTPUT_DIR,
-        f"query_results_{timestamp}.json"
-    )
-
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(all_results, f, indent=2, ensure_ascii=False)
-
-    print("\n✅ Query results saved to:")
-    print(output_path)
+    save_results(all_results)
