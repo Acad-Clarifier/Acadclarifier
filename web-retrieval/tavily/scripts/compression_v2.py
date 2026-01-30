@@ -234,7 +234,7 @@ def run(input_path: str | None, *, query: str | None = None) -> str:
     """
 
     if not input_path:
-        raise ValueError("compression-v2.run requires input_path")
+        raise ValueError("compression_v2.run requires input_path")
 
     path = Path(input_path)
     if not path.exists():

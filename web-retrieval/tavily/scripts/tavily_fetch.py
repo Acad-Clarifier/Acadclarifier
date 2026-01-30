@@ -2,6 +2,7 @@ import os
 import json
 import sys
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, Any
 
 import urllib.request
@@ -12,16 +13,37 @@ import urllib.parse
 # Configuration
 # =========================
 
-# TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
-# TAVILY_API_KEY = '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'  # uselessbear99
-# jsoham672 - student plan
-TAVILY_API_KEY = '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'
 TAVILY_ENDPOINT = "https://api.tavily.com/search"
 
 OUTPUT_DIR = "tavily_outputs"
 
-if not TAVILY_API_KEY:
-    raise RuntimeError("TAVILY_API_KEY environment variable not set")
+# Resolve outputs relative to this script so execution is cwd-agnostic
+SCRIPT_DIR = Path(__file__).resolve().parent
+OUTPUT_PARENT = (SCRIPT_DIR / ".." / "outputs" / OUTPUT_DIR).resolve()
+
+
+def _load_env() -> None:
+    """Load .env variables if present (no external dependency)."""
+    for candidate in (SCRIPT_DIR.parent / ".env", SCRIPT_DIR / ".env"):
+        if not candidate.exists():
+            continue
+        with open(candidate, "r", encoding="utf-8") as f:
+            for line in f.readlines():
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if "=" not in line:
+                    continue
+                key, value = line.split("=", 1)
+                key = key.strip()
+                value = value.strip().strip("'\"")
+                if key and key not in os.environ:
+                    os.environ[key] = value
+        break
+
+
+_load_env()
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 
 
 # =========================
@@ -79,18 +101,14 @@ def save_response(query: str, response_json: Dict[str, Any]) -> str:
     """
     Saves Tavily response to a timestamped JSON file.
     """
-    output_parent = os.path.join("..", "outputs", OUTPUT_DIR)
-    os.makedirs(output_parent, exist_ok=True)
+    OUTPUT_PARENT.mkdir(parents=True, exist_ok=True)
 
     timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
     safe_query = "".join(c for c in query if c.isalnum()
                          or c in (" ", "_"))[:50]
     filename = f"tavily_response_{safe_query}_{timestamp}.json"
 
-    # output_dir = "tavily_outputs"
-    # os.makedirs(output_dir, exist_ok=True)
-
-    file_path = os.path.join(output_parent, filename)
+    file_path = OUTPUT_PARENT / filename
 
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(
@@ -104,41 +122,42 @@ def save_response(query: str, response_json: Dict[str, Any]) -> str:
             ensure_ascii=False
         )
 
-    return file_path
+    return str(file_path)
 
 
 # =========================
 # Entry point
 # =========================
 
+def run(input_path: str | None, *, query: str | None = None) -> str:
+    """
+    Executes Tavily fetch stage.
+
+    Parameters:
+    - input_path: must be None for this stage
+    - query: required user query
+    """
+
+    if input_path not in (None, ""):
+        raise ValueError(
+            "tavily_fetch.run does not accept input_path; pass None")
+
+    if not query or not query.strip():
+        raise ValueError("Query is required for tavily_fetch stage")
+
+    if not TAVILY_API_KEY:
+        raise RuntimeError("TAVILY_API_KEY is not configured")
+
+    response_json = fetch_from_tavily(query.strip())
+    return save_response(query.strip(), response_json)
+
+
 def main():
-    # UNCOMMENT FOR REAL QUERY
-    # if len(sys.argv) < 2:
-    #     print("Usage: python tavily_fetch.py \"your query here\"")
-    #     sys.exit(1)
+    input_path = sys.argv[1] if len(sys.argv) > 1 else None
+    cli_query = sys.argv[2] if len(sys.argv) > 2 else None
 
-    # query = sys.argv[1].strip()
-    # -------------------------------------------------------------------
-
-    # TEMP: hardcoded query for testing
-    # query = "Explain ARM pipeline hazards with examples"
-    # query = "Compare the differences between REST and GraphQL APIs"
-    # query = "What recent changes were introduced in React 19?"
-    # query = "Explain how vector databases internally optimize similarity search at scale."
-    # query = "How to securely store API keys in a Node.js production environment?"
-    query = "Is MongoDB okay for storing embeddings?"
-
-    print(f"[INFO] Fetching Tavily results for query: {query}")
-
-    if not query:
-        raise ValueError("Query cannot be empty")
-
-    print(f"[INFO] Fetching Tavily results for query: {query}")
-
-    response_json = fetch_from_tavily(query)
-    file_path = save_response(query, response_json)
-
-    print(f"[SUCCESS] Tavily response saved to: {file_path}")
+    output_path = run(input_path=input_path, query=cli_query)
+    print(output_path)
 
 
 if __name__ == "__main__":

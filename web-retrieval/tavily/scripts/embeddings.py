@@ -1,14 +1,12 @@
 import json
 import sys
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List
+
 import numpy as np
-from typing import List, Dict
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
-
-from typing import List, Dict, Any
-from datetime import datetime
-import os
-import json
 
 
 # =========================
@@ -20,6 +18,9 @@ SIMILARITY_THRESHOLD = 0.35   # T2 (tune later)
 OUTPUT_TOP_K = None          # set to int if you want a cap
 
 OUTPUT_DIR = "embeddings_outputs"
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+OUTPUT_PARENT = (SCRIPT_DIR / ".." / "outputs" / OUTPUT_DIR).resolve()
 
 # =========================
 # Utilities
@@ -95,13 +96,11 @@ def save_embeddings(query: str, chunks: List[Dict[str, Any]]) -> str:
     """
     Saves Stage-4 embedding + similarity results to embeddings_output.
     """
-
-    output_parent = os.path.join("..", "outputs", OUTPUT_DIR)
-    os.makedirs(output_parent, exist_ok=True)
+    OUTPUT_PARENT.mkdir(parents=True, exist_ok=True)
 
     timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
     filename = f"stage4_embeddings_{timestamp}.json"
-    path = os.path.join(output_parent, filename)
+    path = OUTPUT_PARENT / filename
 
     payload = {
         "query": query,
@@ -114,47 +113,50 @@ def save_embeddings(query: str, chunks: List[Dict[str, Any]]) -> str:
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)
 
-    return path
+    return str(path)
 
 # =========================
 # Entry point
 # =========================
 
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python stage4_embed_and_score.py <stage3_chunks.json>")
-        sys.exit(1)
+def run(input_path: str | None, *, query: str | None = None) -> str:
+    """
+    Executes Stage 4 embedding + similarity scoring.
 
-    input_path = sys.argv[1]
+    Parameters:
+    - input_path: path to Stage 3 chunks JSON (required)
+    - query: optional override if not present in input JSON
+    """
 
-    data = load_stage3_chunks(input_path)
+    if not input_path:
+        raise ValueError("embeddings.run requires input_path")
+
+    path = Path(input_path)
+    if not path.exists():
+        raise FileNotFoundError(f"Input path does not exist: {input_path}")
+
+    data = load_stage3_chunks(str(path))
 
     if "chunks" not in data:
         raise ValueError("Invalid input: missing 'chunks'")
 
-    query = data.get("query", "")
+    resolved_query = data.get("query") or query or ""
     chunks = data["chunks"]
 
-    if not query or not chunks:
+    if not resolved_query or not chunks:
         raise ValueError("Query or chunks missing")
 
-    scored_chunks = compute_similarity(query, chunks)
+    scored_chunks = compute_similarity(resolved_query, chunks)
+    return save_embeddings(resolved_query, scored_chunks)
 
-    output = {
-        "query": query,
-        "stage": "stage_4_embedding_similarity",
-        "num_input_chunks": len(chunks),
-        "num_kept_chunks": len(scored_chunks),
-        "chunks": scored_chunks
-    }
 
-    output_path = save_embeddings(query, scored_chunks)
+def main():
+    input_path = sys.argv[1] if len(sys.argv) > 1 else None
+    cli_query = sys.argv[2] if len(sys.argv) > 2 else None
 
-    print("[STAGE 4 COMPLETE]")
-    print(f"Input chunks : {len(chunks)}")
-    print(f"Kept chunks  : {len(scored_chunks)}")
-    print(f"Output saved: {output_path}")
+    output_path = run(input_path=input_path, query=cli_query)
+    print(output_path)
 
 
 if __name__ == "__main__":

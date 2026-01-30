@@ -1,4 +1,3 @@
-
 # Acadclarifier
 
 BE Project - Acadclarifier
@@ -61,8 +60,6 @@ AcadClarifier/
 ├── requirements.txt
 ├── README.md
 └── .gitignore
-
-
 
 ---
 
@@ -184,3 +181,5 @@ IoT integration using RFID
 
 Hybrid local + cloud AI architecture
 
+6. compression.py
+```

@@ -1,10 +1,10 @@
 import json
 import sys
-import os
-import numpy as np
-from typing import List, Dict
 from datetime import datetime
+from pathlib import Path
+from typing import Dict, List
 
+import numpy as np
 from sentence_transformers import SentenceTransformer, CrossEncoder
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -20,6 +20,9 @@ REDUNDANCY_THRESHOLD = 0.9
 TOP_K = 6
 
 OUTPUT_DIR = "rerank_outputs"
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+OUTPUT_PARENT = (SCRIPT_DIR / ".." / "outputs" / OUTPUT_DIR).resolve()
 
 
 # =========================
@@ -208,12 +211,11 @@ def rerank_chunks(query: str, chunks: List[Dict]) -> List[Dict]:
 # =========================
 
 def save_reranked(query: str, chunks: List[Dict]) -> str:
-    output_parent = os.path.join("..", "outputs", OUTPUT_DIR)
-    os.makedirs(output_parent, exist_ok=True)
+    OUTPUT_PARENT.mkdir(parents=True, exist_ok=True)
 
     timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
     filename = f"stage5_reranked_{timestamp}.json"
-    path = os.path.join(output_parent, filename)
+    path = OUTPUT_PARENT / filename
 
     payload = {
         "query": query,
@@ -226,43 +228,53 @@ def save_reranked(query: str, chunks: List[Dict]) -> str:
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)
 
-    return path
+    return str(path)
 
 
 # =========================
 # Entry point
 # =========================
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python stage5_dedup_and_rerank.py <stage4_embeddings.json>")
-        sys.exit(1)
+def run(input_path: str | None, *, query: str | None = None) -> str:
+    """
+    Executes Stage 5 deduplication and reranking.
 
-    input_path = sys.argv[1]
-    data = load_stage4(input_path)
+    Parameters:
+    - input_path: path to Stage 4 embeddings JSON (required)
+    - query: optional override if not present in input JSON
+    """
+
+    if not input_path:
+        raise ValueError("reranking.run requires input_path")
+
+    path = Path(input_path)
+    if not path.exists():
+        raise FileNotFoundError(f"Input path does not exist: {input_path}")
+
+    data = load_stage4(str(path))
 
     if "chunks" not in data:
         raise ValueError("Invalid input: missing 'chunks'")
 
-    query = data["query"]
+    resolved_query = data.get("query") or query or ""
     chunks = data["chunks"]
 
-    # ---- Step A: redundancy pruning ----
+    if not resolved_query or not chunks:
+        raise ValueError("Query or chunks missing")
+
     deduped_chunks = remove_redundant_chunks(chunks)
-
-    # ---- Step B: reranking ----
-    reranked_chunks = rerank_chunks(query, deduped_chunks)
-
-    # ---- keep top K ----
+    reranked_chunks = rerank_chunks(resolved_query, deduped_chunks)
     final_chunks = reranked_chunks[:TOP_K]
 
-    output_path = save_reranked(query, final_chunks)
+    return save_reranked(resolved_query, final_chunks)
 
-    print("[STAGE 5 COMPLETE]")
-    print(f"Input chunks      : {len(chunks)}")
-    print(f"After dedup       : {len(deduped_chunks)}")
-    print(f"Final kept chunks : {len(final_chunks)}")
-    print(f"Output saved      : {output_path}")
+
+def main():
+    input_path = sys.argv[1] if len(sys.argv) > 1 else None
+    cli_query = sys.argv[2] if len(sys.argv) > 2 else None
+
+    output_path = run(input_path=input_path, query=cli_query)
+    print(output_path)
 
 
 if __name__ == "__main__":

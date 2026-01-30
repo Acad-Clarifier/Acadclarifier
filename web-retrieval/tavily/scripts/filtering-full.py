@@ -1,9 +1,9 @@
 import json
-import os
 import sys
 import re
-from typing import List, Dict, Any
 from datetime import datetime
+from pathlib import Path
+from typing import List, Dict, Any
 
 # =========================
 # Configuration
@@ -19,6 +19,9 @@ MIN_KEYWORD_HITS = 1
 MAX_PRONOUN_RATIO = 0.02  # conversational tone threshold
 
 OUTPUT_DIR = "validation_outputs"
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+OUTPUT_PARENT = (SCRIPT_DIR / ".." / "outputs" / OUTPUT_DIR).resolve()
 
 
 # =========================
@@ -197,13 +200,11 @@ def filter_results(
 # =========================
 
 def save_output(query: str, results: List[Dict[str, Any]]) -> str:
-    # os.makedirs(OUTPUT_DIR, exist_ok=True)
-    output_parent = os.path.join("..", "outputs", OUTPUT_DIR)
-    os.makedirs(output_parent, exist_ok=True)
+    OUTPUT_PARENT.mkdir(parents=True, exist_ok=True)
 
     timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
     filename = f"stage1_2_filtered_{timestamp}.json"
-    path = os.path.join(output_parent, filename)
+    path = OUTPUT_PARENT / filename
 
     payload = {
         "query": query,
@@ -216,57 +217,55 @@ def save_output(query: str, results: List[Dict[str, Any]]) -> str:
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)
 
-    return path
+    return str(path)
 
 
 # =========================
 # Entry point
 # =========================
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python stage1_2_tavily_filter.py <tavily_response.json>")
-        sys.exit(1)
+def run(input_path: str | None, *, query: str | None = None) -> str:
+    """
+    Executes Stage 1 & 2 filtering.
 
-    input_path = sys.argv[1]
+    Parameters:
+    - input_path: path to Tavily response JSON (required)
+    - query: optional override if not present in input JSON
+    """
 
-    with open(input_path, "r", encoding="utf-8") as f:
+    if not input_path:
+        raise ValueError("filtering-full.run requires input_path")
+
+    path = Path(input_path)
+    if not path.exists():
+        raise FileNotFoundError(f"Input path does not exist: {input_path}")
+
+    with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     if "tavily_response" not in data:
         raise ValueError("Invalid input: missing 'tavily_response'")
 
     tavily_response = data["tavily_response"]
-    original_query = data.get("query", "UNKNOWN_QUERY")
+    original_query = data.get("query") or query or "UNKNOWN_QUERY"
 
     if "results" not in tavily_response:
         raise ValueError("Invalid Tavily response: missing 'results'")
 
-    # ---- manual syllabus keywords (temporary) ----
-
-    # # should add the feature to add some keywords from query itself
-    # syllabus_keywords = [
-    #     "pipeline",
-    #     "hazard",
-    #     "data hazard",
-    #     "control hazard",
-    #     "structural hazard",
-    #     "arm"
-    # ]
-
-    # auto keyword detection
     query_keywords = extract_keywords_from_query(original_query)
 
     raw_results = tavily_response["results"]
     filtered_results = filter_results(raw_results, query_keywords)
 
-    output_path = save_output(original_query, filtered_results)
+    return save_output(original_query, filtered_results)
 
-    print("[STAGE 1 + 2 COMPLETE]")
-    print(f"Input results : {len(raw_results)}")
-    print(f"Filtered kept : {len(filtered_results)}")
-    print(f'keywords detected :{query_keywords}')
-    print(f"Output saved : {output_path}")
+
+def main():
+    input_path = sys.argv[1] if len(sys.argv) > 1 else None
+    cli_query = sys.argv[2] if len(sys.argv) > 2 else None
+
+    output_path = run(input_path=input_path, query=cli_query)
+    print(output_path)
 
 
 if __name__ == "__main__":
