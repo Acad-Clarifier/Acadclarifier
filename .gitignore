@@ -1,0 +1,21 @@
+# Virtual environments
+venv/
+.conda/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs
+logs/
+*.log
+
+# Database
+db/*.db
+
+# Streamlit
+.streamlit/
+
+# OS files
+.DS_Store
+Thumbs.db
