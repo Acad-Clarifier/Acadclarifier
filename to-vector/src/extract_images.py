@@ -27,11 +27,17 @@ for page_index, page in enumerate(doc):
         image_name = f"page_{page_index+1}_img_{img_idx+1}.png"
         image_path = os.path.join(OUTPUT_DIR, image_name)
 
-        if pix.n < 5:
-            pix.save(image_path)
-        else:
+        if pix.colorspace is None:
+            # Mask image (skip or handle separately)
+            pix = None
+            continue
+
+        if pix.colorspace.name not in ("DeviceRGB", "DeviceGray"):
             pix = fitz.Pixmap(fitz.csRGB, pix)
-            pix.save(image_path)
+
+        # Save image
+        pix.save(image_path)
+        pix = None
 
         image_records.append({
             "page": page_index + 1,
