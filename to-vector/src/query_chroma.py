@@ -164,7 +164,7 @@ if __name__ == "__main__":
             print(f"Rank {r['rank']} | Distance {r['distance']}")
             print(f"Chapter: {r['chapter']}")
             print(f"Section: {r['section']}")
-            print(r["text_preview"].replace("\n", " "))
+            print(r["query_context"].replace("\n", " "))
             print("-" * 80)
 
         all_results["queries"].append({

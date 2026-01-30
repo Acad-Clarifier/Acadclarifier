@@ -2,8 +2,7 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
-from google import genai
-from google.genai import types
+from transformers import pipeline
 from dotenv import load_dotenv
 
 # ==============================
@@ -14,8 +13,8 @@ from dotenv import load_dotenv
 ENV_PATH = (Path(__file__).resolve().parent / ".." / ".env").resolve()
 load_dotenv(dotenv_path=ENV_PATH)
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-MODEL_NAME = "models/gemini-2.5-flash"
+# Local model for text generation
+MODEL_NAME = "google/flan-t5-small"
 
 OUTPUT_DIR = "final_output"
 
@@ -23,31 +22,11 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 OUTPUT_PARENT = (SCRIPT_DIR / ".." / "outputs" / OUTPUT_DIR).resolve()
 
 # ==============================
-# INITIALIZE GEMINI
+# INITIALIZE LOCAL MODEL
 # ==============================
 
-
-# response = client.models.generate_content(
-#     model="gemini-2.5-flash",
-#     contents=prompt,
-#     config=types.GenerateContentConfig(
-#         system_instruction=SYSTEM_INSTRUCTION,
-#         temperature=0.25,
-#         top_p=0.9,
-#         max_output_tokens=900,
-#     )
-# )
-
-# genai.configure(api_key=GEMINI_API_KEY)
-
-# model = genai.GenerativeModel(
-#     model_name=MODEL_NAME,
-#     generation_config={
-#         "temperature": 0.25,
-#         "top_p": 0.9,
-#         "max_output_tokens": 900
-#     }
-# )
+# Load the local text generation pipeline
+generator = pipeline("text2text-generation", model=MODEL_NAME)
 
 # ==============================
 # PROMPT BUILDER
@@ -108,12 +87,14 @@ OUTPUT_PARENT = (SCRIPT_DIR / ".." / "outputs" / OUTPUT_DIR).resolve()
 #     return prompt.strip()
 
 def build_prompt(data: dict) -> str:
-    query = data["query"]
-    blocks = data["query_context"]
+    # Assume data is from query_results, take the first query
+    query_data = data["queries"][0]
+    query = query_data["query"]
+    blocks = query_data["reranked_results"]
 
     context_text = []
-    for idx, block in enumerate(blocks, start=1):
-        context_text.append(f"Source {idx}: {block['text']}")
+    for idx, block in enumerate(blocks[:5], start=1):  # Limit to top 5
+        context_text.append(f"Source {idx}: {block['text_preview']}")
     joined_context = "\n\n".join(context_text)
 
     # Use "Positive Reinforcement" for length
@@ -132,7 +113,7 @@ def build_prompt(data: dict) -> str:
 
         FORMAT:
         # [Title]
-        
+
         ### Overview
         [2-3 lines summarizing the core concept]
 
@@ -145,40 +126,10 @@ def build_prompt(data: dict) -> str:
     return prompt.strip()
 
 
-# def run_model(prompt: str):
-#     if not GEMINI_API_KEY:
-#         raise ValueError(
-#             "GEMINI_API_KEY is not set. Please set the GEMINI_API_KEY environment "
-#             "variable to use the Gemini API."
-#         )
-#     client = genai.Client(
-#         api_key=GEMINI_API_KEY
-#     )
-#     output = client.models.generate_content(
-#         model="gemini-2.5-flash",
-#         contents=prompt,
-#         config=types.GenerateContentConfig(
-#             temperature=0.25,
-#             top_p=0.9,
-#             max_output_tokens=900,
-#         )
-#     )
-
-#     return output
-
 def run_model(prompt: str):
-    client = genai.Client(api_key=GEMINI_API_KEY)
-    output = client.models.generate_content(
-        # Try "gemini-1.5-pro" if flash is still too short
-        model="gemini-2.5-flash",
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            temperature=0.7,  # Increased from 0.25
-            top_p=0.95,
-            max_output_tokens=2048,  # Increased to allow for longer responses
-        )
-    )
-    return output
+    # Generate text using the local model
+    output = generator(prompt, max_length=1024, do_sample=True, temperature=0.7)
+    return output[0]['generated_text']
 
 # ==============================
 # MAIN EXECUTION
@@ -206,7 +157,7 @@ def run(input_json_path: str):
 
     # response = model.generate_content(prompt)
     response = run_model(prompt)
-    output_text = response.text.strip()
+    output_text = response.strip()
 
     timestamp = data.get(
         "timestamp_utc", datetime.utcnow().strftime("%Y%m%d_%H%M%S"))
@@ -222,7 +173,7 @@ def run(input_json_path: str):
 if __name__ == "__main__":
     import sys
     if len(sys.argv) != 2:
-        print("Usage: python simplifier.py <input_json_file>")
+        print("Usage: python local_simplifier.py <input_json_file>")
         sys.exit(1)
 
     run(sys.argv[1])
