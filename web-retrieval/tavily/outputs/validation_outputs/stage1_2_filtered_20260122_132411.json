@@ -1,0 +1,18 @@
+{
+  "query": "Is MongoDB okay for storing embeddings?",
+  "stage": "stage_1_and_2_validation",
+  "timestamp_utc": "20260122_132411",
+  "num_results": 2,
+  "results": [
+    {
+      "url": "https://medium.com/@jerrymartejr/vector-databases-comparing-nosql-mongodb-cassandra-and-postgresql-for-ai-workloads-82e4805cc2e0",
+      "score": 0.81097376,
+      "content": "Storing Vectors in MongoDB\n\n```\nfrom pymongo import MongoClientclient = MongoClient(\"mongodb://localhost:27017/\")db = client[\"vector_db\"]collection = db[\"embeddings\"]collection.insert_one({\"id\": 1, \"vector\": [0.1, 0.2, 0.3, 0.4]})\n```\n\nThis approach works well for storing embeddings generated from AI models like OpenAI, Hugging Face, or TensorFlow.\n\nQuerying Vectors in MongoDB\n\n```\nquery_vector = [0.15, 0.25, 0.35, 0.45]results = collection.find({\"vector\": {\"$near\": query_vector}})for r in results: print(r)\n```\n\nMongoDB’s strength lies in its scalability, but its vector search capabilities are still evolving compared to dedicated vector databases.\n\n### Cassandra: Handling Vectors in a Distributed System [...] ### Cassandra: Handling Vectors in a Distributed System\n\nCassandra is optimized for massive-scale distributed applications, making it an interesting choice for storing AI embeddings.\n\nStoring Vectors in Cassandra\n\n```\nCREATE TABLE vectors ( id UUID PRIMARY KEY, embedding LIST);INSERT INTO vectors (id, embedding) VALUES (uuid(), [0.1, 0.2, 0.3, 0.4]);\n```\n\nCassandra’s list-based approach makes it possible to store vectors, but querying for similarity search is challenging because Cassandra does not have built-in ANN search capabilities. Instead, AI applications must handle similarity computations at the application level or use external libraries like FAISS or ANNoy.\n\n## Storing and Querying Vectors in PostgreSQL (pgvector)"
+    },
+    {
+      "url": "https://github.com/langchain-ai/langchain/issues/8170",
+      "score": 0.7522497,
+      "content": "### Suggestion:\n\nI tried `MongoDBAtlasVectorSearch` for this and came to know that it does store the vector embeddings in MongoDB database but when extracting the relevant document with respect to a query it does not use `FAISS` based similarity search algorithm (which is, I believe, better than the one used by `MongoDBAtlasVectorSearch`).\n\ndosubot\n\n## Metadata\n\n## Metadata\n\nNo one assigned\n\nNo labels\n\nNo labels\n\nNo type\n\nNo projects\n\nNo milestone\n\nNone yet\n\nNo branches or pull requests\n\n## Issue actions\n\nYou can’t perform that action at this time. [...] Issue body actions\n\n### Issue you'd like to raise.\n\nI am using FAISS vector store for storing the vector embeddings of the documents and retrieving the relevant document with respect to the query. My question is that `FAISS` does not store the embeddings permanently, instead it stores it in RAM and when running the code once again, it simply overwrites on the previous one or simply adds another index for it (I am not sure on this one). What I want is that to store these embeddings, say on `MongoDB` so that it gets stored there for longer period of time and when extracting those embeddings, `FAISS` is the algorithm to be used for similarity search based extraction (as it is best for large documents). Is it possible?\n\n### Suggestion: [...] New issue\n\nCopy link\n\nNew issue\n\nCopy link\n\nClosed as not planned\n\nClosed as not planned\n\nHow to use MongoDB to store vector embeddings and during extracting the relevant document, using `FAISS` for similarity search based document relevancy?#8170\n\nCopy link\n\n## Description\n\nShuhul24\n\nopened on Jul 24, 2023\n\nIssue body actions\n\n### Issue you'd like to raise."
+    }
+  ]
+}

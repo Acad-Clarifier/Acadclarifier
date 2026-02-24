@@ -1,0 +1,22 @@
+{
+  "timestamp_utc": "2026-01-23T14:32:52.486042",
+  "collection": "academic_textbook_chunks",
+  "top_k": 15,
+  "queries": [
+    {
+      "query": "Explain ACID properties in DBMS",
+      "chroma_results": [],
+      "reranked_results": []
+    },
+    {
+      "query": "What is serializability?",
+      "chroma_results": [],
+      "reranked_results": []
+    },
+    {
+      "query": "Explain deadlock and deadlock prevention",
+      "chroma_results": [],
+      "reranked_results": []
+    }
+  ]
+}
