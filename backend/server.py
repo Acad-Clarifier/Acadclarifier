@@ -1,14 +1,10 @@
-from flask import Flask
-from routes import api_routes
+from apps.backend.server import create_app
+import os
+import sys
 
-
-def create_app():
-    app = Flask(__name__)
-
-    # Register all API routes
-    app.register_blueprint(api_routes)
-
-    return app
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
 
 
 if __name__ == "__main__":

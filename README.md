@@ -1,185 +1,142 @@
-# Acadclarifier
+# AcadClarifier
 
-BE Project - Acadclarifier
-
-## Web-retrieval Notes
-
-### Order of scripts
-
-1. tavily_fetch.py
-2. filtering-full.py
-3. chunking.py
-4. embeddings.py
-5. reranking.py
-6.
-
-# 📚 AcadClarifier
+BE Project - AcadClarifier
 
 AcadClarifier is an RFID-based academic question answering system designed for library environments.  
-It combines **Edge AI**, **Vector Databases**, and **Retrieval-Augmented Generation (RAG)** to help students
+It combines Edge AI, Vector Databases, and Retrieval-Augmented Generation (RAG) to help students
 ask academic questions from textbooks or real-time internet sources.
 
-> ⚠️ **Note**  
-> Hardware components (RFID reader, Raspberry Pi) are **mocked** in this version.  
-> This repository focuses on **software architecture, backend logic, and frontend UI**.
+> ⚠️ Note  
+> Hardware components (RFID reader, Raspberry Pi) are mocked in this version.  
+> This repository focuses on software architecture, backend logic, and frontend UI.
 
 ---
 
-## 🎯 Features
+## Features
 
-- 📗 Book-based academic question answering (via RFID session)
-- 🌐 Real-time academic question answering
-- 🧠 Flask-based backend controller
-- 🖥 Streamlit-based kiosk UI
-- 🌙 Light / Dark mode
-- 📦 Modular, ML-ready architecture
-
----
-
-## 🛠 Tech Stack
-
-- **Python 3.10**
-- **Streamlit** – Frontend UI
-- **Flask** – Backend API
-- **SQLite** – Session & logs (future use)
-- **Requests** – Backend ↔ Frontend communication
+- Book-based academic question answering (via RFID session)
+- Real-time academic question answering
+- Flask-based backend controller
+- Streamlit-based kiosk UI
+- Light / Dark mode
+- Modular architecture for local and web retrieval pipelines
 
 ---
 
-## 📁 Project Structure
+## Tech Stack
 
+- Python 3.10+
+- Streamlit (Frontend UI)
+- Flask (Backend API)
+- Requests (Frontend ↔ Backend communication)
+- ChromaDB / vector pipeline scripts (local retrieval)
+- Tavily pipeline scripts (web retrieval)
+
+---
+
+## Project Structure
+
+```text
 AcadClarifier/
-│
-├── app.py # Streamlit frontend
-├── backend/ # Flask backend
-│ ├── server.py
-│ ├── routes.py
-│ ├── session.py
-│ └── ml_client.py # Mock ML responses
-│
+├── app.py                            # Compatibility frontend entrypoint
+├── backend/
+│   └── server.py                     # Compatibility backend entrypoint
+├── apps/
+│   ├── frontend/
+│   │   └── app.py                    # Main Streamlit app
+│   └── backend/
+│       ├── server.py                 # Main Flask app
+│       ├── routes.py
+│       ├── session.py
+│       └── ml_client.py
+├── services/
+│   ├── retrieval-local/              # Previously to-vector/
+│   │   ├── src/
+│   │   ├── chroma_store/
+│   │   ├── data/
+│   │   ├── outputs/
+│   │   └── vectors/
+│   └── retrieval-web/                # Previously web-retrieval/tavily/
+│       ├── scripts/
+│       └── outputs/
+├── data/                             # Reserved for shared runtime artifacts
 ├── requirements.txt
-├── README.md
-└── .gitignore
+└── README.md
+```
 
 ---
 
-## 🚀 How to Run the Project (Step-by-Step)
+## Run the Project
 
-### 1️⃣ Prerequisites
-
-- Python **3.10**
-- Git
-- Internet connection
-
-Check Python version:
+### 1) Create and activate virtual environment
 
 ```bash
-python --version
+python -m venv .venv
+```
 
+Windows PowerShell:
 
-2️⃣ Clone the Repository
+```bash
+.\.venv\Scripts\Activate.ps1
+```
 
-git clone https://github.com/<your-username>/AcadClarifier.git
-cd AcadClarifier
+### 2) Install dependencies
 
-
-3️⃣ Create a Virtual Environment
-
-python -m venv venv
-
-
-Activate the virtual environment
-
-Windows (Git Bash):
-
-source venv/Scripts/activate
-
-
-Windows (PowerShell):
-
-venv\Scripts\Activate.ps1
-
-
-Linux / macOS:
-
-source venv/bin/activate
-
-
-You should see (venv) in the terminal.
-
-
-4️⃣ Install Dependencies
-
+```bash
 pip install -r requirements.txt
+```
 
+### 3) Start backend (Terminal 1)
 
-5️⃣ Run the Backend (Flask)
+Recommended:
 
+```bash
+python apps/backend/server.py
+```
 
-Open Terminal 1:
+Legacy-compatible (still supported):
 
-cd backend
-python server.py
+```bash
+python backend/server.py
+```
 
+Backend URL: http://localhost:5000
 
-Backend runs at:
+### 4) Start frontend (Terminal 2)
 
-http://localhost:5000
+Recommended:
 
+```bash
+python -m streamlit run apps/frontend/app.py
+```
 
-6️⃣ Run the Frontend (Streamlit)
+Legacy-compatible (still supported):
 
-Open Terminal 2 (keep backend running):
-
-cd AcadClarifier
+```bash
 python -m streamlit run app.py
+```
 
+Frontend URL: http://localhost:8501
 
-Frontend runs at:
+---
 
-http://localhost:8501
+## Mocking Book Scan (No Hardware Required)
 
-
-🔁 Mocking Book Scan (No Hardware Required)
-
-To simulate an RFID book scan:
-
+```bash
 curl -X POST http://localhost:5000/rfid/update \
      -H "Content-Type: application/json" \
      -d '{"uid":"BOOK_001"}'
-
-
-The UI will update automatically.
-
-
-🧠 System Modes
-📗 Book Retrieval Mode
-
-Requires a scanned book (mocked RFID)
-
-Questions are answered from book context (mock ML)
-
-🌐 Real-time Retrieval Mode
-
-No book required
-
-Designed for internet-based academic QA
-
-
-
-🎓 Academic Context
-
-This project demonstrates practical implementation of:
-
-Edge AI deployment concepts
-
-Vector database–based semantic search
-
-Retrieval-Augmented Generation (RAG)
-
-IoT integration using RFID
-
-Hybrid local + cloud AI architecture
-
-6. compression.py
 ```
+
+---
+
+## Web Retrieval Notes
+
+Current script order:
+
+1. `tavily_fetch.py`
+2. `filtering-full.py`
+3. `chunking.py`
+4. `embeddings.py`
+5. `reranking.py`
+6. `compression_v2.py`

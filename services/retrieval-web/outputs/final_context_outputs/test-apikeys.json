@@ -1,0 +1,14 @@
+{
+  "query": "How to securely store API keys in a Node.js production environment?",
+  "stage": "stage_6_context_guard",
+  "mode": "compressed",
+  "timestamp_utc": "20260122_125100",
+  "num_blocks": 1,
+  "web_context": [
+    {
+      "text": "## API Key Authentication\nAPI keys are a simple way to authenticate clients to your API.\n\nThey're best suited for server-to-server communication or when you need to identify the calling project without user context.\n\nBest Practices for API Keys:\n Store keys securely (environment variables, secret management services)\n Rotate keys regularly\n Use HTTPS to prevent key exposure\n Implement rate limiting per key\n### Implementation Example\n#### 1.\n\nAPI Key Middleware [...] const express = require('express');  \n const app = express();  \n   \n // In-memory storage for API keys (use a database in production)  \n const apiKeys = new Map([  \n   ['abc123', { name: 'Mobile App', permissions: ['read:data'] }],  \n   ['def456', { name: 'Web Client', permissions: ['read:data', 'write:data'] }]  \n ]);  \n   \n // API key authentication middleware  \n const authenticateApiKey = (req, res, next) => {  \n   const apiKey = req.headers['x-api-key'] || req.query.apiKey;  \n   \n   if (!apiKey) {  \n     return res.status(401).json({   \n       error: 'API key is required',  \n       docs: '  \n     });  \n   }  \n   \n   const keyData = apiKeys.get(apiKey);  \n   if (!keyData) {  \n     return res.status(403).json({ error: 'Invalid API key' });  \n   }",
+      "source": "https://www.w3schools.com/nodejs/nodejs_api_auth.asp",
+      "confidence": 3.658
+    }
+  ]
+}
