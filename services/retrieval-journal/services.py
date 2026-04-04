@@ -7,7 +7,7 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 # 🌐 Semantic Scholar Fetch
 import asyncio
 
-SEMANTIC_API_KEY = "fQyhuq8RKo1jiJjDnGb2Mam45saUMOqjaC59MEwH"   # 🔥 add your key
+SEMANTIC_API_KEY = "ADD Semantic Scholor API Key"   # 🔥 add your key
 query_cache = {}
 
 async def fetch_semantic_scholar(client, query):
