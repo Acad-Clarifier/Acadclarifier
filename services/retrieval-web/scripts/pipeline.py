@@ -8,6 +8,7 @@ import chunking
 import embeddings
 import reranking
 import compression_v2
+import simplifier
 
 
 # ======================================================
@@ -23,6 +24,7 @@ PIPELINE: List[Stage] = [
     ("embeddings", embeddings.run),
     ("reranking", reranking.run),
     ("compression", compression_v2.run),
+    ("simplifier", simplifier.run),
 ]
 
 

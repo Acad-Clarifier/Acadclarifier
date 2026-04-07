@@ -1,0 +1,14 @@
+{
+  "query": "How to make RAG systems",
+  "stage": "stage_6_context_guard",
+  "mode": "compressed",
+  "timestamp_utc": "20260403_061928",
+  "num_blocks": 1,
+  "web_context": [
+    {
+      "text": "### Rollback and Experimentation Strategies\nProduction RAG systems require robust rollback mechanisms to handle model regressions, index corruptions, or performance degradations.\n\nImplement versioned deployments where each component (embeddings, indices, model weights) is tagged with version identifiers.\n\nMaintain at least three versions: current production, previous stable, and candidate release.\n\nBlue-green deployment works effectively for RAG systems.\n\nMaintain two identical production environments, with traffic routed to the \"blue\" environment while \"green\" serves as standby.\n\nUpdates deploy to green first, undergo validation, then traffic switches.\n\nIf issues arise, immediate rollback involves simply reverting the traffic switch. [...] #### Graph RAG\nGraph RAG combines the power of knowledge graphs with vector-based retrieval to capture complex relationships between entities that traditional RAG systems might miss.\n\nBy representing information as interconnected nodes and edges, Graph RAG excels at multi-hop reasoning and relationship-aware retrieval.\n\nThe architecture typically involves:\nKnowledge Graph Construction: Documents are processed to extract entities, relationships, and attributes.\n\nNatural language processing identifies named entities, relationship extraction models determine connections, and community detection algorithms identify clusters of related information.\n\nThis creates a structured representation that preserves semantic relationships beyond what embeddings alone can capture. [...] ## Conclusion\nIt should be clear that building a robust and scalable enterprise RAG system involves carefully orchestrating interconnected components.\n\nFrom user authentication to input guardrails, query rewriting, encoding, document ingestion, and retrieval components, such as vector databases and generators, every step plays a crucial role in shaping the system's performance.\n\nIn the ever-evolving landscape of RAG systems, we hope this practical guide helps empower developers and leaders with actionable insights!\nGalileo is the leading platform for rapid evaluation, experimentation, and observability for teams building LLM-powered applications.\n\nIt is powered by a suite of metrics to identify and mitigate hallucinations.",
+      "source": "https://galileo.ai/blog/mastering-rag-how-to-architect-an-enterprise-rag-system",
+      "confidence": 2.797
+    }
+  ]
+}

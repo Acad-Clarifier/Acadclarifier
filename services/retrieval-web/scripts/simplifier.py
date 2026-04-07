@@ -198,8 +198,11 @@ def save_simplified(output_text: str, *, timestamp: str | None = None) -> str:
     return str(path)
 
 
-def run(input_json_path: str):
-    with open(input_json_path, "r", encoding="utf-8") as f:
+def run(input_path: str | None = None, *, query: str | None = None):
+    if not input_path:
+        raise ValueError("simplifier.run requires input_path")
+
+    with open(input_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     prompt = build_prompt(data)
@@ -213,6 +216,7 @@ def run(input_json_path: str):
     output_path = save_simplified(output_text, timestamp=timestamp)
 
     print(f"[OK] Output saved to: {output_path}")
+    return output_path
 
 # ==============================
 # ENTRY POINT

@@ -1,0 +1,49 @@
+{
+  "query": "Explain the main idea of machine learning in academic terms.",
+  "timestamp_utc": "20260403_055142",
+  "tavily_response": {
+    "query": "Explain the main idea of machine learning in academic terms.",
+    "follow_up_questions": null,
+    "answer": null,
+    "images": [],
+    "results": [
+      {
+        "url": "https://ischoolonline.berkeley.edu/blog/what-is-machine-learning/",
+        "title": "What Is Machine Learning (ML)? Definition and Examples",
+        "content": "The foundation course is Applied Machine Learning, which provides a broad introduction to the key ideas in machine learning. The emphasis is on intuition and practical examples rather than theoretical results, though some experience with probability, statistics, and linear algebra is important. Students learn how to apply powerful machine learning techniques to new problems, run evaluations and interpret results, and think about scaling up from thousands of data points to billions. [...] ## Key Takeaways\n\n Machine learning is a subset of AI concerned with training models to allow computers to mimic human thought and decision making without explicit programming.\n The most common types of ML are supervised learning (learning via labeled data), unsupervised learning (learning via unlabeled data), and reinforcement learning (learning via a reward and punishment response).\n While ML drives powerful benefits like automation, advanced pattern recognition, and personalization, it also has risks, including algorithmic bias and data privacy concerns.\n\nTable of Contents\n\nWhat is machine learning?\n\nHow does machine learning work?\n\nWhat are the main types of machine learning and common algorithms?\n\nWhat are deep learning and neural networks?\n\nExamples of machine learning",
+        "score": 0.55767727,
+        "raw_content": null
+      },
+      {
+        "url": "https://aws.amazon.com/what-is/machine-learning/",
+        "title": "What is Machine Learning? - ML Technology Explained - AWS",
+        "content": "## How does machine learning work?\n\nThe central idea behind machine learning is an existing mathematical relationship between any input and output data combination. The machine learning model does not know this relationship in advance but can guess if sufficient examples of input-output data sets are given. This means every machine learning algorithm is built around a modifiable math function. The underlying principle can be understood like this:\n\n1. We ‘train’ the algorithm by giving it the following input/output (i,o) combinations – (2,10), (5,19), and (9,31)\n2. The algorithm computes the relationship between input and output to be: o=3\\i+4\n3. We then give it input 7 and ask it to predict the output. It can automatically determine the output as 25. [...] ## What is machine learning in simple words?\n\nML is short for Machine Learning which is a branch of artificial intelligence (AI) and computer science that leverages data and algorithms to enable AI systems to learn and improve in a manner similar to humans, progressively enhancing their accuracy over time.\n\n## What is the difference between machine learning vs. artificial intelligence?\n\nWhile the terms machine learning and artificial intelligence (AI) are used interchangeably, they are not the same. Machine learning is one of many branches of AI. While machine learning is AI, not all AI activities can be called machine learning. [...] Artificial intelligence is the broader concept of making machines more human-like, while machine learning is a subset focused on teaching computers to learn from data without explicit programming. AI includes everything from smart assistants like Alexa, chatbots, and image generators to robotic vacuum cleaners and self-driving cars.\n\nIn contrast, machine learning models perform more specific data analysis tasks—like classifying documents, labeling images, or predicting the maintenance schedule of factory equipment. Machine learning technology is primarily based on mathematics and statistics, while other types of AI are more complex. Essentially, machine learning is a method to achieve artificial intelligence.\n\nLearn more about machine learning vs. artificial intelligence",
+        "score": 0.54608524,
+        "raw_content": null
+      },
+      {
+        "url": "https://ischool.syracuse.edu/what-is-machine-learning/",
+        "title": "What Is Machine Learning? Key Concepts and Real-World Uses",
+        "content": "Though the concept might seem like a product of modern advancements, the idea has been around for decades. In 1959, Arthur Samuel, one of the pioneers in computer science, defined it as “the field of study that gives computers the ability to learn without being explicitly programmed.” This means that instead of relying on fixed rules, machine learning systems develop their own insights by analyzing vast amounts of data and adjusting accordingly.\n\nThis idea was later reinforced by Herbert Simon, considered a founding father of artificial intelligence, who explained that machine learning is fundamentally about improving performance through experience—just as humans get better at tasks through practice.\n\n## Machine Learning Versus Other Similar Fields [...] ## What Is Machine Learning?\n\nMachine learning refers to the process by which computers are able to recognize patterns and improve their performance over time without needing to be programmed for every possible scenario. Instead of following a rigid set of rules, these systems analyze data, make predictions, and adjust their approach based on their learning.\n\nThis adapting ability makes machine learning one of the most powerful tools in modern technology. Thanks to it, computers can perform tasks that once required human intuition—like identifying objects in images, understanding spoken language, or detecting fraudulent transactions.",
+        "score": 0.49831602,
+        "raw_content": null
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Machine_learning",
+        "title": "Machine learning - Wikipedia",
+        "content": "[edit]\n\n### Artificial intelligence\n\n[edit]\n\nAs a scientific endeavour, machine learning grew out of the quest for artificial intelligence (AI). In the early days of AI as an academic discipline \"Discipline (academia)\"), some researchers were interested in having machines learn from data. They attempted to approach the problem with various symbolic methods, as well as what were then termed \"neural networks\"; these were mostly perceptrons and other models that were later found to be reinventions of the generalised linear models of statistics. Probabilistic reasoning was also employed, especially in automated medical diagnosis.: 488 [...] denoising. The key idea is that a clean image patch can be sparsely represented by an image dictionary, but the noise cannot.",
+        "score": 0.48469776,
+        "raw_content": null
+      },
+      {
+        "url": "https://mitsloan.mit.edu/ideas-made-to-matter/machine-learning-explained",
+        "title": "Machine learning, explained | MIT Sloan",
+        "content": "## What is machine learning?\n\nMachine learning is a subfield of artificial intelligence, which is broadly defined as the capability of a machine to imitate intelligent human behavior. Artificial intelligence systems are used to perform complex tasks in a way that is similar to how humans solve problems.\n\nThe goal of AI is to create computer models that exhibit “intelligent behaviors” like humans, according to Boris Katz, a principal research scientist and head of the InfoLab Group at CSAIL. This means machines that can recognize a visual scene, understand a text written in natural language, or perform an action in the physical world. [...] Machine learning is one way to use AI. It was defined in the 1950s by AI pioneer Arthur Samuel as “the field of study that gives computers the ability to learn without explicitly being programmed.”\n\nThe definition holds true, according to a lecturer at MIT Sloan and head of machine learning at Kensho, which specializes in artificial intelligence for the finance and U.S. intelligence communities. He compared the traditional way of programming computers, or “software 1.0,” to baking, where a recipe calls for precise amounts of ingredients and tells the baker to mix for an exact amount of time. Traditional programming similarly requires creating detailed instructions for the computer to follow. [...] When companies today deploy artificial intelligence programs, they are most likely using machine learning — so much so that the terms are often used interchangeably, and sometimes ambiguously. Machine learning is a subfield of artificial intelligence that gives computers the ability to learn without explicitly being programmed.\n\n“In just the last five or 10 years, machine learning has become a critical way, arguably the most important way, most parts of AI are done,” said MIT Sloan professor the founding director of the MIT Center for Collective Intelligence. “So that's why some people use the terms AI and machine learning almost as synonymous … most of the current advances in AI have involved machine learning.”",
+        "score": 0.47300056,
+        "raw_content": null
+      }
+    ],
+    "response_time": 1.22,
+    "request_id": "487f8c72-2e16-4fd1-8be2-c68de2d02fb5"
+  }
+}

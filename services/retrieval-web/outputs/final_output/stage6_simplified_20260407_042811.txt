@@ -1,0 +1,4 @@
+# MongoDB: An Academic Guide to a NoSQL Document Database
+
+### Overview
+MongoDB is an open-source, nonrelational database management system (DBMS) that stores data using flexible, JSON-like documents rather than traditional tables and rows. Categorized as a NoSQL database, it offers an elastic data storage model, simplifying database management and providing a highly scalable environment for diverse applications. Its document-

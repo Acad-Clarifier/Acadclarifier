@@ -1,0 +1,40 @@
+<section class="page retrieval-page local-page" data-page="local" aria-labelledby="local-page-title">
+    <header class="local-header page-row">
+        <div>
+            <h1 id="local-page-title" class="page-title">Book Retrieval</h1>
+            <p class="caption">
+                Search your repository and begin contextual Q and A from scanned books.
+            </p>
+        </div>
+        <button class="secondary-btn" data-action="back" data-mode="local" type="button">Back</button>
+    </header>
+
+    <section class="local-search" aria-labelledby="local-search-title">
+        <h2 id="local-search-title" class="visually-hidden">Book search</h2>
+        <div class="search-row">
+            <input id="local-book-search" class="search-input" type="text"
+                placeholder="Search by title, author, ISBN, or research topic..." autocomplete="off" />
+            <button class="primary-btn" data-action="find-library" type="button">Find Book</button>
+            <button class="secondary-btn" data-action="open-library" type="button">Explore Library</button>
+        </div>
+        <section id="local-status" class="status-panel" aria-live="polite"></section>
+    </section>
+
+    <div id="library-modal-root"></div>
+
+    <section class="chat-shell" aria-label="Contextual assistant">
+        <header class="chat-shell-header">
+            <h3>Contextual Assistant</h3>
+            <p id="local-chat-lock-note" class="chat-lock-note">Locked until a book is scanned.</p>
+        </header>
+
+        <div id="local-chat" class="chat-log" aria-live="polite"></div>
+
+        <form id="local-form" class="chat-form" autocomplete="off">
+            <label for="local-question" class="visually-hidden">Ask a question about this book</label>
+            <input id="local-question" name="question" type="text"
+                placeholder="Select a scanned book to start a conversation..." maxlength="500" required />
+            <button class="primary-btn" type="submit">Send</button>
+        </form>
+    </section>
+</section>

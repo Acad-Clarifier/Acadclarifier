@@ -1,0 +1,69 @@
+<section class="page journal-rec-page" data-page="journal_rec" aria-labelledby="journal-rec-title">
+    <header class="journal-rec-hero">
+        <p class="journal-rec-kicker">AI Recommendation Engine</p>
+        <h1 id="journal-rec-title">Journal Recommendation</h1>
+        <p class="journal-rec-lead">
+            Describe your research topic in natural language. Our AI will recommend relevant journals and papers from
+            scholarly sources.
+        </p>
+    </header>
+
+    <section class="journal-rec-input-shell" aria-label="Journal recommendation form">
+        <form id="journal-rec-form" class="journal-rec-form" autocomplete="off">
+            <div class="journal-rec-form-head">
+                <label for="journal-rec-question" class="visually-hidden">Describe your research topic</label>
+                <textarea id="journal-rec-question" name="query" maxlength="1000" required
+                    placeholder='Describe your research topic (e.g., "I am looking for recent breakthroughs in sustainable battery technologies for long-range EVs").'></textarea>
+            </div>
+
+            <div class="journal-rec-actions">
+                <div class="journal-rec-controls">
+                    <label for="journal-rec-topk">Results</label>
+                    <select id="journal-rec-topk" name="top_k">
+                        <option value="5">Top 5</option>
+                        <option value="10" selected>Top 10</option>
+                        <option value="15">Top 15</option>
+                    </select>
+                </div>
+                <button class="primary-btn" type="submit">Send</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="journal-rec-topics" aria-label="Quick prompts">
+        <h2>Quick Prompts</h2>
+        <div class="journal-rec-topic-list">
+            <button type="button"
+                data-journal-topic="Latest breakthroughs in sustainable battery technologies for long-range EVs">EV
+                Battery Breakthroughs</button>
+            <button type="button"
+                data-journal-topic="Machine learning methods for early cancer detection in medical imaging">ML for
+                Medical Imaging</button>
+            <button type="button"
+                data-journal-topic="Green hydrogen production and storage technologies for industrial scale">Green
+                Hydrogen at Scale</button>
+            <button type="button"
+                data-journal-topic="Recent advances in explainable AI for high-stakes decision systems">Explainable AI
+                Advances</button>
+        </div>
+    </section>
+
+    <section class="journal-rec-results-wrap" aria-live="polite" aria-label="Journal recommendation results">
+        <div class="journal-rec-results-head">
+            <div>
+                <h2>Journal Recommendations</h2>
+                <p>
+                    Results for: <span class="query-display">"<span id="journal-rec-query-display">your research
+                            topic</span>"</span>
+                </p>
+            </div>
+            <div class="journal-rec-filters" role="group" aria-label="Journal filters">
+                <button type="button" data-journal-filter="all" class="is-active">All Journals</button>
+                <button type="button" data-journal-filter="subscription">Subscribed</button>
+                <button type="button" data-journal-filter="open_access">Open Access</button>
+            </div>
+        </div>
+
+        <div id="journal-rec-results" class="journal-rec-results"></div>
+    </section>
+</section>

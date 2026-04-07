@@ -1,0 +1,14 @@
+{
+  "query": "Explain the main idea of machine learning in academic terms.",
+  "stage": "stage_6_context_guard",
+  "mode": "compressed",
+  "timestamp_utc": "20260403_055244",
+  "num_blocks": 1,
+  "web_context": [
+    {
+      "text": "Though the concept might seem like a product of modern advancements, the idea has been around for decades.\n\nIn 1959, Arthur Samuel, one of the pioneers in computer science, defined it as “the field of study that gives computers the ability to learn without being explicitly programmed.” This means that instead of relying on fixed rules, machine learning systems develop their own insights by analyzing vast amounts of data and adjusting accordingly.\n\nThis idea was later reinforced by Herbert Simon, considered a founding father of artificial intelligence, who explained that machine learning is fundamentally about improving performance through experience—just as humans get better at tasks through practice.\n## Machine Learning Versus Other Similar Fields [...] ## What Is Machine Learning?\nMachine learning refers to the process by which computers are able to recognize patterns and improve their performance over time without needing to be programmed for every possible scenario.\n\nInstead of following a rigid set of rules, these systems analyze data, make predictions, and adjust their approach based on their learning.\n\nThis adapting ability makes machine learning one of the most powerful tools in modern technology.\n\nThanks to it, computers can perform tasks that once required human intuition—like identifying objects in images, understanding spoken language, or detecting fraudulent transactions.",
+      "source": "https://ischool.syracuse.edu/what-is-machine-learning/",
+      "confidence": 3.136
+    }
+  ]
+}

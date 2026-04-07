@@ -257,6 +257,19 @@ def run(input_path: str | None, *, query: str | None = None) -> str:
     raw_results = tavily_response["results"]
     filtered_results = filter_results(raw_results, query_keywords)
 
+    if not filtered_results and raw_results:
+        print("[FILTERING] No results passed strict validation; using top raw Tavily results as fallback.")
+        fallback_results = []
+        for result in raw_results[:3]:
+            fallback_results.append(
+                {
+                    "url": result.get("url", ""),
+                    "score": result.get("score", 0),
+                    "content": result.get("content", ""),
+                }
+            )
+        filtered_results = fallback_results
+
     return save_output(original_query, filtered_results)
 
 

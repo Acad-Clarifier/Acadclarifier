@@ -1,0 +1,48 @@
+<section class="page retrieval-page web-page" data-page="web" aria-labelledby="web-page-title">
+    <header class="web-breadcrumbs" aria-label="Web retrieval navigation">
+        <div class="breadcrumb-list">
+            <a href="#/">Home</a>
+            <span>/</span>
+            <span class="breadcrumb-current">Web Retrieval</span>
+        </div>
+        <button class="secondary-btn" data-action="back" data-mode="web" type="button">Back</button>
+    </header>
+
+    <section class="web-hero" aria-labelledby="web-page-title">
+        <div class="web-tag">
+            <span class="web-tag-mark" aria-hidden="true"></span>
+            Live Web Access
+        </div>
+        <h1 id="web-page-title" class="web-title">Real-time Retrieval</h1>
+        <p class="web-caption">
+            Access up-to-the-minute academic insights from trusted digital sources and ask follow-up
+            questions in one continuous conversation.
+        </p>
+    </section>
+
+    <section class="chat-shell web-chat" aria-label="Web assistant">
+        <header class="chat-shell-header">
+            <h3>Web Research Assistant</h3>
+            <p class="chat-lock-note">Connected to live sources.</p>
+        </header>
+
+        <div id="web-chat" class="chat-log" aria-live="polite"></div>
+
+        <form id="web-form" class="chat-form" autocomplete="off">
+            <label for="web-question" class="visually-hidden">Ask a question from web sources</label>
+            <input id="web-question" name="question" type="text" placeholder="Ask any academic question..."
+                maxlength="500" required />
+            <button class="primary-btn" type="submit">Send</button>
+        </form>
+
+        <section class="web-hints" aria-label="Prompt ideas">
+            <p class="web-hints-title">Try one of these</p>
+            <div class="web-hint-grid">
+                <button class="web-hint-btn" type="button">Latest breakthroughs in solid-state battery
+                    technology</button>
+                <button class="web-hint-btn" type="button">Peer-reviewed studies on microplastics published this
+                    year</button>
+            </div>
+        </section>
+    </section>
+</section>

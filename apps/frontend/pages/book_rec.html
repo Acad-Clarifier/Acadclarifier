@@ -1,0 +1,50 @@
+<section class="page book-rec-page" data-page="book_rec" aria-labelledby="book-rec-title">
+    <header class="book-rec-hero">
+        <div class="book-rec-icon" aria-hidden="true">★</div>
+        <h1 id="book-rec-title" class="book-rec-title-main">Book Recommendation</h1>
+        <p class="book-rec-lead">
+            Describe what you want to learn and get AI-ranked book recommendations from our indexed collection.
+        </p>
+    </header>
+
+    <section class="book-rec-input-shell" aria-label="Recommendation form">
+        <form id="book-rec-form" class="book-rec-form" autocomplete="off">
+            <label for="book-rec-question" class="visually-hidden">Describe what you want to learn</label>
+            <textarea id="book-rec-question" name="question" maxlength="500" required
+                placeholder="E.g. I want to master machine learning from foundations to practical projects with Python."></textarea>
+
+            <div class="book-rec-form-footer">
+                <div class="book-rec-controls">
+                    <label for="book-rec-topk">Results</label>
+                    <select id="book-rec-topk" name="top_k">
+                        <option value="3">Top 3</option>
+                        <option value="5" selected>Top 5</option>
+                        <option value="8">Top 8</option>
+                    </select>
+                </div>
+                <button class="primary-btn" type="submit">Get Recommendations</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="book-rec-topics" aria-label="Quick topics">
+        <h2>Popular Exploration Paths</h2>
+        <div class="book-rec-topic-list">
+            <button type="button" data-rec-topic="Molecular biology from beginner to intermediate">Molecular Biology
+                101</button>
+            <button type="button" data-rec-topic="Astrophysics for beginners with conceptual clarity">Astrophysics for
+                Beginners</button>
+            <button type="button" data-rec-topic="Roman history classics and primary sources">Roman History
+                Classics</button>
+            <button type="button" data-rec-topic="Computer science theory and algorithms">Computer Science
+                Theory</button>
+            <button type="button" data-rec-topic="Cognitive psychology introductory and advanced books">Cognitive
+                Psychology</button>
+        </div>
+    </section>
+
+    <section class="book-rec-results-wrap" aria-live="polite" aria-label="Recommendation results">
+        <h2>Recommended Books</h2>
+        <div id="book-rec-results" class="book-rec-results"></div>
+    </section>
+</section>

@@ -1,0 +1,49 @@
+{
+  "query": "What is Empirical risk",
+  "timestamp_utc": "20260403_061019",
+  "tavily_response": {
+    "query": "What is Empirical risk",
+    "follow_up_questions": null,
+    "answer": null,
+    "images": [],
+    "results": [
+      {
+        "url": "https://codefinity.com/courses/v2/abf891a8-0a13-4925-bcbc-0bafe55c27be/8aa87fb9-cab1-477a-a0b0-4c055d59908d/4ad62a5e-f271-42a2-bbc3-ae6c02b8cf33",
+        "title": "Learn Risk Minimization: Expected vs Empirical Risk - Codefinity",
+        "content": "## Empirical Risk: What You Can Actually Compute\n\nSince you only have a finite dataset, you approximate the expected risk with the empirical risk:\n\nEmpirical risk simply averages the loss over the training samples.\nIt's the practical version of the theoretical ideal.\n\nNote\n\nExpected risk is like measuring your driving skills on all roads in the world.\nEmpirical risk is like testing yourself on the few routes you drive every day.\nMastering just those doesn't guarantee you're ready for a mountain pass in Nepal. [...] Select the correct answer\n\nExpected risk is always lower than empirical risk because it is calculated on a larger dataset.\n\nEmpirical risk is only used for evaluating models, not for training.\n\nEmpirical risk is a theoretical concept, while expected risk is what is minimized in practice.\n\nExpected risk measures the average loss over the true data distribution, while empirical risk averages loss over the observed dataset; empirical risk is used because the true distribution is unknown.\n\nHow can we improve it?\n\nThanks for your feedback!\n\nAsk AI\n\nexpand\n\nAsk AI\n\nChatGPT\n\nAsk anything or try one of the suggested questions to begin our chat\n\nsome-alt [...] ### What this demonstrates\n\nMinimizing empirical risk is central to training machine learning models. The hope is that lowering the loss on the training data will also reduce the expected risk on unseen data. However, relying only on empirical risk can cause overfitting: the model may learn patterns that are specific to the training set, including noise. In such cases, it performs well on the training data but poorly on new examples. This creates the key challenge in machine learning — achieving a balance between fitting the data and ensuring good generalization.\n\nquestion mark\n\nWhich of the following statements best describes the difference between expected risk and empirical risk, and explains why empirical risk is used in practice?\n\nSelect the correct answer",
+        "score": 0.8706085,
+        "raw_content": null
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Empirical_risk_minimization",
+        "title": "Empirical risk minimization - Wikipedia",
+        "content": "In statistical learning theory, the principle of empirical risk minimization defines a family of learning algorithms based on evaluating performance over a known and fixed dataset. The core idea is based on an application of the law of large numbers; more specifically, we cannot know exactly how well a predictive algorithm will work in practice (i.e. the \"true risk\") because we do not know the true distribution of the data, but we can instead estimate and optimize the performance of the algorithm on a known set of training data. The performance over the known set of training data is referred to as the \"empirical risk\".\n\n## Background\n\n[edit] [...] ## Formal definition\n\n[edit]\n\nIn general, the risk {\\displaystyle R(h)} cannot be computed because the distribution {\\displaystyle P(x,y)} is unknown to the learning algorithm. However, given a sample of iid training data points, we can compute an estimate \"Estimate (statistics)\"), called the empirical risk, by computing the average of the loss function over the training set; more formally, computing the expectation with respect to the empirical measure:\n\n:   {\\displaystyle \\!R_{\\text{emp}}(h)={\\frac {1}{n}}\\sum _{i=1}^{n}L(h(x_{i}),y_{i}).}\n\nThe empirical risk minimization principle states that the learning algorithm should choose a hypothesis {\\displaystyle {\\hat {h}}} which minimizes the empirical risk over the hypothesis class {\\displaystyle {\\mathcal {H}}}: [...] {\\displaystyle \\mathbb {E} L_{n}\\geq a_{i}}\n\nfor all {\\displaystyle n}. This result shows that universally good classification rules do not exist, in the sense that the rule must be low quality for at least one distribution.\n\n### Computational complexity\n\n[edit]\n\nEmpirical risk minimization for a classification problem with a 0-1 loss function is known to be an NP-hard problem even for a relatively simple class of functions such as linear classifiers. Nevertheless, it can be solved efficiently when the minimal empirical risk is zero, i.e., data is linearly separable.[citation needed]",
+        "score": 0.8679453,
+        "raw_content": null
+      },
+      {
+        "url": "https://ee104.stanford.edu/lectures/erm.pdf",
+        "title": "[PDF] Empirical Risk Minimization - Stanford University",
+        "content": "empirical risk L(\u0012) increases and sensitivity r(\u0012) decreases 26 Regularization path 10 4 10 2 10 0 10 2 10 4 0.6 0.4 0.2 0.0 0.2 0.4 \u0015 \u0012i I plot shows regularization path, i.e., d = 11 components of \u0012 versus \u0015 I as \u0015 increases, model parameters (generally) get smaller I explains why regularization is also called shrinkage 27 Validation results 10 4 10 2 10 0 10 2 10 4 0.5 0.6 0.7 0.8 0.9 1.0 \u0015 risk I performance metric (mean square error) on training data (blue) and test data (red) I a reasonable choice of \u0015 is 0:3 I in this example regularization only improved model performance a little bit 28 Summary 29 Summary I empirical risk is a function of the parameter \u0012 that measures the ﬁt on the training data set I it is often but not always the same as the performance metric I ERM chooses \u0012 to",
+        "score": 0.8386933,
+        "raw_content": null
+      },
+      {
+        "url": "https://www.geeksforgeeks.org/machine-learning/empirical-risk-minimization/",
+        "title": "Empirical Risk Minimization - GeeksforGeeks",
+        "content": "### True Risk (Expected Risk)\n\nThe average error over the entire data distribution. Mathematically, it is expressed as:\n\n> R(h) = \\mathbb{E}\\_{(x, y) \\sim P}[\\mathcal{L}(y, h(x))]\n\nHere, 𝑃 represents the true data distribution and 𝐿 is the loss function.\n\n### Empirical Risk\n\nSince the true data distribution 𝑃 is usually unknown, we approximate it using the finite training dataset. The empirical risk is defined as:\n\n> R\\_{\\text{emp}}(h) = \\frac{1}{n} \\sum\\_{i=1}^n \\mathcal{L}(y\\_i, h(x\\_i))\n\nwhere 𝑛 is the number of training samples.\n\n### Hypothesis Space and ERM\n\nThe success of ERM depends on the hypothesis space 𝐻, which defines the set of all possible models. If 𝐻 is too simple, the model may underfit the data. Conversely, if 𝐻 is too complex, the model may overfit. [...] geeksforgeeks\n\n Interview Prep\n\n Python for Machine Learning\n Machine Learning with R\n Machine Learning Algorithms\n EDA\n Math for Machine Learning\n Machine Learning Interview Questions\n ML Projects\n Deep Learning\n NLP\n Computer vision\n Data Science\n Artificial Intelligence\n\n# Empirical Risk Minimization\n\nLast Updated : 23 Jul, 2025\n\nIn machine learning, the goal is to find a model that generalizes well to unseen data. One of the foundational principles for achieving this is Empirical Risk Minimization (ERM), a method that focuses on minimizing the average error over the training data. Risk refers to the expected loss incurred when using a particular hypothesis (or model). It measures the difference between the predicted outputs and the true labels.\n\n### True Risk (Expected Risk)",
+        "score": 0.8098936,
+        "raw_content": null
+      },
+      {
+        "url": "https://faculty.washington.edu/yenchic/18W_425/Lec16_ERM.pdf",
+        "title": "[PDF] Lecture 16: Learning Theory: Empirical Risk Minimization",
+        "content": "b Rn(c) is called the empirical risk. By the law of large number, b Rn(c) −R(c) = oP (1) for any given c.\nThe empirical risk minimization (ERM) is to ﬁnd the classiﬁer c∗by minimizing the empirical risk b c = argminc∈C b Rn(c).\n(16.1) As we have seen in the past few lectures, the ERM may not work because we not only need b Rn(c)−R(c) ≈0 for a given c but also b Rn(c) −R(c) ≈0 uniformly for all c ∈C. Namely, we need sup c∈C | b Rn(c) −R(c)| = oP (1).\n(16.2) When C contains only ﬁnite number of classiﬁers, say N classiﬁers, then Hoeﬀding’s inequality shows that sup c∈C | b Rn(c) −R(c)| = OP r log N n !\n, 16-1 16-2 Lecture 16: Learning Theory: Empirical Risk Minimization so as long as N is not too large compared to the sample size n, we eventually have (16.2). [...] Then we can use the new data to evaluate the performance of our classiﬁer, i.e.\nb R∗ m(b c) = 1 m m X j=1 L(b c(X∗ j ), Y ∗ j ).\nBecause now the classiﬁer b c is ﬁxed and the new data is independent of the classiﬁer b c, b R∗ m(b c) −R(b c) = OP r 1 m !\nand E( b R∗ m(b c)|b c) = R(b c), implying that b R∗ m(b c) is an unbiased estimator of R(b c).\nThus, as long as we have a set of new data, the empirical risk on the new dataset is an unbaised estimator of the actual risk.",
+        "score": 0.78154784,
+        "raw_content": null
+      }
+    ],
+    "response_time": 2.08,
+    "request_id": "0289671b-8b7a-4cd7-b79d-30f7457543c8"
+  }
+}

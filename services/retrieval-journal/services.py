@@ -1,14 +1,23 @@
+import asyncio
+import os
+from pathlib import Path
+
 import httpx
+from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
+
+
+ENV_PATH = Path(__file__).resolve().parent / ".env"
+load_dotenv(ENV_PATH)
 
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
 
 # 🌐 Semantic Scholar Fetch
-import asyncio
 
-SEMANTIC_API_KEY = "ADD Semantic Scholor API Key"   # 🔥 add your key
+SEMANTIC_API_KEY = os.getenv("SEMANTIC_API_KEY", "").strip()
 query_cache = {}
+
 
 async def fetch_semantic_scholar(client, query):
     url = "https://api.semanticscholar.org/graph/v1/paper/search"
@@ -22,8 +31,10 @@ async def fetch_semantic_scholar(client, query):
     headers = {
         "User-Agent": "acadclarifier/1.0",
         "Accept": "application/json",
-        "x-api-key": SEMANTIC_API_KEY   # 🔥 KEY USED HERE
     }
+
+    if SEMANTIC_API_KEY:
+        headers["x-api-key"] = SEMANTIC_API_KEY
 
     try:
         # 🔥 RATE LIMIT PROTECTION (1 req/sec)
@@ -62,9 +73,6 @@ async def fetch_semantic_scholar(client, query):
         return []
 
 
-
-
-
 async def fetch_openalex(client, query):
     url = "https://api.openalex.org/works"
 
@@ -93,7 +101,8 @@ async def fetch_openalex(client, query):
 
             if abstract_dict:
                 words = sorted(
-                    [(pos, word) for word, positions in abstract_dict.items() for pos in positions]
+                    [(pos, word) for word, positions in abstract_dict.items()
+                     for pos in positions]
                 )
                 abstract = " ".join([word for _, word in words])
 
@@ -115,20 +124,15 @@ async def fetch_openalex(client, query):
     except Exception as e:
         print("OpenAlex Error:", e)
         return []
-    
-
-
-
-
 
 
 # 🔍 Filter Function
 def filter_papers(papers, filter_type):
     if filter_type == "open_access":
-        filtered = [p for p in papers if p.get("is_oa")]
+        return [p for p in papers if p.get("is_oa")]
 
     elif filter_type == "subscription":
-        filtered = [
+        known_subscription = [
             p for p in papers
             if any(pub in (p.get("publisher") or "").lower()
                    for pub in [
@@ -136,14 +140,17 @@ def filter_papers(papers, filter_type):
                        "electrical and electronics engineers",
                        "elsevier",
                        "springer"
-                   ])
+            ])
         ]
+
+        if known_subscription:
+            return known_subscription
+
+        # Fallback for entries where publisher metadata is missing.
+        return [p for p in papers if not p.get("is_oa")]
 
     else:
         return papers
-
-    # ✅ fallback if empty
-    return filtered if filtered else papers
 
 
 # 🚀 MAIN PIPELINE
@@ -155,20 +162,18 @@ async def search_papers(query: str, filter_type: str = "all"):
 
         # check cache
         if query in query_cache:
-          print("Using cached results")
-          papers = query_cache[query]
+            print("Using cached results")
+            papers = query_cache[query]
         else:
-           papers = await fetch_semantic_scholar(client, query)
-           print("FETCHED PAPERS:", len(papers))
+            papers = await fetch_semantic_scholar(client, query)
+            print("FETCHED PAPERS:", len(papers))
 
-           if not papers:
-             papers = await fetch_openalex(client, query)
-             print("Using OpenAlex fallback")
+            if not papers:
+                papers = await fetch_openalex(client, query)
+                print("Using OpenAlex fallback")
 
-             query_cache[query] = papers
+                query_cache[query] = papers
 
-        
-        
         # 🔁 Step 2: Remove duplicates
         seen = set()
         unique_papers = []

@@ -1,0 +1,24 @@
+{
+  "query": "What is Empirical risk",
+  "stage": "stage_5_dedup_and_rerank",
+  "timestamp_utc": "20260403_061032",
+  "num_chunks": 2,
+  "chunks": [
+    {
+      "chunk_text": "### True Risk (Expected Risk)\nThe average error over the entire data distribution.\n\nMathematically, it is expressed as:\n> R(h) = \\mathbb{E}\\_{(x, y) \\sim P}[\\mathcal{L}(y, h(x))]\nHere, 𝑃 represents the true data distribution and 𝐿 is the loss function.\n### Empirical Risk\nSince the true data distribution 𝑃 is usually unknown, we approximate it using the finite training dataset.\n\nThe empirical risk is defined as:\n> R\\_{\\text{emp}}(h) = \\frac{1}{n} \\sum\\_{i=1}^n \\mathcal{L}(y\\_i, h(x\\_i))\nwhere 𝑛 is the number of training samples.\n### Hypothesis Space and ERM\nThe success of ERM depends on the hypothesis space 𝐻, which defines the set of all possible models.\n\nIf 𝐻 is too simple, the model may underfit the data.\n\nConversely, if 𝐻 is too complex, the model may overfit. [...] geeksforgeeks\n Interview Prep\n Python for Machine Learning\n Machine Learning with R\n Machine Learning Algorithms\n EDA\n Math for Machine Learning\n Machine Learning Interview Questions\n ML Projects\n Deep Learning\n NLP\n Computer vision\n Data Science\n Artificial Intelligence\n# Empirical Risk Minimization\nLast Updated : 23 Jul, 2025\nIn machine learning, the goal is to find a model that generalizes well to unseen data.\n\nOne of the foundational principles for achieving this is Empirical Risk Minimization (ERM), a method that focuses on minimizing the average error over the training data.\n\nRisk refers to the expected loss incurred when using a particular hypothesis (or model).\n\nIt measures the difference between the predicted outputs and the true labels.\n### True Risk (Expected Risk)",
+      "source": "https://www.geeksforgeeks.org/machine-learning/empirical-risk-minimization/",
+      "tavily_score": 0.8098936,
+      "similarity": 0.6576,
+      "token_estimate": 254,
+      "rerank_score": 5.9083
+    },
+    {
+      "chunk_text": "In statistical learning theory, the principle of empirical risk minimization defines a family of learning algorithms based on evaluating performance over a known and fixed dataset.\n\nThe core idea is based on an application of the law of large numbers; more specifically, we cannot know exactly how well a predictive algorithm will work in practice (i.e. the \"true risk\") because we do not know the true distribution of the data, but we can instead estimate and optimize the performance of the algorithm on a known set of training data.\n\nThe performance over the known set of training data is referred to as the \"empirical risk\".\n## Background\n[edit] [...] ## Formal definition\n[edit]\nIn general, the risk {\\displaystyle R(h)} cannot be computed because the distribution {\\displaystyle P(x,y)} is unknown to the learning algorithm.\n\nHowever, given a sample of iid training data points, we can compute an estimate \"Estimate (statistics)\"), called the empirical risk, by computing the average of the loss function over the training set; more formally, computing the expectation with respect to the empirical measure:\n:   {\\displaystyle \\!R_{\\text{emp}}(h)={\\frac {1}{n}}\\sum _{i=1}^{n}L(h(x_{i}),y_{i}).}\nThe empirical risk minimization principle states that the learning algorithm should choose a hypothesis {\\displaystyle {\\hat {h}}} which minimizes the empirical risk over the hypothesis class {\\displaystyle {\\mathcal {H}}}: [...] {\\displaystyle \\mathbb {E} L_{n}\\geq a_{i}}\nfor all {\\displaystyle n}.\n\nThis result shows that universally good classification rules do not exist, in the sense that the rule must be low quality for at least one distribution.\n### Computational complexity\n[edit]\nEmpirical risk minimization for a classification problem with a 0-1 loss function is known to be an NP-hard problem even for a relatively simple class of functions such as linear classifiers.\n\nThis result shows that universally good classification rules do not exist, in the sense that the rule must be low quality for at least one distribution.\n### Computational complexity\n[edit]\nEmpirical risk minimization for a classification problem with a 0-1 loss function is known to be an NP-hard problem even for a relatively simple class of functions such as linear classifiers.\n\nNevertheless, it can be solved efficiently when the minimal empirical risk is zero, i.e., data is linearly separable.[citation needed]",
+      "source": "https://en.wikipedia.org/wiki/Empirical_risk_minimization",
+      "tavily_score": 0.8679453,
+      "similarity": 0.6514,
+      "token_estimate": 382,
+      "rerank_score": 4.1682
+    }
+  ]
+}

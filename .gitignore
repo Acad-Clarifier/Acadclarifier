@@ -10,8 +10,17 @@ __pycache__/
 logs/
 *.log
 
+# Environment files
+.env
+*.env
+!.env.example
+
 # Database
 db/*.db
+
+# Alembic cache
+*.pyc
+migrations/__pycache__/
 
 # Streamlit
 .streamlit/
