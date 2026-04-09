@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import sys
 from functools import lru_cache
 from pathlib import Path
 from types import ModuleType
@@ -22,6 +23,10 @@ def _load_orchestrator_module() -> ModuleType:
     if not module_path.exists():
         raise FileNotFoundError(
             f"Runtime orchestrator not found: {module_path}")
+
+    scripts_dir = str(module_path.parent)
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
 
     spec = importlib.util.spec_from_file_location(
         "runtime_orchestrator", module_path)

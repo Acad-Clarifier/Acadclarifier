@@ -1,6 +1,13 @@
-const API_BASE = 'https://acadclarifier.onrender.com';
-// const API_BASE =
-//   window.APP_CONFIG?.apiBaseUrl || 'https://acadclarifier.onrender.com';
+const DEPLOYED_API_BASE = 'https://acadclarifier-test.onrender.com'; // just for test branch
+const LOCAL_API_BASE = 'http://localhost:5000';
+
+const isLocalHost =
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1';
+
+const API_BASE =
+  window.APP_CONFIG?.apiBaseUrl ||
+  (isLocalHost ? LOCAL_API_BASE : DEPLOYED_API_BASE);
 
 const DEFAULT_TIMEOUT_MS = 45000;
 
