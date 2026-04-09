@@ -698,9 +698,10 @@ async function submitQuestion(mode, formElement) {
   }
 
   try {
+    const activeBookRef = mode === 'local' ? getState().activeBook : null;
     const response =
       mode === 'local'
-        ? await askQuestion(question)
+        ? await askQuestion(question, activeBookRef)
         : await askWebQuestion(question);
     setApiResults(response);
 

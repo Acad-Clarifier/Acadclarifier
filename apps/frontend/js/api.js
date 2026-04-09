@@ -1,4 +1,6 @@
-const API_BASE = window.APP_CONFIG?.apiBaseUrl || 'http://localhost:5000';
+const API_BASE = 'https://acadclarifier.onrender.com';
+// const API_BASE =
+//   window.APP_CONFIG?.apiBaseUrl || 'https://acadclarifier.onrender.com';
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_BASE}${path}`, {
@@ -17,10 +19,15 @@ export function fetchSession() {
   return request('/session', { method: 'GET' });
 }
 
-export function askQuestion(question) {
+export function askQuestion(question, bookRef = null) {
+  const payload = { question };
+  if (bookRef) {
+    payload.book_ref = bookRef;
+  }
+
   return request('/ask', {
     method: 'POST',
-    body: JSON.stringify({ question }),
+    body: JSON.stringify(payload),
   });
 }
 

@@ -1,0 +1,44 @@
+{
+  "query_id": "http_verification_retry_001",
+  "timestamp": "2026-04-08T19:31:47.129172",
+  "query": "What is outer join",
+  "book": "book-1",
+  "results": [
+    {
+      "rank": 1,
+      "chunk_id": "3781",
+      "similarity_score": 0.7386,
+      "document": "•Outer-join operations can be implemented by simple extensions of join algo-rithms.\n•Hashing and sorting are dual, in the sense that any operation such as du-plicate elimination, projection, aggregation, join, and outer join that can be\nimplemented by hashing can also be implemented by sorting, and vice versa;\nthat is, any operation that can be implemented by sorting can also be imple-mented by hashing."
+    },
+    {
+      "rank": 2,
+      "chunk_id": "1504",
+      "similarity_score": 0.7321,
+      "document": "be“lost”in this way. The outer join operation works in a manner similar to the\nnatural join operation we have already studied, but preserves those tuples thatwould be lost in an join by creating tuples in the result containing null values.\nWe can use the outer-join operation to avoid this loss of information. There\nare actually three forms of the operation: left outer join, denoted\n1;right outer\njoin, denoted 1;a n d full outer join, denoted\n1. All three forms of outer join"
+    },
+    {
+      "rank": 3,
+      "chunk_id": "786",
+      "similarity_score": 0.7315,
+      "document": "instudent,b u tS n o w ’ s IDnumber does not appear in the IDcolumn of takes.T h u s,\nSnow does not appear in the result of the natural join.\nMore generally, some tuples in either or both of the relations being joined may\nbe“lost”in this way. The outer join operation works in a manner similar to the\njoin operations we have already studied, but preserve those tuples that would be\nlost in a join, by creating tuples in the result containing null values."
+    },
+    {
+      "rank": 4,
+      "chunk_id": "3719",
+      "similarity_score": 0.7286,
+      "document": "1.Compute the corresponding join, and then add further tuples to the join\nresult to get the outer-join result. Consider the left outer-join operation andtwo relations: r(R)a n d s(S). To evaluate r\n1/H9258s,w eﬁ r s tc o m p u t e r1/H9258s,\nand save that result as temporary relation q1. Next, we compute r−/Pi1R(q1)\nto obtain those tuples in rthat do not participate in the theta join. We can use"
+    },
+    {
+      "rank": 5,
+      "chunk_id": "1499",
+      "similarity_score": 0.7262,
+      "document": "relations constitute a database modiﬁcation. Note that the assignment operation\ndoes not provide any additional power to the algebra. It is, however, a convenientway to express complex queries.\n6.1.3.4 Outer join Operations\nTheouter-join operation is an extension of the join operation to deal with missing\ninformation. Suppose that there is some instructor who teaches no courses. Then\n6.1 The Relational Algebra 233\nID\nname\ndept\nname\nsalary\ncourse\nid\nsec\nid\nsemester\nyear\n10101"
+    }
+  ],
+  "summary": {
+    "total_results": 5,
+    "top_similarity_score": 0.7386,
+    "threshold_used": 0.3,
+    "model_used": "BAAI/bge-base-en-v1.5"
+  }
+}

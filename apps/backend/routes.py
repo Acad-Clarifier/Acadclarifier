@@ -2,17 +2,17 @@ from flask import Blueprint, current_app, jsonify, request
 
 try:
     from .journal_client import JournalServiceError, recommend_journals
-    from .ml_client import query_ml
     from .recommend_client import recommend_books
     from .repositories import get_book_by_ref, list_books
     from .session import get_active_book, set_active_book
+    from .local_retrieval_bridge import run_local_retrieval_pipeline
     from .web_pipeline import run_web_pipeline
 except ImportError:
     from journal_client import JournalServiceError, recommend_journals
-    from ml_client import query_ml
     from recommend_client import recommend_books
     from repositories import get_book_by_ref, list_books
     from session import get_active_book, set_active_book
+    from local_retrieval_bridge import run_local_retrieval_pipeline
     from web_pipeline import run_web_pipeline
 
 api_routes = Blueprint("api_routes", __name__)
@@ -65,11 +65,29 @@ def rfid_update():
 def ask_question():
     payload = request.get_json(silent=True) or {}
     question = (payload.get("question") or "").strip()
+    book_ref = (
+        payload.get("book_ref")
+        or payload.get("book_uid")
+        or payload.get("uid")
+        or get_active_book()
+    )
     if not question:
         return jsonify({"error": "question is required"}), 400
 
-    answer, confidence = query_ml(question, get_active_book())
-    return jsonify({"answer": answer, "confidence": confidence})
+    result = run_local_retrieval_pipeline(
+        query_text=question,
+        book_ref=book_ref,
+        query_id=payload.get("query_id"),
+        request_metadata={
+            "route": "/ask",
+            "book_ref_source": "payload_or_session",
+        },
+    )
+
+    if result.get("status") != "success":
+        return jsonify(result), 400
+
+    return jsonify(result)
 
 
 @api_routes.route("/web/ask", methods=["POST"])
