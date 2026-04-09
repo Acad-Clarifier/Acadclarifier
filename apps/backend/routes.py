@@ -1,3 +1,6 @@
+import concurrent.futures
+import time
+
 from flask import Blueprint, current_app, jsonify, request
 
 try:
@@ -16,6 +19,16 @@ except ImportError:
     from web_pipeline import run_web_pipeline
 
 api_routes = Blueprint("api_routes", __name__)
+
+ASK_TIMEOUT_SECONDS = 70
+WEB_ASK_TIMEOUT_SECONDS = 75
+JOURNAL_TIMEOUT_SECONDS = 45
+
+
+def _run_with_timeout(func, *, timeout_seconds):
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+        future = executor.submit(func)
+        return future.result(timeout=timeout_seconds)
 
 
 @api_routes.route("/health", methods=["GET"])
@@ -63,6 +76,7 @@ def rfid_update():
 
 @api_routes.route("/ask", methods=["POST"])
 def ask_question():
+    started = time.perf_counter()
     payload = request.get_json(silent=True) or {}
     question = (payload.get("question") or "").strip()
     book_ref = (
@@ -74,15 +88,29 @@ def ask_question():
     if not question:
         return jsonify({"error": "question is required"}), 400
 
-    result = run_local_retrieval_pipeline(
-        query_text=question,
-        book_ref=book_ref,
-        query_id=payload.get("query_id"),
-        request_metadata={
-            "route": "/ask",
-            "book_ref_source": "payload_or_session",
-        },
-    )
+    try:
+        result = _run_with_timeout(
+            lambda: run_local_retrieval_pipeline(
+                query_text=question,
+                book_ref=book_ref,
+                query_id=payload.get("query_id"),
+                request_metadata={
+                    "route": "/ask",
+                    "book_ref_source": "payload_or_session",
+                },
+            ),
+            timeout_seconds=ASK_TIMEOUT_SECONDS,
+        )
+    except concurrent.futures.TimeoutError:
+        current_app.logger.warning(
+            "/ask timed out after %ss", ASK_TIMEOUT_SECONDS)
+        return jsonify({"status": "error", "error": "request timed out"}), 504
+    except Exception as exc:
+        current_app.logger.exception("/ask failed: %s", exc)
+        return jsonify({"status": "error", "error": str(exc)}), 500
+    finally:
+        elapsed = round((time.perf_counter() - started) * 1000, 2)
+        current_app.logger.info("/ask completed in %sms", elapsed)
 
     if result.get("status") != "success":
         return jsonify(result), 400
@@ -92,15 +120,27 @@ def ask_question():
 
 @api_routes.route("/web/ask", methods=["POST"])
 def ask_web_question():
+    started = time.perf_counter()
     payload = request.get_json(silent=True) or {}
     question = (payload.get("question") or "").strip()
     if not question:
         return jsonify({"error": "question is required"}), 400
 
     try:
-        result = run_web_pipeline(question)
+        result = _run_with_timeout(
+            lambda: run_web_pipeline(question),
+            timeout_seconds=WEB_ASK_TIMEOUT_SECONDS,
+        )
+    except concurrent.futures.TimeoutError:
+        current_app.logger.warning(
+            "/web/ask timed out after %ss", WEB_ASK_TIMEOUT_SECONDS)
+        return jsonify({"error": "request timed out"}), 504
     except Exception as exc:
+        current_app.logger.exception("/web/ask failed: %s", exc)
         return jsonify({"error": str(exc)}), 500
+    finally:
+        elapsed = round((time.perf_counter() - started) * 1000, 2)
+        current_app.logger.info("/web/ask completed in %sms", elapsed)
 
     return jsonify(result)
 
@@ -134,6 +174,7 @@ def recommend_route():
 
 @api_routes.route("/journal/recommend", methods=["POST"])
 def recommend_journal_route():
+    started = time.perf_counter()
     payload = request.get_json(silent=True) or {}
     question = (payload.get("question") or payload.get("query") or "").strip()
     top_k = payload.get("top_k", 10)
@@ -146,15 +187,28 @@ def recommend_journal_route():
         return jsonify({"error": "top_k must be an integer"}), 400
 
     try:
-        result = recommend_journals(
-            question=question,
-            top_k=top_k,
-            filter_type=filter_type,
+        result = _run_with_timeout(
+            lambda: recommend_journals(
+                question=question,
+                top_k=top_k,
+                filter_type=filter_type,
+                timeout_seconds=JOURNAL_TIMEOUT_SECONDS,
+            ),
+            timeout_seconds=JOURNAL_TIMEOUT_SECONDS + 2,
         )
+    except concurrent.futures.TimeoutError:
+        current_app.logger.warning(
+            "/journal/recommend timed out after %ss", JOURNAL_TIMEOUT_SECONDS)
+        return jsonify({"error": "request timed out", "status": "error", "items": []}), 504
     except JournalServiceError as exc:
         return jsonify({"error": str(exc), "status": "error", "items": []}), exc.status_code
     except Exception as exc:
+        current_app.logger.exception("/journal/recommend failed: %s", exc)
         return jsonify({"error": str(exc), "status": "error", "items": []}), 500
+    finally:
+        elapsed = round((time.perf_counter() - started) * 1000, 2)
+        current_app.logger.info(
+            "/journal/recommend completed in %sms", elapsed)
 
     if result.get("status") == "error":
         return jsonify(result), 500

@@ -87,11 +87,18 @@ def _load_search_papers_callable():
         return _SEARCH_PAPERS
 
 
-def _run_search_papers(query: str, filter_type: str) -> Dict[str, Any]:
+def _run_search_papers(query: str, filter_type: str, timeout_seconds: int) -> Dict[str, Any]:
     search_papers = _load_search_papers_callable()
 
     try:
-        return asyncio.run(search_papers(query=query, filter_type=filter_type))
+        return asyncio.run(
+            asyncio.wait_for(
+                search_papers(query=query, filter_type=filter_type),
+                timeout=timeout_seconds,
+            )
+        )
+    except asyncio.TimeoutError as exc:
+        raise TimeoutError("Journal service timed out") from exc
     except RuntimeError as exc:
         # Defensive fallback for environments where an event loop is already running.
         if "asyncio.run() cannot be called from a running event loop" not in str(exc):
@@ -99,7 +106,14 @@ def _run_search_papers(query: str, filter_type: str) -> Dict[str, Any]:
 
         loop = asyncio.new_event_loop()
         try:
-            return loop.run_until_complete(search_papers(query=query, filter_type=filter_type))
+            return loop.run_until_complete(
+                asyncio.wait_for(
+                    search_papers(query=query, filter_type=filter_type),
+                    timeout=timeout_seconds,
+                )
+            )
+        except asyncio.TimeoutError as loop_exc:
+            raise TimeoutError("Journal service timed out") from loop_exc
         finally:
             loop.close()
 
@@ -143,8 +157,11 @@ def recommend_journals(
 
     try:
         _ = service_base_url  # kept for backward-compatible function signature
-        _ = timeout_seconds
-        payload = _run_search_papers(query=query, filter_type=filter_type)
+        payload = _run_search_papers(
+            query=query,
+            filter_type=filter_type,
+            timeout_seconds=timeout_seconds,
+        )
     except TimeoutError as exc:
         raise JournalServiceError(
             "Journal service timed out", status_code=504) from exc
