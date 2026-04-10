@@ -1,5 +1,6 @@
 import json
 import sys
+import threading
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
@@ -23,6 +24,10 @@ OUTPUT_DIR = "rerank_outputs"
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 OUTPUT_PARENT = (SCRIPT_DIR / ".." / "outputs" / OUTPUT_DIR).resolve()
+
+_EMBED_MODEL_CACHE = None
+_RERANK_MODEL_CACHE = None
+_MODEL_LOCK = threading.Lock()
 
 
 # =========================
@@ -150,7 +155,13 @@ def remove_redundant_chunks(chunks: List[Dict]) -> List[Dict]:
     if len(chunks) <= 1:
         return chunks
 
-    embedder = SentenceTransformer(EMBED_MODEL)
+    global _EMBED_MODEL_CACHE
+    if _EMBED_MODEL_CACHE is None:
+        with _MODEL_LOCK:
+            if _EMBED_MODEL_CACHE is None:
+                _EMBED_MODEL_CACHE = SentenceTransformer(EMBED_MODEL)
+
+    embedder = _EMBED_MODEL_CACHE
 
     texts = [c["chunk_text"] for c in chunks]
     vectors = embed_texts(embedder, texts)
@@ -192,7 +203,13 @@ def rerank_chunks(query: str, chunks: List[Dict]) -> List[Dict]:
     if not chunks:
         return []
 
-    reranker = CrossEncoder(RERANK_MODEL)
+    global _RERANK_MODEL_CACHE
+    if _RERANK_MODEL_CACHE is None:
+        with _MODEL_LOCK:
+            if _RERANK_MODEL_CACHE is None:
+                _RERANK_MODEL_CACHE = CrossEncoder(RERANK_MODEL)
+
+    reranker = _RERANK_MODEL_CACHE
 
     pairs = [(query, c["chunk_text"]) for c in chunks]
     scores = reranker.predict(pairs)

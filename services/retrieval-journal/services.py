@@ -1,5 +1,7 @@
 import asyncio
 import os
+import logging
+import threading
 from pathlib import Path
 
 import httpx
@@ -10,7 +12,28 @@ from sentence_transformers import SentenceTransformer
 ENV_PATH = Path(__file__).resolve().parent / ".env"
 load_dotenv(ENV_PATH)
 
-model = SentenceTransformer('all-MiniLM-L6-v2')
+logger = logging.getLogger(__name__)
+
+_MODEL = None
+_MODEL_LOCK = threading.Lock()
+
+
+def get_model():
+    global _MODEL
+
+    if _MODEL is not None:
+        return _MODEL
+
+    with _MODEL_LOCK:
+        if _MODEL is None:
+            try:
+                _MODEL = SentenceTransformer('all-MiniLM-L6-v2')
+            except Exception as exc:  # pragma: no cover - runtime fallback
+                logger.exception(
+                    "Failed to load journal embedding model: %s", exc)
+                return None
+
+    return _MODEL
 
 
 # 🌐 Semantic Scholar Fetch
@@ -38,9 +61,9 @@ async def fetch_semantic_scholar(client, query):
 
     try:
         # 🔥 RATE LIMIT PROTECTION (1 req/sec)
-        await asyncio.sleep(1)
+        await asyncio.sleep(0.2)
 
-        res = await client.get(url, params=params, headers=headers)
+        res = await client.get(url, params=params, headers=headers, timeout=15)
 
         print("Semantic Status:", res.status_code)
 
@@ -82,7 +105,7 @@ async def fetch_openalex(client, query):
     }
 
     try:
-        res = await client.get(url, params=params)
+        res = await client.get(url, params=params, timeout=15)
 
         print("OpenAlex Status:", res.status_code)
 
@@ -187,6 +210,10 @@ async def search_papers(query: str, filter_type: str = "all"):
 
         # 🧠 Step 3: Store + Hybrid Search
         from vector_store import add_papers, hybrid_search
+
+        model = get_model()
+        if model is None:
+            return {"results": filter_papers(papers, filter_type)}
 
         add_papers(papers, model)  # safe (no duplicates)
 

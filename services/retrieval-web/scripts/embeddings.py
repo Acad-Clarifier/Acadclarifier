@@ -1,5 +1,6 @@
 import json
 import sys
+import threading
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
@@ -21,6 +22,9 @@ OUTPUT_DIR = "embeddings_outputs"
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 OUTPUT_PARENT = (SCRIPT_DIR / ".." / "outputs" / OUTPUT_DIR).resolve()
+
+_EMBEDDING_MODEL = None
+_EMBEDDING_MODEL_LOCK = threading.Lock()
 
 # =========================
 # Utilities
@@ -52,7 +56,13 @@ def compute_similarity(
     chunks: List[Dict]
 ) -> List[Dict]:
 
-    model = SentenceTransformer(EMBEDDING_MODEL_NAME)
+    global _EMBEDDING_MODEL
+    if _EMBEDDING_MODEL is None:
+        with _EMBEDDING_MODEL_LOCK:
+            if _EMBEDDING_MODEL is None:
+                _EMBEDDING_MODEL = SentenceTransformer(EMBEDDING_MODEL_NAME)
+
+    model = _EMBEDDING_MODEL
 
     # ---- embed query ----
     query_vec = embed_texts(model, [query])[0]

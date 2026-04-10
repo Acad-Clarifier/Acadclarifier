@@ -3,6 +3,7 @@ import os
 import logging
 import time
 import uuid
+import threading
 from pathlib import Path
 from typing import List, Dict, Tuple, Optional
 import numpy as np
@@ -17,12 +18,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+_MODEL_CACHE: Optional[SentenceTransformer] = None
+_MODEL_LOCK = threading.Lock()
+
 # Configuration
 SCRIPT_DIR = Path(__file__).parent
 BASE_DIR = SCRIPT_DIR.parent  # retrieval-local folder
 EMBEDDINGS_DIR = BASE_DIR / "outputs" / "embeddings_output"
 OUTPUT_DIR = BASE_DIR / "outputs" / "query_output"
-MODEL_NAME = "BAAI/bge-base-en-v1.5"
+MODEL_NAME = "all-MiniLM-L6-v2"
 COLLECTION_NAME = "text_embeddings"
 BGE_QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
 TOP_K = 5
@@ -160,14 +164,23 @@ def load_model() -> Optional[SentenceTransformer]:
     Returns:
         Loaded SentenceTransformer model or None on failure
     """
-    try:
-        logger.info(f"Loading model: {MODEL_NAME}")
-        model = SentenceTransformer(MODEL_NAME)
-        logger.info("✓ Model loaded successfully")
-        return model
-    except Exception as e:
-        logger.error(f"Error loading model: {str(e)}")
-        return None
+    global _MODEL_CACHE
+
+    if _MODEL_CACHE is not None:
+        return _MODEL_CACHE
+
+    with _MODEL_LOCK:
+        if _MODEL_CACHE is not None:
+            return _MODEL_CACHE
+
+        try:
+            logger.info(f"Loading model: {MODEL_NAME}")
+            _MODEL_CACHE = SentenceTransformer(MODEL_NAME)
+            logger.info("✓ Model loaded successfully")
+            return _MODEL_CACHE
+        except Exception as e:
+            logger.error(f"Error loading model: {str(e)}")
+            return None
 
 
 def initialize_chromadb_for_book(book_name: str) -> Optional[chromadb.Client]:

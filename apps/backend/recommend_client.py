@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import threading
 import sqlite3
 import sys
 from pathlib import Path
@@ -8,6 +9,25 @@ from typing import Any, Dict
 
 _RECOMMENDER_INSTANCE = None
 _RECOMMENDER_IMPORT_ERROR = None
+_RECOMMENDER_LOCK = threading.Lock()
+_RECOMMENDER_LOADING = False
+
+
+def _load_recommender_task(chroma_path: str | None) -> None:
+    global _RECOMMENDER_INSTANCE
+    global _RECOMMENDER_IMPORT_ERROR
+    global _RECOMMENDER_LOADING
+
+    try:
+        book_recommender_cls = _load_recommender_class()
+        _RECOMMENDER_INSTANCE = book_recommender_cls(
+            chroma_persist_dir=chroma_path or str(_get_default_chroma_path())
+        )
+    except Exception as exc:  # pragma: no cover - runtime fallback
+        _RECOMMENDER_IMPORT_ERROR = str(exc)
+        _RECOMMENDER_INSTANCE = None
+    finally:
+        _RECOMMENDER_LOADING = False
 
 
 def _load_recommender_class():
@@ -40,17 +60,19 @@ def _get_default_chroma_path() -> Path:
 def get_recommender(chroma_path: str | None = None):
     global _RECOMMENDER_INSTANCE
     global _RECOMMENDER_IMPORT_ERROR
+    global _RECOMMENDER_LOADING
 
     if _RECOMMENDER_INSTANCE is None:
-        try:
-            book_recommender_cls = _load_recommender_class()
-            _RECOMMENDER_INSTANCE = book_recommender_cls(
-                chroma_persist_dir=chroma_path or str(
-                    _get_default_chroma_path())
-            )
-        except Exception as exc:  # pragma: no cover - runtime fallback
-            _RECOMMENDER_IMPORT_ERROR = str(exc)
-            _RECOMMENDER_INSTANCE = None
+        with _RECOMMENDER_LOCK:
+            if _RECOMMENDER_INSTANCE is None:
+                if not _RECOMMENDER_LOADING:
+                    _RECOMMENDER_LOADING = True
+                    threading.Thread(
+                        target=_load_recommender_task,
+                        args=(chroma_path,),
+                        daemon=True,
+                        name="RecommenderWarmup",
+                    ).start()
 
     return _RECOMMENDER_INSTANCE
 
