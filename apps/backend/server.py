@@ -13,13 +13,11 @@ try:
     from .config import Config
     from .db import db, migrate
     from .models import Book  # noqa: F401 - imported for metadata registration
-    from .recommend_client import get_recommender
     from .routes import api_routes
 except ImportError:
     from apps.backend.config import Config
     from apps.backend.db import db, migrate
     from apps.backend.models import Book  # noqa: F401 - imported for metadata registration
-    from apps.backend.recommend_client import get_recommender
     from apps.backend.routes import api_routes
 
 
@@ -38,12 +36,8 @@ def create_app():
     # Register all API routes
     app.register_blueprint(api_routes)
 
-    # Warm-load recommender so first request does not pay full model load cost.
-    try:
-        get_recommender(app.config.get("BOOK_RECOMMENDER_CHROMA_PATH"))
-    except Exception as exc:
-        app.logger.warning(
-            "Book recommender not initialized at startup: %s", exc)
+    # NOTE: Recommender is lazy-loaded on first request to avoid deployment timeout.
+    # Heavy models (torch, sentence-transformers) load only when needed.
 
     return app
 
