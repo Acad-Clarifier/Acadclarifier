@@ -1,0 +1,33 @@
+QUERY ID: query_1775831931_16f27da6
+BOOK: book-3
+ORIGINAL QUERY: What is intelligent agent ?
+
+================================================================================
+
+# What is an Intelligent Agent?
+
+### Overview
+An intelligent agent is a sophisticated computer program or system designed to operate autonomously, perceive its environment, and act rationally to achieve specific goals. Central to artificial intelligence, these agents distinguish themselves from ordinary programs by their ability to adapt to change, persist over time, and make decisions aimed at achieving the best possible outcomes, even under uncertainty.
+
+### Key Concepts
+*   **Computer Agent:** A program or system that goes beyond simple execution, characterized by autonomy, perception, persistence, adaptability, and goal-pursuit.
+*   **Rational Agent:** An agent that consistently acts to achieve the best possible outcome, or the best expected outcome when faced with uncertainty. This concept is fundamental to the approach of artificial intelligence.
+*   **Intelligent Agent:** A rational agent that leverages knowledge about its environment to make informed decisions and pursue its goals effectively.
+*   **Environment:** The context in which an agent operates, which can be diverse, from a simple simulated space (like a vacuum cleaner's squares) to complex real-world systems (like the Internet).
+*   **Performance Measure:** A metric used to evaluate the success of an agent's actions, crucial for determining if an agent is acting rationally.
+*   **Knowledge Base:** A component of a knowledge-based agent that stores information about the world, represented as sentences in a specific language.
+*   **Inference Mechanism:** A component (implied by the data) that processes the knowledge in the knowledge base to derive new conclusions and make decisions.
+*   **Autonomy:** The ability of an agent to operate independently without constant human intervention.
+*   **Perception:** The ability of an agent to sense and interpret information from its environment.
+*   **Adaptation:** The capacity of an agent to adjust its behavior in response to changes in its environment or internal state.
+*   **Goals:** The desired states or outcomes that an agent strives to achieve through its actions.
+
+### Detailed Academic Explanation
+
+An intelligent agent represents a core concept in artificial intelligence, distinguishing itself from conventional computer programs through a set of advanced capabilities. While all computer programs perform actions, computer agents are specifically designed to operate autonomously, meaning they can function independently without continuous human oversight. They possess the ability to perceive their environment, gathering information through various sensors, and persist over prolonged periods, maintaining their operational state and objectives. Crucially, intelligent agents are expected to adapt to changes within their environment and to create and pursue specific goals, making their behavior dynamic and purposeful.
+
+At the heart of the definition of an intelligent agent lies the concept of rationality. A rational agent is one that consistently acts in a manner calculated to achieve the best possible outcome. In situations where certainty is not possible, a rational agent aims for the best *expected* outcome, making decisions based on probabilities and available information. This notion of rationality is central to the approach of artificial intelligence, serving as a foundational principle for designing systems that can be considered truly intelligent. The success of such an agent is evaluated against a predefined performance measure, which quantifies how well its actions contribute to its goals, taking into account what is known about the environment and the agent's sensory and actuation capabilities. For instance, a simple vacuum-cleaner agent's rationality depends on its performance measure (e.g., cleanliness, energy efficiency), its knowledge of the environment (e.g., square layout), and its sensors (e.g., dirt sensor) and actuators (e.g., movement, cleaning mechanism).
+
+To make good decisions and act rationally, intelligent agents fundamentally require knowledge about the world. This knowledge is not merely raw data but is structured and contained within the agent in the form of sentences expressed in a specific knowledge representation language. These sentences are stored in a component known as a knowledge base. Consequently, a knowledge-based agent is typically composed of this knowledge base alongside an inference mechanism (implied by the data), which processes the stored knowledge to deduce new information, make logical inferences, and ultimately guide the agent's actions. This architecture allows agents to reason about their environment and potential actions, moving beyond simple reactive behaviors.
+
+The environments in which intelligent agents operate can be incredibly diverse. While the concept of rationality can be applied to agents in any imaginable environment, the Internet stands out as one of the most significant and complex environments for intelligent agents today. The widespread integration of AI systems into web-based applications has led to the common use of the "-bot" suffix (e.g., chatbots, web crawlers), signifying their pervasive presence in our digital lives. These agents leverage AI technologies to perform tasks ranging from information retrieval and customer service to complex data analysis, demonstrating the practical application of the design principles aimed at building successful, intelligent systems. The development of complete agent architectures, such as SOAR, exemplifies the ongoing effort to create comprehensive frameworks for building agents capable of operating effectively in such varied and dynamic environments.
