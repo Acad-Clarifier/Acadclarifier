@@ -6,6 +6,11 @@ from functools import lru_cache
 from pathlib import Path
 from types import ModuleType
 
+try:
+    from . import sqlite_compat  # noqa: F401
+except ImportError:
+    import sqlite_compat  # type: ignore # noqa: F401
+
 
 def _orchestrator_file_path() -> Path:
     return (

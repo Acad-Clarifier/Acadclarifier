@@ -8,6 +8,11 @@ from threading import Lock
 from typing import Any, Dict
 from urllib.parse import quote_plus
 
+try:
+    from . import sqlite_compat  # noqa: F401
+except ImportError:
+    import sqlite_compat  # type: ignore # noqa: F401
+
 
 ALLOWED_FILTERS = {"all", "open_access", "subscription"}
 _LOAD_LOCK = Lock()

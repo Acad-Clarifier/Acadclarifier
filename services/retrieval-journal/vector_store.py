@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 import chromadb
 from chromadb.config import Settings
 from rank_bm25 import BM25Okapi
@@ -6,15 +9,37 @@ from rank_bm25 import BM25Okapi
 bm25 = None
 documents = []
 metadata_store = []
+_client = None
+_collection = None
 
-# 🔹 Chroma setup
-client = chromadb.Client(Settings(persist_directory="./chroma_db"))
-collection = client.get_or_create_collection(name="papers")
+
+def _resolve_chroma_path() -> str:
+    configured = os.getenv("RETRIEVAL_JOURNAL_CHROMA_PATH", "").strip()
+    if configured:
+        return str(Path(configured).expanduser().resolve())
+    return str((Path(__file__).resolve().parent / "chroma_db").resolve())
+
+
+def get_client():
+    global _client
+    if _client is None:
+        _client = chromadb.Client(
+            Settings(persist_directory=_resolve_chroma_path())
+        )
+    return _client
+
+
+def get_collection():
+    global _collection
+    if _collection is None:
+        _collection = get_client().get_or_create_collection(name="papers")
+    return _collection
 
 
 # 🚀 ADD PAPERS
 def add_papers(papers, model):
     global bm25, documents, metadata_store
+    collection = get_collection()
 
     existing_ids = set(collection.get()["ids"])
 
@@ -58,6 +83,7 @@ def add_papers(papers, model):
 # 🔍 HYBRID SEARCH
 def hybrid_search(query, model, k=20):
     global bm25, documents, metadata_store
+    collection = get_collection()
 
     # 🔥 rebuild BM25 if missing (on restart)
     if bm25 is None:

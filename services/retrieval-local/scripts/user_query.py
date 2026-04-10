@@ -24,13 +24,57 @@ _MODEL_LOCK = threading.Lock()
 # Configuration
 SCRIPT_DIR = Path(__file__).parent
 BASE_DIR = SCRIPT_DIR.parent  # retrieval-local folder
-EMBEDDINGS_DIR = BASE_DIR / "outputs" / "embeddings_output"
+
+
+def _resolve_embeddings_dir() -> Path:
+    configured = os.getenv("RETRIEVAL_LOCAL_EMBEDDINGS_DIR", "").strip()
+    if configured:
+        return Path(configured).expanduser().resolve()
+    return (BASE_DIR / "outputs" / "embeddings_output").resolve()
+
+
+EMBEDDINGS_DIR = _resolve_embeddings_dir()
 OUTPUT_DIR = BASE_DIR / "outputs" / "query_output"
-MODEL_NAME = "all-MiniLM-L6-v2"
 COLLECTION_NAME = "text_embeddings"
 BGE_QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
 TOP_K = 5
 SIMILARITY_THRESHOLD = 0.3
+
+
+def _resolve_model_name() -> str:
+    configured = os.getenv("RETRIEVAL_LOCAL_MODEL_NAME", "").strip()
+    return configured or "BAAI/bge-base-en-v1.5"
+
+
+def _classify_chroma_error(message: str) -> Tuple[str, str]:
+    lowered = message.lower()
+    if "unsupported version of sqlite3" in lowered:
+        return "chroma_sqlite_incompatible", "chroma_sqlite_compatibility"
+    if "collection expecting embedding with dimension" in lowered:
+        return "chroma_embedding_dimension_mismatch", "chroma_query_error"
+    if "no such table" in lowered or "database disk image is malformed" in lowered:
+        return "chroma_storage_corrupt", "chroma_storage_error"
+    return "chroma_runtime_error", "chroma_runtime_error"
+
+
+def _structured_error(
+    *,
+    query_id: str,
+    book_uid: Optional[str],
+    message: str,
+    error_code: str,
+    error_type: str,
+) -> Dict:
+    return {
+        "status": "error",
+        "error": message,
+        "error_code": error_code,
+        "error_type": error_type,
+        "query_id": query_id,
+        "book": book_uid,
+        "confidence": 0.0,
+    }
+
 
 # Book titles mapping
 BOOK_TITLES = {
@@ -174,8 +218,9 @@ def load_model() -> Optional[SentenceTransformer]:
             return _MODEL_CACHE
 
         try:
-            logger.info(f"Loading model: {MODEL_NAME}")
-            _MODEL_CACHE = SentenceTransformer(MODEL_NAME)
+            model_name = _resolve_model_name()
+            logger.info(f"Loading model: {model_name}")
+            _MODEL_CACHE = SentenceTransformer(model_name)
             logger.info("✓ Model loaded successfully")
             return _MODEL_CACHE
         except Exception as e:
@@ -183,7 +228,7 @@ def load_model() -> Optional[SentenceTransformer]:
             return None
 
 
-def initialize_chromadb_for_book(book_name: str) -> Optional[chromadb.Client]:
+def initialize_chromadb_for_book(book_name: str) -> Tuple[Optional[chromadb.Client], Optional[Dict]]:
     """
     Connect to ChromaDB for specific book.
 
@@ -198,18 +243,28 @@ def initialize_chromadb_for_book(book_name: str) -> Optional[chromadb.Client]:
 
         if not book_db_path.exists():
             logger.error(f"Book database not found: {book_db_path}")
-            return None
+            return None, {
+                "error": f"missing embeddings for book '{book_name}'",
+                "error_code": "embeddings_missing",
+                "error_type": "configuration_error",
+            }
 
         client = chromadb.PersistentClient(path=str(book_db_path))
         logger.info(f"✓ Connected to ChromaDB for {book_name}")
-        return client
+        return client, None
 
     except Exception as e:
-        logger.error(f"Error initializing ChromaDB for {book_name}: {str(e)}")
-        return None
+        message = str(e)
+        logger.error(f"Error initializing ChromaDB for {book_name}: {message}")
+        error_code, error_type = _classify_chroma_error(message)
+        return None, {
+            "error": message,
+            "error_code": error_code,
+            "error_type": error_type,
+        }
 
 
-def load_collection(client: chromadb.Client) -> Optional[chromadb.Collection]:
+def load_collection(client: chromadb.Client) -> Tuple[Optional[chromadb.Collection], Optional[Dict]]:
     """
     Load existing collection from ChromaDB.
 
@@ -223,10 +278,16 @@ def load_collection(client: chromadb.Client) -> Optional[chromadb.Collection]:
         collection = client.get_collection(name=COLLECTION_NAME)
         count = collection.count()
         logger.info(f"✓ Loaded collection with {count} embeddings")
-        return collection
+        return collection, None
     except Exception as e:
-        logger.error(f"Error loading collection: {str(e)}")
-        return None
+        message = str(e)
+        logger.error(f"Error loading collection: {message}")
+        error_code, error_type = _classify_chroma_error(message)
+        return None, {
+            "error": message,
+            "error_code": error_code,
+            "error_type": error_type,
+        }
 
 
 def run_retrieval_request(
@@ -272,25 +333,35 @@ def run_retrieval_request(
             "confidence": 0.0,
         }
 
-    client = initialize_chromadb_for_book(normalized_book_uid)
+    client, client_error = initialize_chromadb_for_book(normalized_book_uid)
     if not client:
-        return {
-            "status": "error",
+        details = client_error or {
             "error": f"missing embeddings for book '{normalized_book_uid}'",
-            "query_id": resolved_query_id,
-            "book": normalized_book_uid,
-            "confidence": 0.0,
+            "error_code": "chroma_init_failed",
+            "error_type": "chroma_runtime_error",
         }
+        return _structured_error(
+            query_id=resolved_query_id,
+            book_uid=normalized_book_uid,
+            message=details["error"],
+            error_code=details["error_code"],
+            error_type=details["error_type"],
+        )
 
-    collection = load_collection(client)
+    collection, collection_error = load_collection(client)
     if not collection:
-        return {
-            "status": "error",
+        details = collection_error or {
             "error": f"failed to load collection for book '{normalized_book_uid}'",
-            "query_id": resolved_query_id,
-            "book": normalized_book_uid,
-            "confidence": 0.0,
+            "error_code": "chroma_collection_load_failed",
+            "error_type": "chroma_runtime_error",
         }
+        return _structured_error(
+            query_id=resolved_query_id,
+            book_uid=normalized_book_uid,
+            message=details["error"],
+            error_code=details["error_code"],
+            error_type=details["error_type"],
+        )
 
     query_embedding = embed_query(normalized_query, model)
     if query_embedding is None:
@@ -302,15 +373,20 @@ def run_retrieval_request(
             "confidence": 0.0,
         }
 
-    results = retrieve_documents(collection, query_embedding)
+    results, retrieval_error = retrieve_documents(collection, query_embedding)
     if results is None:
-        return {
-            "status": "error",
+        details = retrieval_error or {
             "error": "retrieval failed",
-            "query_id": resolved_query_id,
-            "book": normalized_book_uid,
-            "confidence": 0.0,
+            "error_code": "chroma_query_failed",
+            "error_type": "chroma_runtime_error",
         }
+        return _structured_error(
+            query_id=resolved_query_id,
+            book_uid=normalized_book_uid,
+            message=details["error"],
+            error_code=details["error_code"],
+            error_type=details["error_type"],
+        )
 
     similarity_scores, chunk_ids, result_data = process_results(results)
     if similarity_scores is None or not result_data:
@@ -347,7 +423,7 @@ def run_retrieval_request(
             "total_results": len(result_data),
             "top_similarity_score": round(similarity_scores[0], 4) if similarity_scores else None,
             "threshold_used": SIMILARITY_THRESHOLD,
-            "model_used": MODEL_NAME,
+            "model_used": _resolve_model_name(),
         },
         "retrieval_source_path": retrieval_output_path,
     }
@@ -420,7 +496,7 @@ def embed_query(query: str, model: SentenceTransformer) -> Optional[np.ndarray]:
 def retrieve_documents(
     collection: chromadb.Collection,
     query_embedding: np.ndarray
-) -> Optional[Dict]:
+) -> Tuple[Optional[Dict], Optional[Dict]]:
     """
     Perform cosine similarity search in ChromaDB.
 
@@ -445,10 +521,16 @@ def retrieve_documents(
         elapsed_time = time.time() - start_time
         logger.info(f"✓ Retrieval completed in {elapsed_time:.4f} seconds")
 
-        return results
+        return results, None
     except Exception as e:
-        logger.error(f"Error retrieving documents: {str(e)}")
-        return None
+        message = str(e)
+        logger.error(f"Error retrieving documents: {message}")
+        error_code, error_type = _classify_chroma_error(message)
+        return None, {
+            "error": message,
+            "error_code": error_code,
+            "error_type": error_type,
+        }
 
 
 def process_results(results: Dict) -> Tuple[Optional[List[float]], Optional[List[str]], Optional[List[Dict]]]:
@@ -581,7 +663,7 @@ def save_results(
                 "total_results": len(result_data),
                 "top_similarity_score": round(similarity_scores[0], 4) if similarity_scores else None,
                 "threshold_used": SIMILARITY_THRESHOLD,
-                "model_used": MODEL_NAME
+                "model_used": _resolve_model_name()
             }
         }
 

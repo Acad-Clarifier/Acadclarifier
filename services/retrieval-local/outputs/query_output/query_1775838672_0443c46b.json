@@ -1,0 +1,44 @@
+{
+  "query_id": "query_1775838672_0443c46b",
+  "timestamp": "2026-04-10T22:01:18.052785",
+  "query": "Explain A* search algorithm",
+  "book": "book-3",
+  "results": [
+    {
+      "rank": 1,
+      "chunk_id": "3430",
+      "similarity_score": 0.7189,
+      "document": "simistic descriptions bound these costs. In this way, angelic search can ﬁnd provably optimalabstract plans without considering their implementations. The same approach can be used toobtain effective hierarchical lookahead algorithms for online search, in the style of LRTA\n∗ HIERARCHICAL\nLOOKAHEAD\n(page 152). In some ways, such algorithms mirror aspects of human deliberation in tasks such"
+    },
+    {
+      "rank": 2,
+      "chunk_id": "935",
+      "similarity_score": 0.7166,
+      "document": "limit,alternative ))\nifresult/negationslash=failure then return result\nFigure 3.26 The algorithm for recursive best-ﬁrst search.\nbefore it runs out of time. For this reason, A∗is not practical for many large-scale prob-\nlems. There are, however, algorithms that overcome the space problem without sacriﬁcingoptimality or completeness, at a small cost in execution time. We discuss these next.\n3.5.3 Memory-bounded heuristic search"
+    },
+    {
+      "rank": 3,
+      "chunk_id": "1108",
+      "similarity_score": 0.7165,
+      "document": "4.1 L OCAL SEARCH ALGORITHMS AND OPTIMIZATION PROBLEMS\nThe search algorithms that we have seen so far are designed to explore search spaces sys-tematically. This systematicity is achieved by keeping one or more paths in memory and byrecording which alternatives have been explored at each point along the path. When a goal isfound, the path to that goal also constitutes a solution to the problem. In many problems, how-"
+    },
+    {
+      "rank": 4,
+      "chunk_id": "672",
+      "similarity_score": 0.7145,
+      "document": "Our discussion of problem solving begins with precise deﬁnitions of problems and their\nsolutions and give several examples to illustrate these deﬁnitions. We then describe several\ngeneral-purpose search algorithms that can be used to solve these problems. We will seeseveral uninformed search algorithms—algorithms that are given no information about the"
+    },
+    {
+      "rank": 5,
+      "chunk_id": "690",
+      "similarity_score": 0.7113,
+      "document": "and the environment is known and deterministic, it knows exactly where it will be after the\nﬁrst action and what it will perceive. Since only one percept is possible after the ﬁrst action,the solution can specify only one possible second action, and so on.\nThe process of looking for a sequence of actions that reaches the goal is called search.\nSEARCH\nA search algorithm takes a problem as input and returns a solution in the form of an action SOLUTION"
+    }
+  ],
+  "summary": {
+    "total_results": 5,
+    "top_similarity_score": 0.7189,
+    "threshold_used": 0.3,
+    "model_used": "BAAI/bge-base-en-v1.5"
+  }
+}

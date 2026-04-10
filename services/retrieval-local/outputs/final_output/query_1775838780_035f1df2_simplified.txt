@@ -1,0 +1,31 @@
+QUERY ID: query_1775838780_035f1df2
+BOOK: book-3
+ORIGINAL QUERY: What is intelligent agent ?
+
+================================================================================
+
+# Understanding Intelligent Agents: Core Principles and Characteristics
+
+### Overview
+An intelligent agent is a sophisticated computer program or system designed to operate autonomously, perceiving its environment and acting to achieve specific goals. Central to this concept is the notion of a "rational agent," which consistently strives to achieve the best possible outcome, even when faced with uncertainty. These agents are fundamental to Artificial Intelligence, enabling systems to adapt, persist, and make informed decisions in diverse environments.
+
+### Key Concepts
+*   **Intelligent Agent:** A system that operates autonomously, perceives its environment, persists over a prolonged period, adapts to change, and creates and pursues goals. It is designed to exhibit intelligent behavior.
+*   **Rational Agent:** A specific type of intelligent agent that consistently acts in a way that achieves the best possible outcome, or the best expected outcome when uncertainty is present. This concept is central to building successful AI systems.
+*   **Autonomy:** The capacity of an agent to operate independently without continuous human intervention, making its own decisions and executing actions.
+*   **Perception:** The process by which an agent gathers information about its environment, typically through sensors, to understand its current state.
+*   **Actuators:** The mechanisms an agent uses to perform actions and effect changes within its environment.
+*   **Environment:** The external world or context in which an agent operates, interacts, and perceives information. Examples include a physical room for a robot or the Internet for a software agent.
+*   **Performance Measure:** The criteria or metric used to evaluate the success, effectiveness, or rationality of an agent's actions and overall behavior.
+*   **Knowledge Base:** A component within a knowledge-based agent that stores information about the world in a structured format, often using a knowledge representation language.
+*   **Inference Mechanism:** A component that works with the knowledge base to derive new conclusions, make logical deductions, and inform the agent's decision-making process.
+
+### Detailed Academic Explanation
+
+The concept of an intelligent agent is foundational to the field of Artificial Intelligence, moving beyond the simple execution of computer programs to encompass systems capable of more sophisticated behaviors. Unlike ordinary programs, computer agents are specifically designed to operate autonomously, meaning they can function independently without constant human oversight. They possess the ability to perceive their environment, gather information about their surroundings, and persist over prolonged periods, continuously interacting with their operational context. A crucial characteristic is their capacity to adapt to changes within their environment and to create and pursue specific goals, demonstrating a level of flexibility and purposefulness.
+
+At the heart of understanding intelligent agents is the notion of a **rational agent**. This concept is considered central to the approach of artificial intelligence, providing a concrete framework for designing systems that can be reasonably called intelligent. A rational agent is defined as one that consistently acts so as to achieve the best possible outcome. In situations where there is uncertainty about the environment or the consequences of actions, a rational agent aims for the best *expected* outcome. This emphasis on optimal action distinguishes rational agents and guides the development of design principles for building successful AI systems. The rationality of an agent, however, is not absolute; it "depends" on several factors, including the defined performance measure, the extent of its knowledge about the environment, and the capabilities of its sensors and actuators. For instance, a simple vacuum-cleaner agent's rationality in cleaning a dirty square or moving to another depends entirely on how its performance is measured (e.g., cleanliness, battery life), what it knows about the room layout, and its ability to sense dirt and move.
+
+To make good decisions and act rationally, intelligent agents fundamentally require **knowledge about the world**. This knowledge is not merely raw data but is structured and contained within the agent in the form of "sentences" expressed in a specific knowledge representation language. These sentences are stored in a **knowledge base**, which serves as the agent's repository of information. A **knowledge-based agent** is therefore composed of this knowledge base along with an **inference mechanism**. The inference mechanism is responsible for processing the information in the knowledge base, drawing new conclusions, and using this derived understanding to inform the agent's actions. The agent's overall behavior, or its "agent function," is determined by the sequence of its perceptions and whatever built-in knowledge it possesses, which together dictate its responses and goal-directed actions.
+
+Intelligent agents operate in a wide variety of environments, from highly structured virtual worlds to complex real-world scenarios. One of the most significant environments for intelligent agents today is the Internet. AI systems have become so prevalent in web-based applications that the "-bot" suffix has become common in everyday language, signifying the widespread integration of autonomous agents. Examples like SOAR, developed by Allen Newell and Paul Rosenbloom, represent complete agent architectures that embody these principles, demonstrating how perception, knowledge, and action can be integrated into a functional intelligent system. Ultimately, the goal of designing intelligent agents is to create systems that can autonomously perceive, reason using their knowledge, and act rationally to achieve their objectives, thereby making AI technologies fundamental to many modern applications.

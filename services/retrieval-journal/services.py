@@ -208,16 +208,19 @@ async def search_papers(query: str, filter_type: str = "all"):
 
         papers = unique_papers
 
-        # 🧠 Step 3: Store + Hybrid Search
-        from vector_store import add_papers, hybrid_search
-
         model = get_model()
         if model is None:
             return {"results": filter_papers(papers, filter_type)}
 
-        add_papers(papers, model)  # safe (no duplicates)
-
-        papers = hybrid_search(query, model)
+        # 🧠 Step 3: Store + Hybrid Search (optional fallback when Chroma is unavailable)
+        try:
+            from vector_store import add_papers, hybrid_search
+            add_papers(papers, model)  # safe (no duplicates)
+            papers = hybrid_search(query, model)
+        except Exception as exc:  # pragma: no cover - runtime fallback
+            logger.warning(
+                "Vector rerank unavailable, using source ranking only: %s", exc
+            )
 
         # 🎯 Step 4: Apply filter
         papers = filter_papers(papers, filter_type)

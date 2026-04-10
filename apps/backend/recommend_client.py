@@ -6,6 +6,11 @@ import sys
 from pathlib import Path
 from typing import Any, Dict
 
+try:
+    from . import sqlite_compat  # noqa: F401
+except ImportError:
+    import sqlite_compat  # type: ignore # noqa: F401
+
 
 _RECOMMENDER_INSTANCE = None
 _RECOMMENDER_IMPORT_ERROR = None

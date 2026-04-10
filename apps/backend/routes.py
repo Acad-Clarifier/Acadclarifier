@@ -27,6 +27,22 @@ WEB_ASK_TIMEOUT_SECONDS = 120  # Web: includes potential first-time model load
 JOURNAL_TIMEOUT_SECONDS = 90
 
 
+def _map_chroma_error_to_http(message: str, error_code: str = ""):
+    lowered = (message or "").lower()
+    code = (error_code or "").lower()
+
+    if "unsupported version of sqlite3" in lowered or code == "chroma_sqlite_incompatible":
+        return 503, "chroma/sqlite compatibility issue"
+
+    if "collection expecting embedding with dimension" in lowered or code == "chroma_embedding_dimension_mismatch":
+        return 422, "embedding dimension mismatch"
+
+    if code in {"embeddings_missing", "chroma_storage_corrupt"}:
+        return 503, "local embeddings store unavailable"
+
+    return 500, "retrieval failed"
+
+
 def _run_with_timeout(func, *, timeout_seconds):
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
         future = executor.submit(func)
@@ -115,7 +131,13 @@ def ask_question():
         current_app.logger.info("/ask completed in %sms", elapsed)
 
     if result.get("status") != "success":
-        return jsonify(result), 400
+        error_message = result.get("error", "retrieval failed")
+        error_code = result.get("error_code", "")
+        status_code, summary = _map_chroma_error_to_http(
+            error_message, error_code)
+        payload = dict(result)
+        payload.setdefault("error_summary", summary)
+        return jsonify(payload), status_code
 
     return jsonify(result)
 
@@ -203,7 +225,14 @@ def recommend_journal_route():
             "/journal/recommend timed out after %ss", JOURNAL_TIMEOUT_SECONDS)
         return jsonify({"error": "request timed out", "status": "error", "items": []}), 504
     except JournalServiceError as exc:
-        return jsonify({"error": str(exc), "status": "error", "items": []}), exc.status_code
+        status_code, summary = _map_chroma_error_to_http(str(exc))
+        final_status = exc.status_code if status_code == 500 else status_code
+        return jsonify({
+            "error": str(exc),
+            "error_summary": summary,
+            "status": "error",
+            "items": []
+        }), final_status
     except Exception as exc:
         current_app.logger.exception("/journal/recommend failed: %s", exc)
         return jsonify({"error": str(exc), "status": "error", "items": []}), 500
