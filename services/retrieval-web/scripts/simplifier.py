@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from datetime import datetime
 from pathlib import Path
 from google import genai
@@ -12,7 +13,7 @@ from dotenv import load_dotenv
 
 # Load environment variables from project .env
 ENV_PATH = (Path(__file__).resolve().parent / ".." / ".env").resolve()
-load_dotenv(dotenv_path=ENV_PATH)
+load_dotenv(dotenv_path=ENV_PATH, override=True)
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 MODEL_NAME = "models/gemini-2.5-flash"
@@ -145,6 +146,27 @@ def build_prompt(data: dict) -> str:
     return prompt.strip()
 
 
+def _ensure_gemini_api_key() -> str:
+    if not GEMINI_API_KEY:
+        raise ValueError(
+            "GEMINI_API_KEY is not configured. Set services/retrieval-web/.env and restart the backend."
+        )
+    return GEMINI_API_KEY
+
+
+def _normalize_gemini_error(exc: Exception) -> str:
+    message = str(exc).strip() or exc.__class__.__name__
+    lowered = message.lower()
+
+    if "api key expired" in lowered or "api_key_invalid" in lowered or "invalid api key" in lowered:
+        return (
+            "GEMINI_API_KEY is invalid or expired. Renew the key in services/retrieval-web/.env "
+            "and restart the backend."
+        )
+
+    return f"Gemini request failed: {exc.__class__.__name__}: {message}"
+
+
 # def run_model(prompt: str):
 #     if not GEMINI_API_KEY:
 #         raise ValueError(
@@ -167,18 +189,33 @@ def build_prompt(data: dict) -> str:
 #     return output
 
 def run_model(prompt: str):
-    client = genai.Client(api_key=GEMINI_API_KEY)
-    output = client.models.generate_content(
-        # Try "gemini-1.5-pro" if flash is still too short
-        model="gemini-2.5-flash",
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            temperature=0.7,  # Increased from 0.25
-            top_p=0.95,
-            max_output_tokens=2048,  # Increased to allow for longer responses
-        )
-    )
-    return output
+    api_key = _ensure_gemini_api_key()
+    last_error: Exception | None = None
+
+    for attempt in range(2):
+        try:
+            client = genai.Client(api_key=api_key)
+            return client.models.generate_content(
+                # Try "gemini-1.5-pro" if flash is still too short
+                model="gemini-2.5-flash",
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    temperature=0.7,  # Increased from 0.25
+                    top_p=0.95,
+                    max_output_tokens=2048,  # Increased to allow for longer responses
+                )
+            )
+        except Exception as exc:
+            last_error = exc
+            if attempt == 0:
+                time.sleep(0.5)
+                continue
+            raise RuntimeError(_normalize_gemini_error(exc)) from exc
+
+    if last_error is not None:
+        raise RuntimeError(_normalize_gemini_error(last_error)) from last_error
+
+    raise RuntimeError("Gemini request failed unexpectedly")
 
 # ==============================
 # MAIN EXECUTION

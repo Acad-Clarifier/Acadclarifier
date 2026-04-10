@@ -1,0 +1,19 @@
+{
+  "query": "What is MongoDB ?",
+  "stage": "stage_6_context_guard",
+  "mode": "compressed",
+  "timestamp_utc": "20260407_054345",
+  "num_blocks": 2,
+  "web_context": [
+    {
+      "text": "## What Is MongoDB?\nMongoDB is a popular open source document database that’s widely used in modern web and mobile applications.\n\nIt’s categorized as a NoSQL database, which means it takes a flexible, document-oriented approach to storing data rather than a traditional table-based relational method.\n\nA big part of MongoDB’s appeal is its simplicity and developer focus.\n\nFor example, Mongo interactions are defined by the acronym CRUD, for create, read, update, delete. [...] While MongoDB was developed to track impressions across thousands of ad-serving sites, it soon gained wide popularity as a flexible data store in open source web development.\n\nIt’s continually evolved since its 2007 launch, accumulating a robust feature set that includes ad hoc queries, indexing, and real-time aggregation.\n\nA key benefit of MongoDB for developers is that, relative to most popular relational databases, it’s intuitive to use and quick to get started with.\n\nThe type of JSON documents stored in MongoDB map to familiar data types found in popular programming languages, such as JavaScript or Python dictionaries.\n\nMongo also provides a thorough menu of client libraries with driver support for most programming languages, including PHP, .Net, Java, Python, Node.js, and many others. [...] MongoDB saves data in JSON documents that make it relatively easy to use stored data—whether it’s structured, unstructured, or semistructured—for different kinds of applications.\n\nMongoDB’s flexible data model allows developers to store unstructured data while offering indexing support for faster file access and replication for data protection and availability.\n\nThat means developers can design and build sophisticated applications using MongoDB.",
+      "source": "https://www.oracle.com/database/mongodb/",
+      "confidence": 6.398
+    },
+    {
+      "text": "# What is MongoDB?\n## What is MongoDB?\nMongoDB is an open source, nonrelational database management system (DBMS) that uses flexible documents instead of tables and rows to process and store various forms of data.\n\nAs a NoSQL database solution, MongoDB does not require a relational database management system (RDBMS), so it provides an elastic data storage model that enables users to store and query multivariate data types with ease.\n\nThis not only simplifies database management for developers but also creates a highly scalable environment for cross-platform applications and services. [...] MongoDB documents or collections of documents are the basic units of data.\n\nFormatted as Binary JSON (Java Script Object Notation), these documents can store various types of data and be distributed across multiple systems.\n\nSince MongoDB employs a dynamic schema design, users have unparalleled flexibility when creating data records, querying document collections through MongoDB aggregation and analyzing large amounts of information.\n## The latest tech news, backed by expert insights\nStay up to date on the most important—and intriguing—industry trends on AI, automation, data and beyond with the Think newsletter.\n\nSee the IBM Privacy Statement.\n## Thank you! You are subscribed.\n## Comparing MongoDB to other databases [...] ## Mongo DB benefits\nOver the years, MongoDB has become a trusted solution for many businesses that are looking for a powerful and highly scalable NoSQL database.\n\nBut MongoDB is much more than just a traditional document-based database and it boasts a few great capabilities that make it stand out from other DBMS.\n### Load balancing",
+      "source": "https://www.ibm.com/think/topics/mongodb",
+      "confidence": 6.223
+    }
+  ]
+}

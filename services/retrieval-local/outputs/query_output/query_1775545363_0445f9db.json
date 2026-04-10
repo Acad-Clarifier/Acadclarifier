@@ -1,0 +1,44 @@
+{
+  "query_id": "query_1775545363_0445f9db",
+  "timestamp": "2026-04-07T12:32:43.555801",
+  "query": "Explain types of Normal forms in DBMS",
+  "book": "book-1",
+  "results": [
+    {
+      "rank": 1,
+      "chunk_id": "931",
+      "similarity_score": 0.7267,
+      "document": "read function call.\n4.5.5 User-Deﬁned Types\nSQL supports two forms of user-deﬁned data types. The ﬁrst form, which we\ncover here, is called distinct types. The other form, called structured data types,\nallows the creation of complex data types with nested record structures, arrays,\n4.5 SQL Data Types and Schemas 139\nand multisets. We do not cover structured data types in this chapter, but describe\nthem later, in Chapter 22."
+    },
+    {
+      "rank": 2,
+      "chunk_id": "2292",
+      "similarity_score": 0.7245,
+      "document": "8.7 More Normal Forms\nThe fourth normal form is by no means the “ultimate ”normal form. As we\nsaw earlier, multivalued dependencies help us understand and eliminate someforms of repetition of information that cannot be understood in terms of func-\ntional dependencies. There are types of constraints called join dependencies that\ngeneralize multivalued dependencies, a nd lead to another normal form called\nproject-join normal form ("
+    },
+    {
+      "rank": 3,
+      "chunk_id": "245",
+      "similarity_score": 0.7214,
+      "document": "the desirable normal forms, we need additi onal information about the real-world\nenterprise that we are modeling with the database. The most common approach\nis to use functional dependencies, which we cover in Section 8.4.\nTo understand the need for normalization, let us look at what can go wrong\nin a bad database design. Among the undesirable properties that a bad design\nmay have are:\n•Repetition of information\n•Inability to represent certain information"
+    },
+    {
+      "rank": 4,
+      "chunk_id": "8842",
+      "similarity_score": 0.7209,
+      "document": "higher normal forms and,\n337-338\nkeys and, 330-333\nlossless, 345-346\nlossless-join, 345-346\nlossy, 345-346multivalued dependencies\nand, 355-360\nrelational database design\nand, 329-338, 348-360\nthird normal form and,\n336-337, 352-355\ndecomposition rule, 339\nDEC Rdb, 30\ndeduplication, 890-891Deep Web crawlers, 931default values, 133, 137, 140,\n144, 425, 899, 952,\n991-992, 996, 1128\ndeferred integrity constraints,\n134\ndegree-two consistency, 701-702"
+    },
+    {
+      "rank": 5,
+      "chunk_id": "2378",
+      "similarity_score": 0.7135,
+      "document": "8.34 Explain why 4NF is a normal form more desirable than BCNF.\nBibliographical Notes\nThe ﬁrst discussion of relational database design theory appeared in an early pa-per by Codd [1970]. In that paper, Codd also introduced functional dependenciesand ﬁrst, second, and third normal forms.\nArmstrong’s axioms were introduced in Armstrong [1974]. Signiﬁcant devel-"
+    }
+  ],
+  "summary": {
+    "total_results": 5,
+    "top_similarity_score": 0.7267,
+    "threshold_used": 0.3,
+    "model_used": "BAAI/bge-base-en-v1.5"
+  }
+}

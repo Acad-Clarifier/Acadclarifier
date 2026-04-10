@@ -32,6 +32,10 @@ import {
 const pageRoot = document.getElementById('page-root');
 const navbarRoot = document.getElementById('navbar-root');
 let localPollingTimer = null;
+let localPollingFailureCount = 0;
+let libraryFetchController = null;
+let libraryBookFetchController = null;
+const MAX_LOCAL_POLL_FAILURES = 5;
 
 const PAGE_STYLE_BY_ROUTE = {
   '/': './css/home.css',
@@ -40,6 +44,40 @@ const PAGE_STYLE_BY_ROUTE = {
   '/book_rec': './css/book_rec.css',
   '/journal_rec': './css/journal_rec.css',
 };
+
+function getFriendlyRequestError(error, fallbackMessage) {
+  if (!error) {
+    return fallbackMessage;
+  }
+  if (error.code === 'TIMEOUT') {
+    return 'Request timed out. Please try again.';
+  }
+  if (error.code === 'NETWORK') {
+    return 'Network error while contacting backend.';
+  }
+  if (error.code === 'ABORTED') {
+    return fallbackMessage;
+  }
+  if (error.code === 'HTTP') {
+    const backendMessage =
+      typeof error.payload === 'object' && error.payload !== null
+        ? error.payload.error || error.payload.message
+        : '';
+    return backendMessage || `Backend request failed (${error.status}).`;
+  }
+  return fallbackMessage;
+}
+
+function removeLoadingMessage(mode) {
+  const chat = mode === 'local' ? getState().localChat : getState().webChat;
+  if (!chat.length) {
+    return;
+  }
+  const lastMessage = chat[chat.length - 1];
+  if (lastMessage?.role === 'assistant' && lastMessage?.message === '...') {
+    chat.pop();
+  }
+}
 
 function applyPageStyles(route) {
   const head = document.head;
@@ -325,10 +363,13 @@ async function applyJournalFilter(filterType) {
           : '',
       results: response?.items || [],
     });
-  } catch (_error) {
+  } catch (error) {
     setJournalRecommendationState({
       loading: false,
-      error: 'Unable to fetch journal recommendations right now.',
+      error: getFriendlyRequestError(
+        error,
+        'Unable to fetch journal recommendations right now.',
+      ),
       results: [],
     });
   } finally {
@@ -375,10 +416,13 @@ async function submitRecommendation(formElement) {
           : '',
       results: response?.items || [],
     });
-  } catch (_error) {
+  } catch (error) {
     setRecommendationState({
       loading: false,
-      error: 'Unable to fetch recommendations right now.',
+      error: getFriendlyRequestError(
+        error,
+        'Unable to fetch recommendations right now.',
+      ),
       results: [],
     });
   } finally {
@@ -431,10 +475,13 @@ async function submitJournalRecommendation(formElement) {
           : '',
       results: response?.items || [],
     });
-  } catch (_error) {
+  } catch (error) {
     setJournalRecommendationState({
       loading: false,
-      error: 'Unable to fetch journal recommendations right now.',
+      error: getFriendlyRequestError(
+        error,
+        'Unable to fetch journal recommendations right now.',
+      ),
       results: [],
     });
   } finally {
@@ -511,11 +558,26 @@ function renderLibraryModal() {
       loadLibraryBooks(query);
     },
     onPick: async (uid) => {
+      if (libraryBookFetchController) {
+        libraryBookFetchController.abort();
+      }
+      libraryBookFetchController = new AbortController();
       try {
-        const book = await fetchLibraryBook(uid);
+        const book = await fetchLibraryBook(uid, {
+          signal: libraryBookFetchController.signal,
+        });
         setSelectedLibraryBook(book);
-      } catch (_error) {
-        setLibraryError('Failed to fetch selected book details.');
+      } catch (error) {
+        if (error.code !== 'ABORTED') {
+          setLibraryError(
+            getFriendlyRequestError(
+              error,
+              'Failed to fetch selected book details.',
+            ),
+          );
+        }
+      } finally {
+        libraryBookFetchController = null;
       }
       renderLibraryModal();
     },
@@ -526,17 +588,29 @@ function renderLibraryModal() {
 }
 
 async function loadLibraryBooks(query = '') {
+  if (libraryFetchController) {
+    libraryFetchController.abort();
+  }
+  libraryFetchController = new AbortController();
+
   setLibraryLoading(true);
   setLibraryError('');
   renderLibraryModal();
 
   try {
-    const data = await fetchLibrary(query, 1, 60);
+    const data = await fetchLibrary(query, 1, 60, {
+      signal: libraryFetchController.signal,
+    });
     setLibraryData({ items: data.items || [], total: data.total || 0 });
-  } catch (_error) {
+  } catch (error) {
     setLibraryData({ items: [], total: 0 });
-    setLibraryError('Unable to load library right now.');
+    if (error.code !== 'ABORTED') {
+      setLibraryError(
+        getFriendlyRequestError(error, 'Unable to load library right now.'),
+      );
+    }
   } finally {
+    libraryFetchController = null;
     setLibraryLoading(false);
     renderLibraryModal();
   }
@@ -552,6 +626,14 @@ function openLibraryModal(initialQuery = '') {
 }
 
 function closeLibraryModal() {
+  if (libraryFetchController) {
+    libraryFetchController.abort();
+    libraryFetchController = null;
+  }
+  if (libraryBookFetchController) {
+    libraryBookFetchController.abort();
+    libraryBookFetchController = null;
+  }
   setLibraryModalOpen(false);
   renderLibraryModal();
 }
@@ -583,6 +665,7 @@ async function pollLocalBookSession() {
 
   try {
     const result = await fetchSession();
+    localPollingFailureCount = 0;
     const activeBook = result?.active_book || null;
     setState({ activeBook });
 
@@ -598,10 +681,22 @@ async function pollLocalBookSession() {
       setLocalStatus('warn', 'Please scan a book to begin...', true);
       setLocalChatLocked(true);
     }
-  } catch (_error) {
+  } catch (error) {
+    localPollingFailureCount += 1;
+
+    if (localPollingFailureCount >= MAX_LOCAL_POLL_FAILURES) {
+      setLocalStatus(
+        'warn',
+        'Session check is unstable. Select a book from Explore Library to continue.',
+      );
+      setLocalChatLocked(true);
+      stopLocalPolling();
+      return;
+    }
+
     setLocalStatus(
       'warn',
-      'Scan a book or select one from Explore Library to begin.',
+      getFriendlyRequestError(error, 'Waiting for book scan...'),
     );
     setLocalChatLocked(true);
   }
@@ -612,6 +707,8 @@ function startLocalPolling() {
     clearInterval(localPollingTimer);
   }
 
+  localPollingFailureCount = 0;
+
   pollLocalBookSession();
   localPollingTimer = window.setInterval(pollLocalBookSession, 2000);
 }
@@ -621,6 +718,7 @@ function stopLocalPolling() {
     clearInterval(localPollingTimer);
     localPollingTimer = null;
   }
+  localPollingFailureCount = 0;
 }
 
 function setupPageState(route) {
@@ -690,24 +788,32 @@ async function submitQuestion(mode, formElement) {
   input.focus();
   submitButton.disabled = true;
 
-  // Show loading indicator for web requests
-  if (mode === 'web') {
-    setWebLoading(true);
+  // Show loading indicator for long-running requests.
+  if (mode === 'web' || mode === 'local') {
+    if (mode === 'web') {
+      setWebLoading(true);
+    }
     addChatMessage(mode, 'assistant', '...');
-    renderMessages(chatContainer, getState().webChat);
+    renderMessages(
+      chatContainer,
+      mode === 'local' ? getState().localChat : getState().webChat,
+    );
   }
 
   try {
+    const activeBookRef = mode === 'local' ? getState().activeBook : null;
     const response =
       mode === 'local'
-        ? await askQuestion(question)
+        ? await askQuestion(question, activeBookRef)
         : await askWebQuestion(question);
     setApiResults(response);
 
     // Remove loading indicator and add real response
-    if (mode === 'web') {
-      setWebLoading(false);
-      getState().webChat.pop(); // Remove loading indicator
+    if (mode === 'web' || mode === 'local') {
+      if (mode === 'web') {
+        setWebLoading(false);
+      }
+      removeLoadingMessage(mode);
     }
 
     const answer = response?.answer || 'No answer';
@@ -717,12 +823,18 @@ async function submitQuestion(mode, formElement) {
         ? answer
         : `${answer}\n\nConfidence: ${confidence}`;
     addChatMessage(mode, 'assistant', assistantMessage);
-  } catch (_error) {
-    if (mode === 'web') {
-      setWebLoading(false);
-      getState().webChat.pop(); // Remove loading indicator
+  } catch (error) {
+    if (mode === 'web' || mode === 'local') {
+      if (mode === 'web') {
+        setWebLoading(false);
+      }
+      removeLoadingMessage(mode);
     }
-    addChatMessage(mode, 'assistant', 'Backend error while answering.');
+    addChatMessage(
+      mode,
+      'assistant',
+      getFriendlyRequestError(error, 'Backend error while answering.'),
+    );
   } finally {
     renderMessages(
       chatContainer,
