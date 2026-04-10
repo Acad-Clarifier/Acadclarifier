@@ -1,4 +1,5 @@
-const DEPLOYED_API_BASE = 'https://acadclarifier-test.onrender.com'; // just for test branch
+const DEPLOYED_API_BASE =
+  'https://acadclarifier-eyebgfaxfdgrcwe4.eastasia-01.azurewebsites.net';
 const LOCAL_API_BASE = 'http://localhost:5000';
 
 const isLocalHost =
@@ -9,7 +10,7 @@ const API_BASE =
   window.APP_CONFIG?.apiBaseUrl ||
   (isLocalHost ? LOCAL_API_BASE : DEPLOYED_API_BASE);
 
-const DEFAULT_TIMEOUT_MS = 45000;
+const DEFAULT_TIMEOUT_MS = 90000;
 
 function buildRequestError(message, details = {}) {
   const error = new Error(message);
