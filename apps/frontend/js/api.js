@@ -10,7 +10,7 @@ const API_BASE =
   window.APP_CONFIG?.apiBaseUrl ||
   (isLocalHost ? LOCAL_API_BASE : DEPLOYED_API_BASE);
 
-const DEFAULT_TIMEOUT_MS = 90000;
+const DEFAULT_TIMEOUT_MS = 150000;  // 150s - covers backend 120s timeout + buffer
 
 function buildRequestError(message, details = {}) {
   const error = new Error(message);

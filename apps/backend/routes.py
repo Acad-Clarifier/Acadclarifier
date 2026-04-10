@@ -20,9 +20,11 @@ except ImportError:
 
 api_routes = Blueprint("api_routes", __name__)
 
-ASK_TIMEOUT_SECONDS = 70
-WEB_ASK_TIMEOUT_SECONDS = 75
-JOURNAL_TIMEOUT_SECONDS = 45
+# Increased timeouts to handle model warmup + request processing on first call
+# Background thread loads recommender ~2-5s after app starts
+ASK_TIMEOUT_SECONDS = 120  # Local: includes potential first-time model load
+WEB_ASK_TIMEOUT_SECONDS = 120  # Web: includes potential first-time model load
+JOURNAL_TIMEOUT_SECONDS = 90
 
 
 def _run_with_timeout(func, *, timeout_seconds):
