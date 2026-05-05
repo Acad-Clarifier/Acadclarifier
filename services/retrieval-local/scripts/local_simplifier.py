@@ -5,6 +5,7 @@ import time
 from pathlib import Path
 from typing import List, Dict, Optional, Tuple, Any
 from dotenv import load_dotenv
+import requests
 
 try:
     import google.generativeai as genai  # type: ignore
@@ -32,9 +33,11 @@ FINAL_OUTPUT_DIR = BASE_DIR / "outputs" / "final_output"
 ENV_FILE = BASE_DIR / ".env"
 
 MODEL_NAME = "gemini-2.5-flash"
-MODEL_FALLBACKS = ["gemini-2.0-flash", "gemini-flash-latest"]
+MISTRAL_MODEL = "mistral-small-latest"
 TEMPERATURE = 0.3
-MAX_OUTPUT_TOKENS = 8000
+MAX_OUTPUT_TOKENS = 1500
+MODEL_TIMEOUT_SECONDS = 12
+MIN_RESPONSE_CHARS = 1200
 
 # Configure logging
 logging.basicConfig(
@@ -48,6 +51,19 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 
 
+def _load_api_key_from_env(var_name: str) -> str:
+    """Load an API key from the configured .env file."""
+    load_dotenv(ENV_FILE)
+
+    api_key = os.getenv(var_name)
+    if not api_key:
+        logger.error("%s not found in .env file", var_name)
+        raise ValueError(f"{var_name} not found in {ENV_FILE}")
+
+    logger.info("✓ %s loaded successfully from .env file", var_name)
+    return api_key
+
+
 def load_api_key_from_env() -> str:
     """
     Load Gemini API key from .env file.
@@ -59,22 +75,24 @@ def load_api_key_from_env() -> str:
         ValueError: If API key not found
     """
     try:
-        # Load environment variables from .env file
-        load_dotenv(ENV_FILE)
-
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            logger.error("GEMINI_API_KEY not found in .env file")
-            raise ValueError(f"GEMINI_API_KEY not found in {ENV_FILE}")
-
-        logger.info("✓ API key loaded successfully from .env file")
-        return api_key
-
+        return _load_api_key_from_env("GEMINI_API_KEY")
     except FileNotFoundError:
         logger.error(f".env file not found at {ENV_FILE}")
         raise ValueError(f".env file not found at {ENV_FILE}")
     except Exception as e:
         logger.error(f"Error loading API key: {str(e)}")
+        raise
+
+
+def load_mistral_api_key_from_env() -> str:
+    """Load the Mistral API key from the configured .env file."""
+    try:
+        return _load_api_key_from_env("MISTRAL_API_KEY")
+    except FileNotFoundError:
+        logger.error(f".env file not found at {ENV_FILE}")
+        raise ValueError(f".env file not found at {ENV_FILE}")
+    except Exception as e:
+        logger.error(f"Error loading Mistral API key: {str(e)}")
         raise
 
 
@@ -165,7 +183,7 @@ def extract_context_from_results(results: List[Dict]) -> str:
 
         # Concatenate all documents from results
         context_parts = []
-        for result in results:
+        for result in results[:3]:
             if 'document' in result and result['document']:
                 context_parts.append(result['document'])
 
@@ -197,123 +215,212 @@ DATA:
 {joined_context}
 
 INSTRUCTIONS:
-1. PROVIDE DEPTH: While the language should be simple, the explanation must be detailed and thorough. Do not give a summary; give a full explanation.
-2. STRUCTURE: Use the format below. Ensure the 'Detailed Explanation' section is the longest part of your response.
+1. PROVIDE DEPTH: While the language should be simple, the explanation must be concise but complete. Avoid repetition and keep the response roughly half the previous length.
+2. STRUCTURE: Use the format below. Keep the 'Detailed Explanation' section shorter than before, but still useful.
 3. TONE: Academic, professional, and educational.
 4. CONSTRAINTS: Use only provided data as long as it directly answers the query, but feel free to rephrase and expand on the logic to make it easier to understand.
-5. REWRITE TOTALLY: If the user query and the context data are very different from each other and the data is not directly answering the query, you should rewrite the data in a way that it answers the query. Do not just summarize or give a short answer. You should rewrite the data in a way that it answers the query in a detailed and comprehensive manner.
+5. REWRITE TOTALLY: If the user query and the context data are very different from each other and the data is not directly answering the query, rewrite the data in a way that answers the query clearly without unnecessary length.
 
 FORMAT:
 # [Title]
 
 ### Overview
-[2-3 lines summarizing the core concept]
+[1-2 lines summarizing the core concept]
 
 ### Key Concepts
-[Bullet points explaining the main terms found in the data]
+[4-6 bullet points explaining the main terms found in the data]
 
 ### Detailed Academic Explanation
-[Provide a multi-paragraph, in-depth explanation here. Elaborate on how the different pieces of data connect. This section should be at least 300 words long.]"""
+[Provide a compact multi-paragraph explanation here. Focus on the essential connections and practical meaning. Keep this section roughly 150-200 words long.]"""
 
     logger.info("✓ Prompt built successfully")
     return prompt
 
 
-def generate_response(api_key: str, prompt: str) -> Optional[str]:
+def _extract_gemini_text(response_data: Dict[str, Any]) -> Optional[str]:
+    candidates = response_data.get("candidates") or []
+    if not candidates:
+        return None
+
+    first_candidate = candidates[0] or {}
+    content = first_candidate.get("content") or {}
+    parts = content.get("parts") or []
+    text_parts = [part.get("text", "")
+                  for part in parts if isinstance(part, dict)]
+    response_text = "".join(text_parts).strip()
+    return response_text or None
+
+
+def _extract_mistral_text(response_data: Dict[str, Any]) -> Optional[str]:
+    choices = response_data.get("choices") or []
+    if not choices:
+        return None
+
+    first_choice = choices[0] or {}
+    message = first_choice.get("message") or {}
+    response_text = (message.get("content") or "").strip()
+    return response_text or None
+
+
+def _generate_gemini_response(api_key: str, prompt: str) -> Optional[str]:
+    if not api_key:
+        return None
+
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{MODEL_NAME}:generateContent?key={api_key}"
+    )
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "temperature": TEMPERATURE,
+            "maxOutputTokens": MAX_OUTPUT_TOKENS,
+        },
+    }
+
+    logger.info("Generating response with Gemini model: %s", MODEL_NAME)
+    response = requests.post(url, json=payload, timeout=MODEL_TIMEOUT_SECONDS)
+    response.raise_for_status()
+    response_data = response.json()
+    response_text = _extract_gemini_text(response_data)
+    if not response_text:
+        logger.error("Empty response received from Gemini")
+        return None
+
+    logger.info("✓ Gemini response generated successfully")
+    logger.info("  Response length: %s characters", len(response_text))
+    return response_text
+
+
+def _generate_mistral_response(api_key: str, prompt: str) -> Optional[str]:
+    if not api_key:
+        return None
+
+    url = "https://api.mistral.ai/v1/chat/completions"
+    payload = {
+        "model": MISTRAL_MODEL,
+        "messages": [
+            {"role": "user", "content": prompt},
+        ],
+        "temperature": TEMPERATURE,
+        "max_tokens": MAX_OUTPUT_TOKENS,
+    }
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+
+    logger.info("Generating response with Mistral model: %s", MISTRAL_MODEL)
+    response = requests.post(
+        url,
+        headers=headers,
+        json=payload,
+        timeout=MODEL_TIMEOUT_SECONDS,
+    )
+    response.raise_for_status()
+    response_data = response.json()
+    response_text = _extract_mistral_text(response_data)
+    if not response_text:
+        logger.error("Empty response received from Mistral")
+        return None
+
+    logger.info("✓ Mistral response generated successfully")
+    logger.info("  Response length: %s characters", len(response_text))
+    return response_text
+
+
+def generate_response(api_key: str, prompt: str) -> Dict[str, Any]:
     """
-    Generate response using Gemini API with error handling.
-
-    Args:
-        api_key: Gemini API key
-        prompt: Formatted prompt string
-
-    Returns:
-        Generated response text or None on failure
+    Generate a response sequentially: try Mistral first, then Gemini as backup.
     """
-    def _is_retryable_error(error: Exception) -> bool:
-        error_text = str(error).lower()
-        return any(
-            marker in error_text
-            for marker in [" 503 ", "status': 'unavailable'", "status code: 503", "429", "too many requests"]
-        )
+    providers: List[Tuple[str, Any]] = []
 
-    model_candidates = [MODEL_NAME, *MODEL_FALLBACKS]
-    seen_models = set()
-    ordered_models = []
-    for model_name in model_candidates:
-        if model_name not in seen_models:
-            ordered_models.append(model_name)
-            seen_models.add(model_name)
+    try:
+        mistral_api_key = load_mistral_api_key_from_env()
+        providers.append(
+            ("mistral", lambda: _generate_mistral_response(mistral_api_key, prompt)))
+    except Exception as exc:
+        logger.warning("Mistral API key unavailable: %s", exc)
 
-    for model_name in ordered_models:
-        max_attempts = 3
-        for attempt in range(1, max_attempts + 1):
-            try:
-                logger.info(f"Generating response with model: {model_name}")
+    if api_key:
+        providers.append(
+            ("gemini", lambda: _generate_gemini_response(api_key, prompt)))
 
-                if GOOGLE_GENAI_BACKEND == "legacy" and genai is not None:
-                    genai.configure(api_key=api_key)
+    if not providers:
+        return {
+            "status": "error",
+            "provider": "unknown",
+            "error": "no generation providers available",
+        }
 
-                    model = genai.GenerativeModel(
-                        model_name=model_name,
-                        generation_config={
-                            "temperature": TEMPERATURE,
-                            "max_output_tokens": MAX_OUTPUT_TOKENS,
-                        }
-                    )
+    start_time = time.perf_counter()
+    last_error: Optional[str] = None
 
-                    response = model.generate_content(prompt)
-                    response_text = getattr(response, "text", None)
-                elif GOOGLE_GENAI_BACKEND == "v1" and GOOGLE_GENAI_CLIENT is not None:
-                    client = GOOGLE_GENAI_CLIENT.Client(api_key=api_key)
-                    response = client.models.generate_content(
-                        model=model_name,
-                        contents=prompt,
-                        config={
-                            "temperature": TEMPERATURE,
-                            "max_output_tokens": MAX_OUTPUT_TOKENS,
-                        },
-                    )
-                    response_text = getattr(response, "text", None)
-                else:
-                    logger.error("No Google GenAI client library is installed")
-                    return None
+    for provider_name, provider_fn in providers:
+        provider_started = time.perf_counter()
+        try:
+            response_text = provider_fn()
+        except requests.Timeout:
+            last_error = f"{provider_name} timed out"
+            logger.warning(
+                "%s timed out after %ss",
+                provider_name.capitalize(),
+                MODEL_TIMEOUT_SECONDS,
+            )
+            continue
+        except requests.RequestException as exc:
+            last_error = f"{provider_name} request failed: {exc}"
+            logger.warning(
+                "%s request failed: %s",
+                provider_name.capitalize(),
+                str(exc),
+            )
+            continue
+        except Exception as exc:
+            last_error = f"{provider_name} unexpected failure: {exc}"
+            logger.warning(
+                "%s unexpected failure: %s",
+                provider_name.capitalize(),
+                str(exc),
+            )
+            continue
 
-                if not response_text:
-                    logger.error("Empty response received from API")
-                    return None
-
-                logger.info("✓ Response generated successfully")
-                logger.info(
-                    f"  Response length: {len(response_text)} characters")
-
-                return response_text
-
-            except Exception as e:
-                retryable = _is_retryable_error(e)
-                if retryable and attempt < max_attempts:
-                    wait_seconds = 2 ** (attempt - 1)
-                    logger.warning(
-                        "Retryable Gemini error for %s on attempt %s/%s: %s. Retrying in %s seconds.",
-                        model_name,
-                        attempt,
-                        max_attempts,
-                        str(e),
-                        wait_seconds,
-                    )
-                    time.sleep(wait_seconds)
-                    continue
-
-                logger.warning(
-                    "Gemini model %s failed%s: %s",
-                    model_name,
-                    " after retries" if retryable else "",
-                    str(e),
+        if response_text:
+            if len(response_text.strip()) < MIN_RESPONSE_CHARS:
+                last_error = (
+                    f"{provider_name} response too short "
+                    f"({len(response_text.strip())} chars)"
                 )
-                break
+                logger.warning(
+                    "%s response rejected because it was too short (%s chars)",
+                    provider_name.capitalize(),
+                    len(response_text.strip()),
+                )
+                continue
 
-    logger.error("All Gemini model candidates failed")
-    return None
+            logger.info(
+                "%s completed in %.2fs",
+                provider_name.capitalize(),
+                time.perf_counter() - provider_started,
+            )
+            logger.info(
+                "%s won the sequential fallback in %.2fs",
+                provider_name.capitalize(),
+                time.perf_counter() - start_time,
+            )
+            return {
+                "status": "success",
+                "provider": provider_name,
+                "response_text": response_text,
+            }
+
+        last_error = f"{provider_name} returned an empty response"
+
+    return {
+        "status": "error",
+        "provider": "unknown",
+        "error": last_error or "all generation providers failed",
+    }
 
 
 def save_output(response_text: str, query_id: str, query: str, book_name: str) -> Optional[str]:
@@ -377,6 +484,8 @@ def simplify_retrieval_payload(
             "error": "retrieval payload must be a dictionary",
         }
 
+    simplify_started = time.perf_counter()
+
     if retrieval_payload.get("status") != "success":
         return {
             "status": "error",
@@ -400,6 +509,7 @@ def simplify_retrieval_payload(
             "confidence": retrieval_payload.get("confidence", 0.0),
         }
 
+    context_started = time.perf_counter()
     joined_context = extract_context_from_results(results)
     if not joined_context:
         return {
@@ -409,11 +519,24 @@ def simplify_retrieval_payload(
             "book": book_name,
             "confidence": retrieval_payload.get("confidence", 0.0),
         }
+    logger.info(
+        "Context extraction finished in %.2fs for query_id=%s",
+        time.perf_counter() - context_started,
+        query_id,
+    )
 
+    prompt_started = time.perf_counter()
     prompt = build_prompt(query, joined_context)
+    logger.info(
+        "Prompt build finished in %.2fs for query_id=%s (prompt length=%s)",
+        time.perf_counter() - prompt_started,
+        query_id,
+        len(prompt),
+    )
 
     effective_api_key = api_key
     if not effective_api_key:
+        key_started = time.perf_counter()
         try:
             effective_api_key = load_api_key_from_env()
         except Exception as exc:
@@ -424,9 +547,17 @@ def simplify_retrieval_payload(
                 "book": book_name,
                 "confidence": retrieval_payload.get("confidence", 0.0),
             }
+        logger.info(
+            "API key loaded in %.2fs for query_id=%s",
+            time.perf_counter() - key_started,
+            query_id,
+        )
 
-    response_text = generate_response(effective_api_key, prompt)
-    if not response_text:
+    response_started = time.perf_counter()
+    generation_result = generate_response(effective_api_key, prompt)
+    response_text = generation_result.get(
+        "response_text") if isinstance(generation_result, dict) else None
+    if generation_result.get("status") != "success" or not response_text:
         return {
             "status": "error",
             "error": "simplification failed",
@@ -434,10 +565,28 @@ def simplify_retrieval_payload(
             "book": book_name,
             "confidence": retrieval_payload.get("confidence", 0.0),
         }
+    logger.info(
+        "%s generation finished in %.2fs for query_id=%s",
+        generation_result.get("provider", "unknown").capitalize(),
+        time.perf_counter() - response_started,
+        query_id,
+    )
 
     output_path = None
     if save_output_file:
+        save_started = time.perf_counter()
         output_path = save_output(response_text, query_id, query, book_name)
+        logger.info(
+            "Simplified output saved in %.2fs for query_id=%s",
+            time.perf_counter() - save_started,
+            query_id,
+        )
+
+    logger.info(
+        "Simplification pipeline finished in %.2fs for query_id=%s",
+        time.perf_counter() - simplify_started,
+        query_id,
+    )
 
     return {
         "status": "success",
@@ -491,8 +640,10 @@ def process_single_query(api_key: str, query_file: Path) -> bool:
         prompt = build_prompt(query, joined_context)
 
         # Step 5: Generate response
-        response_text = generate_response(api_key, prompt)
-        if not response_text:
+        generation_result = generate_response(api_key, prompt)
+        response_text = generation_result.get(
+            "response_text") if isinstance(generation_result, dict) else None
+        if generation_result.get("status") != "success" or not response_text:
             logger.error(f"Failed to generate response for {query_file.name}")
             return False
 

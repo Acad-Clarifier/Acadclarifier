@@ -1,4 +1,5 @@
 import argparse
+import time
 from typing import Callable, List, Tuple
 
 # Import all stage modules
@@ -41,6 +42,7 @@ def run_pipeline(
     Allows resuming from any stage.
     """
 
+    pipeline_started = time.perf_counter()
     current_path = None
     started = start_stage is None
 
@@ -51,6 +53,7 @@ def run_pipeline(
             else:
                 continue
 
+        stage_started = time.perf_counter()
         print(f"[PIPELINE] Running stage: {name}")
 
         if name == "tavily_fetch":
@@ -63,8 +66,14 @@ def run_pipeline(
                 input_path=current_path
             )
 
+        elapsed = time.perf_counter() - stage_started
+        print(f"[PIPELINE] Stage {name} completed in {elapsed:.2f}s")
+
         if not current_path:
             raise RuntimeError(f"Stage {name} did not return output path")
+
+    total_elapsed = time.perf_counter() - pipeline_started
+    print(f"[PIPELINE] Total pipeline time: {total_elapsed:.2f}s")
 
     return current_path
 

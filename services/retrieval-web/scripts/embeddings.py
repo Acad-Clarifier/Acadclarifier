@@ -1,5 +1,6 @@
 import json
 import sys
+from functools import lru_cache
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
@@ -15,7 +16,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
 SIMILARITY_THRESHOLD = 0.35   # T2 (tune later)
-OUTPUT_TOP_K = None          # set to int if you want a cap
+OUTPUT_TOP_K = 20             # cap candidates before reranking
 
 OUTPUT_DIR = "embeddings_outputs"
 
@@ -43,6 +44,12 @@ def embed_texts(model: SentenceTransformer, texts: List[str]) -> np.ndarray:
     )
 
 
+@lru_cache(maxsize=1)
+def get_embedder() -> SentenceTransformer:
+    """Load the embedding model once per process."""
+    return SentenceTransformer(EMBEDDING_MODEL_NAME)
+
+
 # =========================
 # Core logic
 # =========================
@@ -52,7 +59,7 @@ def compute_similarity(
     chunks: List[Dict]
 ) -> List[Dict]:
 
-    model = SentenceTransformer(EMBEDDING_MODEL_NAME)
+    model = get_embedder()
 
     # ---- embed query ----
     query_vec = embed_texts(model, [query])[0]

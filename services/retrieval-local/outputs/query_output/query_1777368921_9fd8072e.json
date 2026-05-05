@@ -1,0 +1,44 @@
+{
+  "query_id": "query_1777368921_9fd8072e",
+  "timestamp": "2026-04-28T15:05:21.254214",
+  "query": "What is Artificial intelligence ?",
+  "book": "book-3",
+  "results": [
+    {
+      "rank": 1,
+      "chunk_id": "106",
+      "similarity_score": 0.6718,
+      "document": "to us. For thousands of years, we have tried to understand how we think; that is, how a mere\nhandful of matter can perceive, understand, predict, and manipulate a world far larger andmore complicated than itself. The ﬁeld of artiﬁcial intelligence, or AI, goes further still: it\nARTIFICIAL\nINTELLIGENCE\nattempts not just to understand but also to build intelligent entities.\nAI is one of the newest ﬁelds in science and engineering. Work started in earnest soon"
+    },
+    {
+      "rank": 2,
+      "chunk_id": "107",
+      "similarity_score": 0.6543,
+      "document": "AI is one of the newest ﬁelds in science and engineering. Work started in earnest soon\nafter World War II, and the name itself was coined in 1956. Along with molecular biology,"
+    },
+    {
+      "rank": 3,
+      "chunk_id": "2009",
+      "similarity_score": 0.6535,
+      "document": "Humans, it seems, know things; and what they know helps them do things. These are\nnot empty statements. They make strong claims about how the intelligence of humans is\nachieved—not by purely reﬂex mechanisms but by processes of reasoning that operate on\nREASONING\ninternal representations of knowledge. In AI, this approach to intelligence is embodied in REPRESENTATION\nknowledge-based agents.KNOWLEDGE-BASED\nAGENTS"
+    },
+    {
+      "rank": 4,
+      "chunk_id": "109",
+      "similarity_score": 0.6506,
+      "document": "AI currently encompasses a huge variety of subﬁelds, ranging from the general (learning\nand perception) to the speciﬁc, such as playing chess, proving mathematical theorems, writingpoetry, driving a car on a crowded street, and diagnosing diseases. AI is relevant to anyintellectual task; it is truly a universal ﬁeld.\n1.1 W HAT ISAI?\nWe have claimed that AI is exciting, but we have not said what it is. In Figure 1.1 we see"
+    },
+    {
+      "rank": 5,
+      "chunk_id": "8510",
+      "similarity_score": 0.6482,
+      "document": "information technology in general and AI in particular has created more jobs than it haseliminated, and has created more interesting, higher-paying jobs. Now that the canonical AIprogram is an “intelligent agent” designed to assist a human, loss of jobs is less of a concernthan it was when AI focused on “expert systems” designed to replace humans. But someresearchers think that doing the complete job is the right goal for AI"
+    }
+  ],
+  "summary": {
+    "total_results": 5,
+    "top_similarity_score": 0.6718,
+    "threshold_used": 0.3,
+    "model_used": "BAAI/bge-base-en-v1.5"
+  }
+}

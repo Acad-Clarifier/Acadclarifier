@@ -3,6 +3,7 @@ import user_query
 import local_simplifier
 
 import logging
+import time
 import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -39,6 +40,7 @@ def run_local_retrieval_pipeline(
     save_artifacts: bool = True,
 ) -> Dict[str, Any]:
     """Run the live local retrieval pipeline for backend API requests."""
+    pipeline_started = time.perf_counter()
     normalized_query = _normalize_query(query_text)
     normalized_book_ref = _normalize_book_ref(book_ref)
 
@@ -64,6 +66,14 @@ def run_local_retrieval_pipeline(
             "source_path": None,
         }
 
+    logger.info(
+        "Orchestrating local retrieval query_id=%s book=%s",
+        query_id,
+        normalized_book_ref,
+    )
+
+    retrieval_started = time.perf_counter()
+
     retrieval_result = user_query.run_retrieval_request(
         normalized_query,
         normalized_book_ref,
@@ -86,6 +96,13 @@ def run_local_retrieval_pipeline(
             "request_metadata": request_metadata or {},
         }
 
+    logger.info(
+        "Retrieval orchestration finished in %.2fs for query_id=%s",
+        time.perf_counter() - retrieval_started,
+        retrieval_result.get("query_id", query_id),
+    )
+
+    simplification_started = time.perf_counter()
     simplification_result = local_simplifier.simplify_retrieval_payload(
         retrieval_result,
         api_key=api_key,
@@ -108,15 +125,34 @@ def run_local_retrieval_pipeline(
             "request_metadata": request_metadata or {},
         }
 
-    return {
+    logger.info(
+        "Simplification orchestration finished in %.2fs for query_id=%s",
+        time.perf_counter() - simplification_started,
+        simplification_result.get(
+            "query_id", retrieval_result.get("query_id", query_id)),
+    )
+
+    final_result = {
         "status": "success",
         "answer": simplification_result.get("answer", ""),
         "confidence": simplification_result.get(
             "confidence", retrieval_result.get("confidence", 0.0)
         ),
-        "query_id": simplification_result.get("query_id", retrieval_result.get("query_id", query_id)),
-        "book": simplification_result.get("book", retrieval_result.get("book", normalized_book_ref)),
+        "query_id": simplification_result.get(
+            "query_id", retrieval_result.get("query_id", query_id)
+        ),
+        "book": simplification_result.get(
+            "book", retrieval_result.get("book", normalized_book_ref)
+        ),
         "source_path": simplification_result.get("source_path"),
         "retrieval": retrieval_result,
         "request_metadata": request_metadata or {},
     }
+
+    logger.info(
+        "Local retrieval pipeline completed in %.2fs for query_id=%s",
+        time.perf_counter() - pipeline_started,
+        final_result["query_id"],
+    )
+
+    return final_result

@@ -3,9 +3,9 @@ import os
 import time
 from datetime import datetime
 from pathlib import Path
-from google import genai
-from google.genai import types
+from typing import Any
 from dotenv import load_dotenv
+import requests
 
 # ==============================
 # CONFIG
@@ -16,7 +16,9 @@ ENV_PATH = (Path(__file__).resolve().parent / ".." / ".env").resolve()
 load_dotenv(dotenv_path=ENV_PATH, override=True)
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-MODEL_NAME = "models/gemini-2.5-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
+MISTRAL_MODEL = "mistral-small-latest"
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
 
 OUTPUT_DIR = "final_output"
 
@@ -117,7 +119,6 @@ def build_prompt(data: dict) -> str:
         context_text.append(f"Source {idx}: {block['text']}")
     joined_context = "\n\n".join(context_text)
 
-    # Use "Positive Reinforcement" for length
     prompt = f"""
         You are an expert Academic Educator. Your task is to transform the provided raw DATA into a comprehensive, simplified academic guide.
 
@@ -126,8 +127,8 @@ def build_prompt(data: dict) -> str:
         {joined_context}
 
         INSTRUCTIONS:
-        1. PROVIDE DEPTH: While the language should be simple, the explanation must be detailed and thorough. Do not give a summary; give a full explanation.
-        2. STRUCTURE: Use the format below. Ensure the 'Detailed Explanation' section is the longest part of your response.
+        1. PROVIDE DEPTH: While the language should be simple, the explanation must be concise but complete. Avoid repetition and keep the response roughly half the previous length.
+        2. STRUCTURE: Use the format below. Keep the 'Detailed Explanation' section shorter than before, but still useful.
         3. TONE: Academic, professional, and educational.
         4. CONSTRAINTS: Use only provided data, but feel free to rephrase and expand on the logic to make it easier to understand.
 
@@ -135,13 +136,13 @@ def build_prompt(data: dict) -> str:
         # [Title]
         
         ### Overview
-        [2-3 lines summarizing the core concept]
+        [1-2 lines summarizing the core concept]
 
         ### Key Concepts
-        [Bullet points explaining the main terms found in the data]
+        [4-6 bullet points explaining the main terms found in the data]
 
         ### Detailed Academic Explanation
-        [Provide a multi-paragraph, in-depth explanation here. Elaborate on how the different pieces of data connect. This section should be at least 300 words long.]
+        [Provide a compact multi-paragraph explanation here. Focus on the essential connections and practical meaning. Keep this section roughly 150-200 words long.]
         """
     return prompt.strip()
 
@@ -188,34 +189,107 @@ def _normalize_gemini_error(exc: Exception) -> str:
 
 #     return output
 
-def run_model(prompt: str):
+def _extract_gemini_text(response: Any) -> str | None:
+    text = getattr(response, "text", None)
+    if text:
+        return text.strip() or None
+    return None
+
+
+def _extract_gemini_http_text(response_data: dict[str, Any]) -> str | None:
+    candidates = response_data.get("candidates") or []
+    if not candidates:
+        return None
+
+    content = candidates[0].get("content") or {}
+    parts = content.get("parts") or []
+    text = "".join(part.get("text", "") for part in parts).strip()
+    return text or None
+
+
+def _run_gemini_model(prompt: str) -> str | None:
     api_key = _ensure_gemini_api_key()
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{GEMINI_MODEL}:generateContent?key={api_key}"
+    )
+    payload = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [{"text": prompt}],
+            }
+        ],
+        "generationConfig": {
+            "temperature": 0.3,
+            "topP": 0.9,
+            "maxOutputTokens": 1500,
+        },
+    }
+
+    response = requests.post(url, json=payload, timeout=8)
+    response.raise_for_status()
+    return _extract_gemini_http_text(response.json())
+
+
+def _run_mistral_model(prompt: str) -> str | None:
+    if not MISTRAL_API_KEY:
+        raise ValueError("MISTRAL_API_KEY is not configured")
+
+    url = "https://api.mistral.ai/v1/chat/completions"
+    payload = {
+        "model": MISTRAL_MODEL,
+        "messages": [
+            {"role": "user", "content": prompt},
+        ],
+        "temperature": 0.3,
+        "max_tokens": 1500,
+    }
+    headers = {
+        "Authorization": f"Bearer {MISTRAL_API_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    response = requests.post(url, headers=headers, json=payload, timeout=12)
+    response.raise_for_status()
+    response_data = response.json()
+    choices = response_data.get("choices") or []
+    if not choices:
+        return None
+    message = choices[0].get("message") or {}
+    content = (message.get("content") or "").strip()
+    return content or None
+
+
+def run_model(prompt: str):
     last_error: Exception | None = None
 
-    for attempt in range(2):
+    for provider_name, runner in (("mistral", _run_mistral_model), ("gemini", _run_gemini_model)):
+        started = time.perf_counter()
         try:
-            client = genai.Client(api_key=api_key)
-            return client.models.generate_content(
-                # Try "gemini-1.5-pro" if flash is still too short
-                model="gemini-2.5-flash",
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    temperature=0.7,  # Increased from 0.25
-                    top_p=0.95,
-                    max_output_tokens=2048,  # Increased to allow for longer responses
-                )
-            )
+            text = runner(prompt)
+            if text:
+                if len(text.strip()) < 700:
+                    last_error = RuntimeError(
+                        f"{provider_name} response too short ({len(text.strip())} chars)"
+                    )
+                    continue
+                print(
+                    f"[{provider_name.upper()}] completed in {time.perf_counter() - started:.2f}s")
+
+                class _Response:
+                    def __init__(self, text: str):
+                        self.text = text
+                return _Response(text)
+            last_error = RuntimeError(f"{provider_name} returned empty text")
         except Exception as exc:
             last_error = exc
-            if attempt == 0:
-                time.sleep(0.5)
-                continue
-            raise RuntimeError(_normalize_gemini_error(exc)) from exc
+            continue
 
     if last_error is not None:
         raise RuntimeError(_normalize_gemini_error(last_error)) from last_error
 
-    raise RuntimeError("Gemini request failed unexpectedly")
+    raise RuntimeError("Model request failed unexpectedly")
 
 # ==============================
 # MAIN EXECUTION

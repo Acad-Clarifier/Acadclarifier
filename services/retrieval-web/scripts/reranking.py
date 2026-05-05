@@ -1,5 +1,6 @@
 import json
 import sys
+from functools import lru_cache
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
@@ -17,7 +18,7 @@ EMBED_MODEL = "all-MiniLM-L6-v2"
 RERANK_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
 REDUNDANCY_THRESHOLD = 0.9
-TOP_K = 6
+TOP_K = 5
 
 OUTPUT_DIR = "rerank_outputs"
 
@@ -40,6 +41,18 @@ def embed_texts(model: SentenceTransformer, texts: List[str]) -> np.ndarray:
         convert_to_numpy=True,
         normalize_embeddings=True
     )
+
+
+@lru_cache(maxsize=1)
+def get_embedder() -> SentenceTransformer:
+    """Load the deduplication embedding model once per process."""
+    return SentenceTransformer(EMBED_MODEL)
+
+
+@lru_cache(maxsize=1)
+def get_reranker() -> CrossEncoder:
+    """Load the cross-encoder reranker once per process."""
+    return CrossEncoder(RERANK_MODEL)
 
 
 def answer_likeness_penalty(text: str) -> float:
@@ -150,7 +163,7 @@ def remove_redundant_chunks(chunks: List[Dict]) -> List[Dict]:
     if len(chunks) <= 1:
         return chunks
 
-    embedder = SentenceTransformer(EMBED_MODEL)
+    embedder = get_embedder()
 
     texts = [c["chunk_text"] for c in chunks]
     vectors = embed_texts(embedder, texts)
@@ -192,7 +205,7 @@ def rerank_chunks(query: str, chunks: List[Dict]) -> List[Dict]:
     if not chunks:
         return []
 
-    reranker = CrossEncoder(RERANK_MODEL)
+    reranker = get_reranker()
 
     pairs = [(query, c["chunk_text"]) for c in chunks]
     scores = reranker.predict(pairs)

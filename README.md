@@ -96,6 +96,10 @@ Recommended:
 
 ```bash
 python -m apps.backend.server
+
+OR
+
+python apps/backend/server.py
 ```
 
 Backend URL: http://localhost:5000

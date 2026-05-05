@@ -3,6 +3,7 @@ import os
 import logging
 import time
 import uuid
+from functools import lru_cache
 from pathlib import Path
 from typing import List, Dict, Tuple, Optional
 import numpy as np
@@ -170,6 +171,12 @@ def load_model() -> Optional[SentenceTransformer]:
         return None
 
 
+@lru_cache(maxsize=1)
+def get_cached_model() -> Optional[SentenceTransformer]:
+    """Load the query embedding model once per process."""
+    return load_model()
+
+
 def initialize_chromadb_for_book(book_name: str) -> Optional[chromadb.Client]:
     """
     Connect to ChromaDB for specific book.
@@ -196,6 +203,12 @@ def initialize_chromadb_for_book(book_name: str) -> Optional[chromadb.Client]:
         return None
 
 
+@lru_cache(maxsize=16)
+def get_cached_chromadb_for_book(book_name: str) -> Optional[chromadb.Client]:
+    """Reuse ChromaDB clients for repeated requests to the same book."""
+    return initialize_chromadb_for_book(book_name)
+
+
 def load_collection(client: chromadb.Client) -> Optional[chromadb.Collection]:
     """
     Load existing collection from ChromaDB.
@@ -216,6 +229,15 @@ def load_collection(client: chromadb.Client) -> Optional[chromadb.Collection]:
         return None
 
 
+@lru_cache(maxsize=16)
+def get_cached_collection(book_name: str) -> Optional[chromadb.Collection]:
+    """Reuse the collection object for repeated requests to the same book."""
+    client = get_cached_chromadb_for_book(book_name)
+    if not client:
+        return None
+    return load_collection(client)
+
+
 def run_retrieval_request(
     query: str,
     book_uid: Optional[str],
@@ -227,6 +249,7 @@ def run_retrieval_request(
 
     Returns a JSON-serializable payload suitable for the simplifier.
     """
+    stage_started = time.perf_counter()
     if not isinstance(query, str) or not query.strip():
         return {
             "status": "error",
@@ -249,7 +272,15 @@ def run_retrieval_request(
     normalized_book_uid = book_uid.strip()
     resolved_query_id = query_id or generate_query_id()
 
-    model = load_model()
+    logger.info(
+        "Starting local retrieval query_id=%s book=%s query_length=%s",
+        resolved_query_id,
+        normalized_book_uid,
+        len(normalized_query),
+    )
+
+    model_start = time.perf_counter()
+    model = get_cached_model()
     if not model:
         return {
             "status": "error",
@@ -258,8 +289,10 @@ def run_retrieval_request(
             "book": normalized_book_uid,
             "confidence": 0.0,
         }
+    logger.info("Model ready in %.2fs", time.perf_counter() - model_start)
 
-    client = initialize_chromadb_for_book(normalized_book_uid)
+    chroma_start = time.perf_counter()
+    client = get_cached_chromadb_for_book(normalized_book_uid)
     if not client:
         return {
             "status": "error",
@@ -268,8 +301,13 @@ def run_retrieval_request(
             "book": normalized_book_uid,
             "confidence": 0.0,
         }
+    logger.info(
+        "Chroma client ready in %.2fs",
+        time.perf_counter() - chroma_start,
+    )
 
-    collection = load_collection(client)
+    collection_start = time.perf_counter()
+    collection = get_cached_collection(normalized_book_uid)
     if not collection:
         return {
             "status": "error",
@@ -278,7 +316,12 @@ def run_retrieval_request(
             "book": normalized_book_uid,
             "confidence": 0.0,
         }
+    logger.info(
+        "Collection ready in %.2fs",
+        time.perf_counter() - collection_start,
+    )
 
+    embed_start = time.perf_counter()
     query_embedding = embed_query(normalized_query, model)
     if query_embedding is None:
         return {
@@ -288,7 +331,12 @@ def run_retrieval_request(
             "book": normalized_book_uid,
             "confidence": 0.0,
         }
+    logger.info(
+        "Query embedding stage finished in %.2fs",
+        time.perf_counter() - embed_start,
+    )
 
+    retrieve_start = time.perf_counter()
     results = retrieve_documents(collection, query_embedding)
     if results is None:
         return {
@@ -298,7 +346,12 @@ def run_retrieval_request(
             "book": normalized_book_uid,
             "confidence": 0.0,
         }
+    logger.info(
+        "Document retrieval stage finished in %.2fs",
+        time.perf_counter() - retrieve_start,
+    )
 
+    process_start = time.perf_counter()
     similarity_scores, chunk_ids, result_data = process_results(results)
     if similarity_scores is None or not result_data:
         return {
@@ -308,10 +361,15 @@ def run_retrieval_request(
             "book": normalized_book_uid,
             "confidence": 0.0,
         }
+    logger.info(
+        "Result processing stage finished in %.2fs",
+        time.perf_counter() - process_start,
+    )
 
     book_title = get_book_title(normalized_book_uid)
     retrieval_output_path = None
     if save_output_file:
+        save_start = time.perf_counter()
         save_results(
             resolved_query_id,
             normalized_query,
@@ -321,6 +379,16 @@ def run_retrieval_request(
             result_data,
         )
         retrieval_output_path = str(OUTPUT_DIR / f"{resolved_query_id}.json")
+        logger.info(
+            "Retrieval output saved in %.2fs",
+            time.perf_counter() - save_start,
+        )
+
+    logger.info(
+        "Retrieval stage total for query_id=%s finished in %.2fs",
+        resolved_query_id,
+        time.perf_counter() - stage_started,
+    )
 
     return {
         "status": "success",
