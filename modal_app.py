@@ -11,11 +11,10 @@ volume = modal.Volume.from_name(
 
 image = (
     modal.Image.debian_slim()
-    .apt_install("git")
     .pip_install_from_requirements(
         "requirements.txt"
     )
-    .add_local_dir(".", remote_path="/root/project")
+    .add_local_dir(".", remote_path="/root/project", ignore=[".git"])
 )
 
 

@@ -12,3 +12,5 @@ venv
 
 services/retrieval-local/outputs/local.tar
 services/retrieval-local/outputs/local.tar.gz
+
+services/retrieval-local/outputs/
