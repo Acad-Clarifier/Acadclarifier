@@ -1,0 +1,44 @@
+{
+  "query_id": "query_1775563432_9aaf78a5",
+  "timestamp": "2026-04-07T17:33:52.003061",
+  "query": "Explain OOP in Java",
+  "book": "book-7",
+  "results": [
+    {
+      "rank": 1,
+      "chunk_id": "220",
+      "similarity_score": 0.762,
+      "document": "object-oriented programming (OOP). Object-oriented programming is discussed in detail later in\nthis book, but here is a brief definition: OOP is a programming methodology that helps organizecomplex programs through the use of inheritance, encapsulation, and polymorphism.\nIn the final analysis, although C is one of the world’s great programming languages,"
+    },
+    {
+      "rank": 2,
+      "chunk_id": "316",
+      "similarity_score": 0.752,
+      "document": "detail in the remaining chapters of Part I.\nObject-Oriented Programming\nObject-oriented programming (OOP) is at the core of Java. In fact, all Java programs are to atleast some extent object-oriented. OOP is so integral to Java that it is best to understand itsbasic principles before you begin writing even simple Java programs. Therefore, this chapterbegins with a discussion of the theoretical aspects of OOP.\nTwo Paradigms"
+    },
+    {
+      "rank": 3,
+      "chunk_id": "327",
+      "similarity_score": 0.7383,
+      "document": "Object-oriented concepts form the heart of Java just as they form the basis for human\nunderstanding. It is important that you understand how these concepts translate intoprograms. As you will see, object-oriented programming is a powerful and natural paradigmfor creating programs that survive the inevitable changes accompanying the life cycle of any\nmajor software project, including conception, growth, and aging. For example, once you"
+    },
+    {
+      "rank": 4,
+      "chunk_id": "799",
+      "similarity_score": 0.7374,
+      "document": "6\nIntroducing Classes\nThe class is at the core of Java. It is the logical construct upon which the entire Java\nlanguage is built because it defines the shape and nature of an object. As such, theclass forms the basis for object-oriented programming in Java. Any concept you wish\nto implement in a Java program must be encapsulated within a class.\nBecause the class is so fundamental to Java, this and the next few chapters will be devoted"
+    },
+    {
+      "rank": 5,
+      "chunk_id": "364",
+      "similarity_score": 0.7343,
+      "document": "Now that the basic object-oriented underpinning of Java has been discussed, let’s look at\nsome actual Java programs. Let’s start by compiling and running the short sample program\nshown here. As you will see, this involves a little more work than you might imagine.\n/*\nThis is a simple Java program.Call this file \"Example.java\".\n*/class Example {\n// Your program begins with a call to main().public static void main(String args[]) {"
+    }
+  ],
+  "summary": {
+    "total_results": 5,
+    "top_similarity_score": 0.762,
+    "threshold_used": 0.3,
+    "model_used": "BAAI/bge-base-en-v1.5"
+  }
+}

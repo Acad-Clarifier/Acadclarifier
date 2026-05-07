@@ -1,0 +1,44 @@
+{
+  "query_id": "query_1778061399_f78d1440",
+  "timestamp": "2026-05-06T15:26:39.367646",
+  "query": "What is AI ?",
+  "book": "book-3",
+  "results": [
+    {
+      "rank": 1,
+      "chunk_id": "109",
+      "similarity_score": 0.6694,
+      "document": "AI currently encompasses a huge variety of subﬁelds, ranging from the general (learning\nand perception) to the speciﬁc, such as playing chess, proving mathematical theorems, writingpoetry, driving a car on a crowded street, and diagnosing diseases. AI is relevant to anyintellectual task; it is truly a universal ﬁeld.\n1.1 W HAT ISAI?\nWe have claimed that AI is exciting, but we have not said what it is. In Figure 1.1 we see"
+    },
+    {
+      "rank": 2,
+      "chunk_id": "107",
+      "similarity_score": 0.6612,
+      "document": "AI is one of the newest ﬁelds in science and engineering. Work started in earnest soon\nafter World War II, and the name itself was coined in 1956. Along with molecular biology,"
+    },
+    {
+      "rank": 3,
+      "chunk_id": "269",
+      "similarity_score": 0.6574,
+      "document": ". None of the otherﬁelds were addressing these issues. The second answer is methodology. AI is the only oneof these ﬁelds that is clearly a branch of computer science (although operations research doesshare an emphasis on computer simulations), and AI is the only ﬁeld to attempt to buildmachines that will function autonomously in complex, changing environments."
+    },
+    {
+      "rank": 4,
+      "chunk_id": "8",
+      "similarity_score": 0.6544,
+      "document": "For Kris, Isabella, and Juliet —P. N.\nThis page intentionally left blank\nPreface\nArtiﬁcial Intelligence (AI) is a big ﬁeld, and this is a big book. We have tried to explore the\nfull breadth of the ﬁeld, which encompasses logic, probability, and continuous mathematics;perception, reasoning, learning, and action; and everything from microelectronic devices to\nrobotic planetary explorers. The book is also big because we go into some depth."
+    },
+    {
+      "rank": 5,
+      "chunk_id": "8510",
+      "similarity_score": 0.6479,
+      "document": "information technology in general and AI in particular has created more jobs than it haseliminated, and has created more interesting, higher-paying jobs. Now that the canonical AIprogram is an “intelligent agent” designed to assist a human, loss of jobs is less of a concernthan it was when AI focused on “expert systems” designed to replace humans. But someresearchers think that doing the complete job is the right goal for AI"
+    }
+  ],
+  "summary": {
+    "total_results": 5,
+    "top_similarity_score": 0.6694,
+    "threshold_used": 0.3,
+    "model_used": "BAAI/bge-base-en-v1.5"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "query_id": "query_1775704066_738e5573",
+  "timestamp": "2026-04-09T08:37:52.763210",
+  "query": "What is this book about?",
+  "book": "book-3",
+  "results": [
+    {
+      "rank": 1,
+      "chunk_id": "9",
+      "similarity_score": 0.5994,
+      "document": "robotic planetary explorers. The book is also big because we go into some depth.\nThe subtitle of this book is “A Modern Approach.” The intended meaning of this rather\nempty phrase is that we have tried to synthesize what is now known into a common frame-work, rather than trying to explain each subﬁeld of AI in its own historical context. Weapologize to those whose subﬁelds are, as a result, less recognizable.\nNew to this edition"
+    },
+    {
+      "rank": 2,
+      "chunk_id": "8679",
+      "similarity_score": 0.5757,
+      "document": "In David Lodge’s Small World (1984), a novel about the academic world of literary criticism,\nthe protagonist causes consternation by asking a panel of eminent but contradictory literarytheorists the following question: “ What if you were right? ” None of the theorists seems to\nhave considered this question before, perhaps because debating unfalsiﬁable theories is an endin itself. Similar confusion can be evoked by asking AI researchers, “ What if you succeed? ”"
+    },
+    {
+      "rank": 3,
+      "chunk_id": "4469",
+      "similarity_score": 0.5721,
+      "document": "with the intended meaning that a customer’s recommendation for a book depends on the\ncustomer’s honesty and kindness and the book’s quality according to some ﬁxed CPT. Thissection develops a language that lets us say exactly this, and a lot more besides.\n14.6.1 Possible worlds\nRecall from Chapter 13 that a probability model deﬁnes a set Ωof possible worlds with\na probability P(ω)for each world ω. For Bayesian networks, the possible worlds are as-"
+    },
+    {
+      "rank": 4,
+      "chunk_id": "25",
+      "similarity_score": 0.5528,
+      "document": "•an annotated list of over 800 links to sites around the Web with useful AI content,\n•a chapter-by-chapter list of supplementary material and links,\n•instructions on how to join a discussion group for the book,\nPreface ix\n•instructions on how to contact the authors with questions or comments,\n•instructions on how to report errors in the book, in the likely event that some exist, and\n•slides and other materials for instructors.\nAbout the cover"
+    },
+    {
+      "rank": 5,
+      "chunk_id": "8",
+      "similarity_score": 0.5433,
+      "document": "For Kris, Isabella, and Juliet —P. N.\nThis page intentionally left blank\nPreface\nArtiﬁcial Intelligence (AI) is a big ﬁeld, and this is a big book. We have tried to explore the\nfull breadth of the ﬁeld, which encompasses logic, probability, and continuous mathematics;perception, reasoning, learning, and action; and everything from microelectronic devices to\nrobotic planetary explorers. The book is also big because we go into some depth."
+    }
+  ],
+  "summary": {
+    "total_results": 5,
+    "top_similarity_score": 0.5994,
+    "threshold_used": 0.3,
+    "model_used": "BAAI/bge-base-en-v1.5"
+  }
+}

@@ -30,7 +30,12 @@ load_dotenv(Path(__file__).resolve().parent / ".env")
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    CORS(app)
+    CORS(app, origins=[
+        "https://acadclarifier.vercel.app",
+        "https://jsoham672--acadclarifier-backend-flask-app.modal.run",
+        "http://localhost:3000",
+        "http://localhost:5000",
+    ])
 
     db.init_app(app)
     migrate.init_app(app, db)

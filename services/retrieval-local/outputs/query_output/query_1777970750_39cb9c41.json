@@ -1,0 +1,44 @@
+{
+  "query_id": "query_1777970750_39cb9c41",
+  "timestamp": "2026-05-05T14:15:59.993254",
+  "query": "What is network ?",
+  "book": "book-5",
+  "results": [
+    {
+      "rank": 1,
+      "chunk_id": "530",
+      "similarity_score": 0.6564,
+      "document": "networks, connectionless serv ice is provided in one layer and connecti on-oriented service is provided in the\nlayer above it.\nWell-known network s include the Internet, ATM networks, Ethernet, and the IEEE 802.11 wireless LAN. The\nInternet evolved from the ARPANET, to which other netwo rks were added to form an internetwork. The present\nInternet is actually a collection of many thousands of networks, rather t han a single network. What characterizes"
+    },
+    {
+      "rank": 2,
+      "chunk_id": "528",
+      "similarity_score": 0.6362,
+      "document": "switched. Wireless networks are becoming extremely popular, especially wireless LANs. Networks can be\ninterconnected to form internetworks.\nNetwork software consists of protocols, which are rule s by which processes communicate. Protocols are either\nconnectionless or connection-oriented. Most networks support prot ocol hierarchies, with each layer providing\nservices to the layers above it and insulating them fr om the details of the protocols used in the lower layers."
+    },
+    {
+      "rank": 3,
+      "chunk_id": "2906",
+      "similarity_score": 0.6287,
+      "document": "them to be divided into numbered areas, where an area is a network or a set of contiguous\nnetworks. Areas do not overlap but need not be exhaustive, that is, some routers may belong\nto no area. An area is a generalization of a subnet. Outside an area, its topology and details\nare not visible.\nEvery AS has a backbone area, called area 0. All areas are connected to the backbone,"
+    },
+    {
+      "rank": 4,
+      "chunk_id": "205",
+      "similarity_score": 0.6221,
+      "document": "gateways to make the connection and provide the necessar y translation, both in terms of hardware and\nsoftware. A collection of interconnected networks is called an internetwork or internet. These terms will be used\nin a generic sense, in contrast to the worldwide Internet (which is one specific internet), which we will always\ncapitalize.\nA common form of internet is a collection of LANs connect ed by a WAN. In fact, if we were to replace the label"
+    },
+    {
+      "rank": 5,
+      "chunk_id": "527",
+      "similarity_score": 0.6194,
+      "document": "such as mobile e-mail access and m-commerce.\nRoughly speaking, networks can be divided up into LA Ns, MANs, WANs, and internetworks, with their own\ncharacteristics, technologies, speeds, and niches. LANs cover a building and operate at high speeds. MANs\ncover a city, for example, the cable television system, whic h is now used by many people to access the Internet.\nWANs cover a country or continent. LANs and MANs ar e unswitched (i.e., do not have routers); WANs are"
+    }
+  ],
+  "summary": {
+    "total_results": 5,
+    "top_similarity_score": 0.6564,
+    "threshold_used": 0.3,
+    "model_used": "BAAI/bge-base-en-v1.5"
+  }
+}

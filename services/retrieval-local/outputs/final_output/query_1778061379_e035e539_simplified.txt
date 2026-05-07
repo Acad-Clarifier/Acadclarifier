@@ -1,0 +1,25 @@
+QUERY ID: query_1778061379_e035e539
+BOOK: book-3
+ORIGINAL QUERY: What is intelligent agent ?
+
+================================================================================
+
+# **Intelligent Agents: A Concise Academic Guide**
+
+### **Overview**
+An *intelligent agent* is a system that perceives its environment through sensors, processes information, and acts rationally to achieve predefined goals. These agents operate based on design principles derived from rationality, adaptability, and environmental interaction.
+
+### **Key Concepts**
+- **Rational Agent**: A system that selects actions maximizing expected performance, given its knowledge of the environment and available actions.
+- **Agent Architecture**: A structured framework (e.g., *SOAR* by Newell, 1990) defining how an agent processes inputs and produces outputs.
+- **Environment Interaction**: Agents operate in dynamic settings (e.g., the Internet), where sensors gather data and actuators execute actions.
+- **Performance Measure**: A metric (e.g., cleaning efficiency) that evaluates an agent’s success in achieving its objectives.
+- **Agent Function**: A mapping from percept sequences to actions, defining the agent’s behavior (e.g., a vacuum-cleaner agent cleaning dirty squares).
+- **Built-in Knowledge**: Predefined rules or data an agent uses to make decisions without prior experience.
+
+### **Detailed Academic Explanation**
+Intelligent agents are central to artificial intelligence, embodying the principle of *rationality*—acting to maximize expected success based on available information. Their design hinges on three core components: *perception* (via sensors), *reasoning* (processing inputs), and *action* (via actuators). The *agent function* formalizes this process, linking environmental inputs to outputs.
+
+A well-known example is the *SOAR* architecture (Laird et al., 1987), which integrates problem-solving and learning. Agents must also adapt to their environment; for instance, AI-driven "bots" on the Internet autonomously perform tasks like search or customer service. Rationality, however, depends on context—an agent’s effectiveness is measured by its *performance metric* (e.g., accuracy, speed) and constrained by its sensors, actuators, and built-in knowledge.
+
+In practice, agents range from simple rule-based systems (e.g., a vacuum cleaner moving between dirty squares) to complex AI models. Their intelligence emerges from balancing predefined rules with adaptive learning, ensuring they act optimally within their operational scope.

@@ -1,4 +1,5 @@
-const DEPLOYED_API_BASE = 'https://acadclarifier-test.onrender.com'; // just for test branch
+// const DEPLOYED_API_BASE = 'https://acadclarifier-test.onrender.com'; // just for test branch
+const DEPLOYED_API_BASE = 'https://jsoham672--acadclarifier-backend-flask-app.modal.run';
 const LOCAL_API_BASE = 'http://localhost:5000';
 
 const isLocalHost =
