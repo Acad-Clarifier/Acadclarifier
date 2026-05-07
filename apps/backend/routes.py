@@ -87,6 +87,11 @@ def ask_question():
     )
     if not question:
         return jsonify({"error": "question is required"}), 400
+    # Capture config values before starting worker thread (avoid using
+    # `current_app` inside a different thread which raises 'working outside'
+    # errors). This tries Modal-mounted path first (set in config), falling
+    # back to local repo paths.
+    chroma_path = current_app.config.get("LOCAL_CHROMA_PATH")
 
     try:
         result = _run_with_timeout(
@@ -94,6 +99,7 @@ def ask_question():
                 query_text=question,
                 book_ref=book_ref,
                 query_id=payload.get("query_id"),
+                chroma_path=chroma_path,
                 request_metadata={
                     "route": "/ask",
                     "book_ref_source": "payload_or_session",

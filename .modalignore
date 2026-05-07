@@ -1,0 +1,15 @@
+.git
+.git/**
+.gitignore
+**pycache**
+**/**pycache**
+node_modules
+venv
+.venv
+.env
+
+# Ignore large local artifacts (do not upload big local outputs)
+
+services/retrieval-local/outputs/local.tar
+services/retrieval-local/outputs/local.tar.gz
+services/retrieval-local/outputs/

@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 # Configuration
 SCRIPT_DIR = Path(__file__).parent
 BASE_DIR = SCRIPT_DIR.parent  # retrieval-local folder
-EMBEDDINGS_DIR = BASE_DIR / "outputs" / "embeddings_output"
+DEFAULT_EMBEDDINGS_DIR = BASE_DIR / "outputs" / "embeddings_output"
 OUTPUT_DIR = BASE_DIR / "outputs" / "query_output"
 MODEL_NAME = "BAAI/bge-base-en-v1.5"
 COLLECTION_NAME = "text_embeddings"
@@ -49,12 +49,18 @@ def get_book_title(book_uid: str) -> str:
     return BOOK_TITLES.get(book_uid, "Unknown Title")
 
 
-def resolve_book_path(book_uid: str) -> Path:
+def _resolve_embeddings_dir(chroma_base_path: Optional[str] = None) -> Path:
+    if chroma_base_path:
+        return Path(chroma_base_path)
+    return DEFAULT_EMBEDDINGS_DIR
+
+
+def resolve_book_path(book_uid: str, chroma_base_path: Optional[str] = None) -> Path:
     """Resolve the on-disk Chroma directory for a book uid."""
-    return EMBEDDINGS_DIR / book_uid
+    return _resolve_embeddings_dir(chroma_base_path) / book_uid
 
 
-def discover_available_books() -> List[str]:
+def discover_available_books(chroma_base_path: Optional[str] = None) -> List[str]:
     """
     Discover available books by scanning embeddings_output folder.
     Sorts books numerically (book-1, book-2, ..., book-10) not alphabetically.
@@ -63,13 +69,14 @@ def discover_available_books() -> List[str]:
         List of book names sorted numerically (e.g., ['book-1', 'book-2', ..., 'book-10'])
     """
     try:
-        if not EMBEDDINGS_DIR.exists():
-            logger.error(f"Embeddings directory not found: {EMBEDDINGS_DIR}")
+        embeddings_dir = _resolve_embeddings_dir(chroma_base_path)
+        if not embeddings_dir.exists():
+            logger.error(f"Embeddings directory not found: {embeddings_dir}")
             return []
 
         # Get all directories matching 'book-*' pattern
         books = []
-        for item in EMBEDDINGS_DIR.iterdir():
+        for item in embeddings_dir.iterdir():
             if item.is_dir() and item.name.startswith('book-'):
                 books.append(item.name)
 
@@ -177,7 +184,7 @@ def get_cached_model() -> Optional[SentenceTransformer]:
     return load_model()
 
 
-def initialize_chromadb_for_book(book_name: str) -> Optional[chromadb.Client]:
+def initialize_chromadb_for_book(book_name: str, chroma_base_path: Optional[str] = None) -> Optional[chromadb.Client]:
     """
     Connect to ChromaDB for specific book.
 
@@ -188,7 +195,7 @@ def initialize_chromadb_for_book(book_name: str) -> Optional[chromadb.Client]:
         ChromaDB client or None on failure
     """
     try:
-        book_db_path = EMBEDDINGS_DIR / book_name
+        book_db_path = resolve_book_path(book_name, chroma_base_path)
 
         if not book_db_path.exists():
             logger.error(f"Book database not found: {book_db_path}")
@@ -204,9 +211,9 @@ def initialize_chromadb_for_book(book_name: str) -> Optional[chromadb.Client]:
 
 
 @lru_cache(maxsize=16)
-def get_cached_chromadb_for_book(book_name: str) -> Optional[chromadb.Client]:
+def get_cached_chromadb_for_book(book_name: str, chroma_base_path: Optional[str] = None) -> Optional[chromadb.Client]:
     """Reuse ChromaDB clients for repeated requests to the same book."""
-    return initialize_chromadb_for_book(book_name)
+    return initialize_chromadb_for_book(book_name, chroma_base_path)
 
 
 def load_collection(client: chromadb.Client) -> Optional[chromadb.Collection]:
@@ -230,9 +237,9 @@ def load_collection(client: chromadb.Client) -> Optional[chromadb.Collection]:
 
 
 @lru_cache(maxsize=16)
-def get_cached_collection(book_name: str) -> Optional[chromadb.Collection]:
+def get_cached_collection(book_name: str, chroma_base_path: Optional[str] = None) -> Optional[chromadb.Collection]:
     """Reuse the collection object for repeated requests to the same book."""
-    client = get_cached_chromadb_for_book(book_name)
+    client = get_cached_chromadb_for_book(book_name, chroma_base_path)
     if not client:
         return None
     return load_collection(client)
@@ -242,6 +249,7 @@ def run_retrieval_request(
     query: str,
     book_uid: Optional[str],
     query_id: Optional[str] = None,
+    chroma_base_path: Optional[str] = None,
     save_output_file: bool = True,
 ) -> Dict:
     """
@@ -292,7 +300,8 @@ def run_retrieval_request(
     logger.info("Model ready in %.2fs", time.perf_counter() - model_start)
 
     chroma_start = time.perf_counter()
-    client = get_cached_chromadb_for_book(normalized_book_uid)
+    client = get_cached_chromadb_for_book(
+        normalized_book_uid, chroma_base_path)
     if not client:
         return {
             "status": "error",
@@ -307,7 +316,7 @@ def run_retrieval_request(
     )
 
     collection_start = time.perf_counter()
-    collection = get_cached_collection(normalized_book_uid)
+    collection = get_cached_collection(normalized_book_uid, chroma_base_path)
     if not collection:
         return {
             "status": "error",

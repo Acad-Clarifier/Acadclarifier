@@ -35,6 +35,7 @@ def run_local_retrieval_pipeline(
     query_text: Any,
     book_ref: Any,
     query_id: Optional[str] = None,
+    chroma_path: Optional[str] = None,
     request_metadata: Optional[Dict[str, Any]] = None,
     api_key: Optional[str] = None,
     save_artifacts: bool = True,
@@ -78,6 +79,7 @@ def run_local_retrieval_pipeline(
         normalized_query,
         normalized_book_ref,
         query_id=query_id,
+        chroma_base_path=chroma_path,
         save_output_file=save_artifacts,
     )
 
