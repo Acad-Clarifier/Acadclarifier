@@ -32,6 +32,8 @@ def create_app():
     app.config.from_object(Config)
     CORS(app, origins=[
         "https://acadclarifier.vercel.app",
+        "https://acadclarifier-git-live-jsoham672-3547s-projects.vercel.app",
+        "https://acadclarifier-jyz25jfhh-jsoham672-3547s-projects.vercel.app",
         "https://jsoham672--acadclarifier-backend-flask-app.modal.run",
         "http://localhost:3000",
         "http://localhost:5000",
