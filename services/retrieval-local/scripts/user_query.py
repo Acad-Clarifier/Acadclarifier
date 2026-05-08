@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 # Configuration
 SCRIPT_DIR = Path(__file__).parent
 BASE_DIR = SCRIPT_DIR.parent  # retrieval-local folder
-EMBEDDINGS_DIR = BASE_DIR / "outputs" / "embeddings_output"
+EMBEDDINGS_DIR = BASE_DIR / "outputs" / "new_embeddings_output"
 OUTPUT_DIR = BASE_DIR / "outputs" / "query_output"
 MODEL_NAME = "BAAI/bge-base-en-v1.5"
 COLLECTION_NAME = "text_embeddings"

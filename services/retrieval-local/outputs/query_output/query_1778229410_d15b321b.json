@@ -1,0 +1,44 @@
+{
+  "query_id": "query_1778229410_d15b321b",
+  "timestamp": "2026-05-08T14:06:50.419287",
+  "query": "What is normalization?",
+  "book": "book-1",
+  "results": [
+    {
+      "rank": 1,
+      "chunk_id": "256",
+      "similarity_score": 0.6483,
+      "document": "null values.\nAn extensive theory of normalization has been developed that helps formally\ndeﬁne what database designs are undesirable, and how to obtain desirable de-signs. Chapter 8 covers relational-data base design, including normalization.\n1.7 Data Storage and Querying\nA database system is partitioned into modules that deal with each of the re-\nsponsibilities of the overall system. The functional components of a database"
+    },
+    {
+      "rank": 2,
+      "chunk_id": "244",
+      "similarity_score": 0.6292,
+      "document": "Another method for designing a relation al database is to use a process commonly\nknown as normalization. The goal is to generate a set of relation schemas thatallows us to store information without unnecessary redundancy, yet also allows\nus to retrieve information easily. The approach is to design schemas that are in\nan appropriate normal form. To determine whether a relation schema is in one of\nthe desirable normal forms, we need additi onal information about the real-world"
+    },
+    {
+      "rank": 3,
+      "chunk_id": "245",
+      "similarity_score": 0.6071,
+      "document": "the desirable normal forms, we need additi onal information about the real-world\nenterprise that we are modeling with the database. The most common approach\nis to use functional dependencies, which we cover in Section 8.4.\nTo understand the need for normalization, let us look at what can go wrong\nin a bad database design. Among the undesirable properties that a bad design\nmay have are:\n•Repetition of information\n•Inability to represent certain information"
+    },
+    {
+      "rank": 4,
+      "chunk_id": "255",
+      "similarity_score": 0.5985,
+      "document": "one instructor associated with the department. Furthermore, we would have\nto delete this information when the last instructor in the department departs.Clearly, this situation is undesirable, since, under our original database design,the department information would be available regardless of whether or not\nthere is an instructor associated with th e department, and without resorting to\nnull values.\nAn extensive theory of normalization has been developed that helps formally"
+    },
+    {
+      "rank": 5,
+      "chunk_id": "2301",
+      "similarity_score": 0.5949,
+      "document": "Functional dependencies can help us detect poor E-Rdesign. If the generated\nrelation schemas are not in desired normal form, the problem can be ﬁxed in the E-\nRdiagram. That is, normalization can be done formally as part of data modeling.\nAlternatively, normalization can be left to the designer’s intuition during E-R\nmodeling, and can be done formally on the relation schemas generated from the\nE-Rmodel."
+    }
+  ],
+  "summary": {
+    "total_results": 5,
+    "top_similarity_score": 0.6483,
+    "threshold_used": 0.3,
+    "model_used": "BAAI/bge-base-en-v1.5"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "query_id": "query_1775900370_57e799c0",
+  "timestamp": "2026-04-11T15:09:30.610061",
+  "query": "what is a database?",
+  "book": "book-1",
+  "results": [
+    {
+      "rank": 1,
+      "chunk_id": "123",
+      "similarity_score": 0.7561,
+      "document": "A. S.H. F. K.\nS. S.\nCHAPTER1\nIntroduction\nAdatabase-management system ( DBMS )is a collection of interrelated data and\na set of programs to access those data. The collection of data, usually referred to\nas the database, contains information relevant to an enterprise. The primary goal\nof a DBMS is to provide a way to store and retrieve database information that is\nboth convenient and efﬁcient.\nDatabase systems are designed to manage large bodies of information. Man-"
+    },
+    {
+      "rank": 2,
+      "chunk_id": "160",
+      "similarity_score": 0.7487,
+      "document": "database systems to solve the problems with ﬁle-processing systems. In most of\nthis book, we use a university organization as a running example of a typical\ndata-processing application.\n1.3 View of Data\nA database system is a collection of interrelated data and a set of programs thatallow users to access and modify these data. A major purpose of a databasesystem is to provide users with an abstract view of the data. That is, the system"
+    },
+    {
+      "rank": 3,
+      "chunk_id": "341",
+      "similarity_score": 0.7457,
+      "document": "32 Chapter 1 Introduction\n•A major purpose of a database system is to provide users with an abstract\nview of the data. That is, the system hides certain details of how the data arestored and maintained.\n•Underlying the structure of a database is the data model: a collection of\nconceptual tools for describing data, d ata relationships, data semantics, and\ndata constraints."
+    },
+    {
+      "rank": 4,
+      "chunk_id": "1623",
+      "similarity_score": 0.7383,
+      "document": "DATABASE DESIGN\nDatabase systems are designed to manage large bodies of information. These large\nbodies of information do not exist in isolation. They are part of the operation ofsome enterprise whose end product may be information from the database ormay be some device or service for which the database plays only a supporting\nrole.\nThe ﬁrst two chapters of this part focus on the design of database schemas.\nThe entity-relationship ("
+    },
+    {
+      "rank": 5,
+      "chunk_id": "5873",
+      "similarity_score": 0.7358,
+      "document": "databases, to allow large volumes of data to be stored in the database and\nretrieved efﬁciently for analysis. The ﬁeld of statistical analysis is a large dis-cipline on its own; see the references in the bibliographical notes for moreinformation.\n•Large companies have diverse sources of data that they need to use for makingbusiness decisions. The sources may store the data under different schemas.\nFor performance reasons (as well as for reasons of organization control), the"
+    }
+  ],
+  "summary": {
+    "total_results": 5,
+    "top_similarity_score": 0.7561,
+    "threshold_used": 0.3,
+    "model_used": "BAAI/bge-base-en-v1.5"
+  }
+}
