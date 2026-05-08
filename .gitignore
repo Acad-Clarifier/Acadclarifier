@@ -32,4 +32,4 @@ Thumbs.db
 # Large local artifacts (do not commit big local outputs)
 services/retrieval-local/outputs/local.tar
 services/retrieval-local/outputs/local.tar.gz
-
+services/retrieval-local/outputs/
