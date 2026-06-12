@@ -32,10 +32,20 @@
             <label for="web-question" class="visually-hidden">Ask a question from web sources</label>
             <input id="web-question" name="question" type="text" placeholder="Ask any academic question..."
                 maxlength="500" required />
+            <button class="secondary-btn voice-btn" type="button" data-action="start-listening"
+                aria-label="Start voice input">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v6a3 3 0 1 0 6 0V4a3 3 0 0 0-3-3Z"></path>
+                    <path d="M5 10v1a7 7 0 0 0 14 0v-1"></path>
+                    <path d="M12 18v4"></path>
+                    <path d="M8 22h8"></path>
+                </svg>
+            </button>
             <button class="primary-btn" type="submit">Send</button>
         </form>
 
-        <section class="web-hints" aria-label="Prompt ideas">
+        <!-- <section class="web-hints" aria-label="Prompt ideas">
             <p class="web-hints-title">Try one of these</p>
             <div class="web-hint-grid">
                 <button class="web-hint-btn" type="button">Latest breakthroughs in solid-state battery
@@ -43,6 +53,6 @@
                 <button class="web-hint-btn" type="button">Peer-reviewed studies on microplastics published this
                     year</button>
             </div>
-        </section>
+        </section> -->
     </section>
 </section>
