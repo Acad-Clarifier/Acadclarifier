@@ -435,6 +435,57 @@ button:disabled {
   padding: 0 24px;
 }
 
+.voice-btn {
+  width: 48px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  position: relative;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.voice-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.voice-btn.is-recording {
+  color: #ffffff;
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent),
+    0 10px 22px rgba(0, 101, 173, 0.18);
+  transform: translateY(-1px);
+}
+
+.voice-btn.is-recording::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  border: 2px solid color-mix(in srgb, var(--primary) 40%, transparent);
+  animation: voice-pulse 1.2s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes voice-pulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.75;
+  }
+
+  100% {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+}
+
 .link-btn {
   margin-top: 6px;
   align-self: flex-start;

@@ -34,6 +34,16 @@
             <label for="local-question" class="visually-hidden">Ask a question about this book</label>
             <input id="local-question" name="question" type="text"
                 placeholder="Select a scanned book to start a conversation..." maxlength="500" required />
+            <button class="secondary-btn voice-btn" type="button" data-action="start-listening"
+                aria-label="Start voice input">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v6a3 3 0 1 0 6 0V4a3 3 0 0 0-3-3Z"></path>
+                    <path d="M5 10v1a7 7 0 0 0 14 0v-1"></path>
+                    <path d="M12 18v4"></path>
+                    <path d="M8 22h8"></path>
+                </svg>
+            </button>
             <button class="primary-btn" type="submit">Send</button>
         </form>
     </section>

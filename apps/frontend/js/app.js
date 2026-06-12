@@ -35,6 +35,7 @@ let localPollingTimer = null;
 let localPollingFailureCount = 0;
 let libraryFetchController = null;
 let libraryBookFetchController = null;
+let activeSpeechRecognition = null;
 const MAX_LOCAL_POLL_FAILURES = 5;
 
 const PAGE_STYLE_BY_ROUTE = {
@@ -76,6 +77,120 @@ function removeLoadingMessage(mode) {
   const lastMessage = chat[chat.length - 1];
   if (lastMessage?.role === 'assistant' && lastMessage?.message === '...') {
     chat.pop();
+  }
+}
+
+function getSpeechRecognitionCtor() {
+  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+function getVoiceInputField(formElement) {
+  if (!(formElement instanceof HTMLFormElement)) {
+    return null;
+  }
+
+  return formElement.querySelector(
+    "input[name='question'], textarea[name='question'], textarea[name='query']",
+  );
+}
+
+function syncQuestionStateFromField(field) {
+  if (
+    !(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement)
+  ) {
+    return;
+  }
+
+  if (field.id === 'local-question' || field.id === 'web-question') {
+    setState({ query: field.value });
+    return;
+  }
+
+  if (field.id === 'book-rec-question') {
+    setRecommendationState({ query: field.value });
+    return;
+  }
+
+  if (field.id === 'journal-rec-question') {
+    setJournalRecommendationState({ query: field.value });
+  }
+}
+
+function setVoiceButtonState(button, isRecording) {
+  if (!(button instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  button.classList.toggle('is-recording', isRecording);
+  button.setAttribute('aria-pressed', isRecording ? 'true' : 'false');
+  button.setAttribute(
+    'aria-label',
+    isRecording ? 'Listening...' : 'Start voice input',
+  );
+  button.title = isRecording ? 'Listening...' : 'Start voice input';
+}
+
+function startListening(formElement, triggerButton = null) {
+  const SpeechRecognition = getSpeechRecognitionCtor();
+  const field = getVoiceInputField(formElement);
+
+  if (!field) {
+    return;
+  }
+
+  if (!SpeechRecognition) {
+    window.alert('Speech recognition is not supported in this browser.');
+    return;
+  }
+
+  setVoiceButtonState(triggerButton, true);
+
+  if (activeSpeechRecognition) {
+    try {
+      activeSpeechRecognition.abort();
+    } catch (error) {
+      console.error(
+        'Unable to stop previous speech recognition session:',
+        error,
+      );
+    }
+    activeSpeechRecognition = null;
+  }
+
+  const recognition = new SpeechRecognition();
+  activeSpeechRecognition = recognition;
+  recognition.lang = 'en-IN';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    field.value = transcript;
+    syncQuestionStateFromField(field);
+    field.focus();
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+  };
+
+  recognition.onerror = (event) => {
+    console.error('Speech recognition error:', event.error || event);
+    setVoiceButtonState(triggerButton, false);
+  };
+
+  recognition.onend = () => {
+    if (activeSpeechRecognition === recognition) {
+      activeSpeechRecognition = null;
+    }
+    setVoiceButtonState(triggerButton, false);
+  };
+
+  try {
+    recognition.start();
+  } catch (error) {
+    console.error('Speech recognition failed to start:', error);
+    setVoiceButtonState(triggerButton, false);
+    if (activeSpeechRecognition === recognition) {
+      activeSpeechRecognition = null;
+    }
   }
 }
 
@@ -512,15 +627,20 @@ function setLocalChatLocked(locked) {
   const form = document.getElementById('local-form');
   const input = document.getElementById('local-question');
   const submit = form?.querySelector("button[type='submit']");
+  const voiceButton = form?.querySelector("[data-action='start-listening']");
   const chat = document.getElementById('local-chat');
   const note = document.getElementById('local-chat-lock-note');
 
-  if (!form || !input || !submit || !chat || !note) {
+  if (!form || !input || !submit || !voiceButton || !chat || !note) {
     return;
   }
 
   input.disabled = locked;
   submit.disabled = locked;
+  voiceButton.disabled = locked;
+  if (locked) {
+    setVoiceButtonState(voiceButton, false);
+  }
   chat.classList.toggle('chat-disabled', locked);
 
   if (locked) {
@@ -845,7 +965,19 @@ async function submitQuestion(mode, formElement) {
 }
 
 function wireGlobalEvents() {
+  pageRoot.addEventListener('input', (event) => {
+    const field = event.target;
+    syncQuestionStateFromField(field);
+  });
+
   pageRoot.addEventListener('click', (event) => {
+    const voiceButton = event.target.closest("[data-action='start-listening']");
+    if (voiceButton) {
+      const formElement = voiceButton.closest('form');
+      startListening(formElement, voiceButton);
+      return;
+    }
+
     const routeButton = event.target.closest('[data-route]');
     if (routeButton) {
       const route = routeButton.dataset.route;
