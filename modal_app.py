@@ -11,6 +11,7 @@ volume = modal.Volume.from_name(
 
 image = (
     modal.Image.debian_slim()
+    .apt_install("ffmpeg")
     .pip_install_from_requirements(
         "requirements.txt"
     )

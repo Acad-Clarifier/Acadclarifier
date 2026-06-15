@@ -24,6 +24,7 @@ WORKDIR /app
 # Install only runtime dependencies (postgresql-client for health checks)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     postgresql-client \
+    ffmpeg \
     curl \
     && rm -rf /var/lib/apt/lists/*
 

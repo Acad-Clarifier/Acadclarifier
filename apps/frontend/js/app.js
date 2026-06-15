@@ -9,6 +9,7 @@ import {
   fetchLibrary,
   fetchLibraryBook,
   fetchSession,
+  transcribeSpeechAudio,
 } from './api.js';
 import { initRouter } from './router.js';
 import {
@@ -35,7 +36,9 @@ let localPollingTimer = null;
 let localPollingFailureCount = 0;
 let libraryFetchController = null;
 let libraryBookFetchController = null;
-let activeSpeechRecognition = null;
+let activeAudioRecorder = null;
+let activeAudioStream = null;
+let activeAudioChunks = [];
 const MAX_LOCAL_POLL_FAILURES = 5;
 
 const PAGE_STYLE_BY_ROUTE = {
@@ -80,10 +83,6 @@ function removeLoadingMessage(mode) {
   }
 }
 
-function getSpeechRecognitionCtor() {
-  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
-}
-
 function getVoiceInputField(formElement) {
   if (!(formElement instanceof HTMLFormElement)) {
     return null;
@@ -116,81 +115,179 @@ function syncQuestionStateFromField(field) {
   }
 }
 
-function setVoiceButtonState(button, isRecording) {
+function setVoiceButtonState(button, state) {
   if (!(button instanceof HTMLButtonElement)) {
     return;
   }
 
-  button.classList.toggle('is-recording', isRecording);
+  const isRecording = state === 'recording';
+  const isTranscribing = state === 'transcribing';
+  const label = isRecording
+    ? 'Stop recording'
+    : isTranscribing
+      ? 'Transcribing...'
+      : 'Start voice input';
+
+  button.classList.toggle('is-recording', isRecording || isTranscribing);
+  button.disabled = isTranscribing;
   button.setAttribute('aria-pressed', isRecording ? 'true' : 'false');
-  button.setAttribute(
-    'aria-label',
-    isRecording ? 'Listening...' : 'Start voice input',
-  );
-  button.title = isRecording ? 'Listening...' : 'Start voice input';
+  button.setAttribute('aria-label', label);
+  button.title = label;
 }
 
-function startListening(formElement, triggerButton = null) {
-  const SpeechRecognition = getSpeechRecognitionCtor();
+function getAudioRecorderErrorMessage(error) {
+  const errorName = error?.name || '';
+
+  if (
+    errorName === 'NotAllowedError' ||
+    errorName === 'PermissionDeniedError'
+  ) {
+    return 'Microphone access was blocked. Please allow microphone permission and try again.';
+  }
+
+  if (errorName === 'NotFoundError' || errorName === 'DevicesNotFoundError') {
+    return 'No microphone was found on this device.';
+  }
+
+  if (errorName === 'NotSupportedError') {
+    return 'Audio recording is not supported in this browser.';
+  }
+
+  return 'Voice recording stopped with an error. Please try again.';
+}
+
+function getPreferredAudioMimeType() {
+  if (
+    typeof MediaRecorder === 'undefined' ||
+    typeof MediaRecorder.isTypeSupported !== 'function'
+  ) {
+    return '';
+  }
+
+  const candidates = [
+    'audio/webm;codecs=opus',
+    'audio/webm',
+    'audio/ogg;codecs=opus',
+  ];
+
+  return (
+    candidates.find((mimeType) => MediaRecorder.isTypeSupported(mimeType)) || ''
+  );
+}
+
+function cleanupAudioCapture() {
+  if (activeAudioStream) {
+    activeAudioStream.getTracks().forEach((track) => track.stop());
+  }
+
+  activeAudioRecorder = null;
+  activeAudioStream = null;
+  activeAudioChunks = [];
+}
+
+async function transcribeRecordedAudio(formElement, triggerButton, audioBlob) {
+  const field = getVoiceInputField(formElement);
+
+  if (!field || !audioBlob || audioBlob.size === 0) {
+    cleanupAudioCapture();
+    setVoiceButtonState(triggerButton, 'idle');
+    return;
+  }
+
+  setVoiceButtonState(triggerButton, 'transcribing');
+
+  try {
+    const response = await transcribeSpeechAudio(audioBlob, {
+      timeoutMs: 120000,
+    });
+    const transcript = (response?.text || '').trim();
+
+    if (transcript) {
+      field.value = transcript;
+      syncQuestionStateFromField(field);
+      field.focus();
+      field.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  } catch (error) {
+    console.error('Audio transcription failed:', error);
+    window.alert(
+      error?.code === 'TIMEOUT'
+        ? 'Transcription took too long. Please try a shorter recording.'
+        : 'Unable to transcribe the recording. Please try again.',
+    );
+  } finally {
+    cleanupAudioCapture();
+    setVoiceButtonState(triggerButton, 'idle');
+  }
+}
+
+async function startListening(formElement, triggerButton = null) {
   const field = getVoiceInputField(formElement);
 
   if (!field) {
     return;
   }
 
-  if (!SpeechRecognition) {
-    window.alert('Speech recognition is not supported in this browser.');
+  if (
+    activeAudioRecorder &&
+    activeAudioRecorder.state &&
+    activeAudioRecorder.state !== 'inactive'
+  ) {
+    try {
+      activeAudioRecorder.stop();
+    } catch (error) {
+      console.error('Unable to stop current audio recording:', error);
+    }
     return;
   }
 
-  setVoiceButtonState(triggerButton, true);
-
-  if (activeSpeechRecognition) {
-    try {
-      activeSpeechRecognition.abort();
-    } catch (error) {
-      console.error(
-        'Unable to stop previous speech recognition session:',
-        error,
-      );
-    }
-    activeSpeechRecognition = null;
+  if (
+    !navigator.mediaDevices?.getUserMedia ||
+    typeof MediaRecorder === 'undefined'
+  ) {
+    window.alert('Audio recording is not supported in this browser.');
+    return;
   }
 
-  const recognition = new SpeechRecognition();
-  activeSpeechRecognition = recognition;
-  recognition.lang = 'en-IN';
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 1;
-
-  recognition.onresult = (event) => {
-    const transcript = event.results[0][0].transcript;
-    field.value = transcript;
-    syncQuestionStateFromField(field);
-    field.focus();
-    field.dispatchEvent(new Event('input', { bubbles: true }));
-  };
-
-  recognition.onerror = (event) => {
-    console.error('Speech recognition error:', event.error || event);
-    setVoiceButtonState(triggerButton, false);
-  };
-
-  recognition.onend = () => {
-    if (activeSpeechRecognition === recognition) {
-      activeSpeechRecognition = null;
-    }
-    setVoiceButtonState(triggerButton, false);
-  };
+  setVoiceButtonState(triggerButton, 'recording');
 
   try {
-    recognition.start();
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mimeType = getPreferredAudioMimeType();
+    const recorder = mimeType
+      ? new MediaRecorder(stream, { mimeType })
+      : new MediaRecorder(stream);
+
+    activeAudioRecorder = recorder;
+    activeAudioStream = stream;
+    activeAudioChunks = [];
+
+    recorder.ondataavailable = (event) => {
+      if (event.data && event.data.size > 0) {
+        activeAudioChunks.push(event.data);
+      }
+    };
+
+    recorder.onerror = (event) => {
+      console.error('Audio recorder error:', event?.error || event);
+      cleanupAudioCapture();
+      setVoiceButtonState(triggerButton, 'idle');
+      window.alert(getAudioRecorderErrorMessage(event?.error || event));
+    };
+
+    recorder.onstop = () => {
+      const audioBlob = new Blob(activeAudioChunks, {
+        type: recorder.mimeType || 'audio/webm',
+      });
+      void transcribeRecordedAudio(formElement, triggerButton, audioBlob);
+    };
+
+    recorder.start();
   } catch (error) {
-    console.error('Speech recognition failed to start:', error);
-    setVoiceButtonState(triggerButton, false);
-    if (activeSpeechRecognition === recognition) {
-      activeSpeechRecognition = null;
-    }
+    console.error('Audio recording failed to start:', error);
+    cleanupAudioCapture();
+    setVoiceButtonState(triggerButton, 'idle');
+    window.alert(getAudioRecorderErrorMessage(error));
   }
 }
 
@@ -639,7 +736,7 @@ function setLocalChatLocked(locked) {
   submit.disabled = locked;
   voiceButton.disabled = locked;
   if (locked) {
-    setVoiceButtonState(voiceButton, false);
+    setVoiceButtonState(voiceButton, 'idle');
   }
   chat.classList.toggle('chat-disabled', locked);
 
