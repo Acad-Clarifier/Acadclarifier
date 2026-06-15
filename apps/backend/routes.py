@@ -9,6 +9,7 @@ try:
     from .repositories import get_book_by_ref, list_books
     from .session import get_active_book, set_active_book
     from .local_retrieval_bridge import run_local_retrieval_pipeline
+    from .transcription import transcribe_audio_bytes
     from .web_pipeline import run_web_pipeline
 except ImportError:
     from journal_client import JournalServiceError, recommend_journals
@@ -16,6 +17,7 @@ except ImportError:
     from repositories import get_book_by_ref, list_books
     from session import get_active_book, set_active_book
     from local_retrieval_bridge import run_local_retrieval_pipeline
+    from transcription import transcribe_audio_bytes
     from web_pipeline import run_web_pipeline
 
 api_routes = Blueprint("api_routes", __name__)
@@ -72,6 +74,27 @@ def rfid_update():
 
     set_active_book(uid)
     return jsonify({"status": "ok", "active_book": uid})
+
+
+@api_routes.route("/transcribe", methods=["POST"])
+def transcribe_route():
+    started = time.perf_counter()
+    audio_file = request.files.get("audio")
+    audio_bytes = audio_file.read() if audio_file else request.get_data(cache=False)
+
+    if not audio_bytes:
+        return jsonify({"error": "audio is required"}), 400
+
+    try:
+        result = transcribe_audio_bytes(audio_bytes)
+    except Exception as exc:
+        current_app.logger.exception("/transcribe failed: %s", exc)
+        return jsonify({"status": "error", "error": str(exc)}), 500
+    finally:
+        elapsed = round((time.perf_counter() - started) * 1000, 2)
+        current_app.logger.info("/transcribe completed in %sms", elapsed)
+
+    return jsonify({"status": "ok", **result})
 
 
 @api_routes.route("/ask", methods=["POST"])

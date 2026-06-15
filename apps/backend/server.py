@@ -1,6 +1,7 @@
 from flask import Flask
 from dotenv import load_dotenv
 from pathlib import Path
+import os
 import sys
 
 from flask_cors import CORS
@@ -27,17 +28,39 @@ except ImportError:
 load_dotenv(Path(__file__).resolve().parent / ".env")
 
 
+PRODUCTION_CORS_ORIGINS = [
+    "https://acadclarifier.vercel.app",
+    "https://acadclarifier-git-live-jsoham672-3547s-projects.vercel.app",
+    "https://acadclarifier-jyz25jfhh-jsoham672-3547s-projects.vercel.app",
+    "https://jsoham672--acadclarifier-backend-flask-app.modal.run",
+]
+
+LOCALHOST_CORS_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:5000",
+    "http://localhost:8501",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5000",
+    "http://127.0.0.1:8501",
+]
+
+
+def _get_cors_origins() -> list[str]:
+    configured_origins = os.getenv("CORS_ALLOWED_ORIGINS")
+    if configured_origins:
+        return [origin.strip() for origin in configured_origins.split(",") if origin.strip()]
+
+    origins = list(PRODUCTION_CORS_ORIGINS)
+    if os.getenv("ENABLE_LOCALHOST_CORS", "0").lower() in {"1", "true", "yes", "on"}:
+        origins.extend(LOCALHOST_CORS_ORIGINS)
+
+    return origins
+
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    CORS(app, origins=[
-        "https://acadclarifier.vercel.app",
-        "https://acadclarifier-git-live-jsoham672-3547s-projects.vercel.app",
-        "https://acadclarifier-jyz25jfhh-jsoham672-3547s-projects.vercel.app",
-        "https://jsoham672--acadclarifier-backend-flask-app.modal.run",
-        "http://localhost:3000",
-        "http://localhost:5000",
-    ])
+    CORS(app, origins=_get_cors_origins())
 
     db.init_app(app)
     migrate.init_app(app, db)

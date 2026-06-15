@@ -1,5 +1,6 @@
 // const DEPLOYED_API_BASE = 'https://acadclarifier-test.onrender.com'; // just for test branch
-const DEPLOYED_API_BASE = 'https://jsoham672--acadclarifier-backend-flask-app.modal.run';
+const DEPLOYED_API_BASE =
+  'https://jsoham672--acadclarifier-backend-flask-app.modal.run';
 const LOCAL_API_BASE = 'http://localhost:5000';
 
 const isLocalHost =
@@ -49,9 +50,11 @@ async function request(path, options = {}) {
 
   let response;
   try {
+    const isFormDataBody =
+      typeof FormData !== 'undefined' && fetchOptions.body instanceof FormData;
     response = await fetch(`${API_BASE}${path}`, {
       headers: {
-        'Content-Type': 'application/json',
+        ...(isFormDataBody ? {} : { 'Content-Type': 'application/json' }),
         ...(fetchOptions.headers || {}),
       },
       ...fetchOptions,
@@ -108,6 +111,18 @@ export function askWebQuestion(question, options = {}) {
   return request('/web/ask', {
     method: 'POST',
     body: JSON.stringify({ question }),
+    ...options,
+  });
+}
+
+export function transcribeSpeechAudio(audioBlob, options = {}) {
+  const formData = new FormData();
+  formData.set('audio', audioBlob, 'voice-input.webm');
+
+  return request('/transcribe', {
+    method: 'POST',
+    body: formData,
+    timeoutMs: 120000,
     ...options,
   });
 }
